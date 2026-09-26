@@ -1,0 +1,83 @@
+{
+  "@@locale": "en",
+  "appTitle": "Family Finance",
+  "@appTitle": {
+    "description": "Application title shown in the window and app bar"
+  },
+  "navHome": "Home",
+  "@navHome": {
+    "description": "Bottom/rail navigation label for the home placeholder"
+  },
+  "navSettings": "Settings",
+  "@navSettings": {
+    "description": "Bottom/rail navigation label for settings"
+  },
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Settings screen title"
+  },
+  "settingsLanguage": "Language",
+  "@settingsLanguage": {
+    "description": "Label for the language preference control"
+  },
+  "languageEnglish": "English",
+  "@languageEnglish": {
+    "description": "English language option"
+  },
+  "languageItalian": "Italian",
+  "@languageItalian": {
+    "description": "Italian language option"
+  },
+  "homePlaceholderTitle": "Home",
+  "@homePlaceholderTitle": {
+    "description": "Placeholder home screen title"
+  },
+  "homePlaceholderBody": "Shared ledger, budgets, and goals will appear here.",
+  "@homePlaceholderBody": {
+    "description": "Placeholder copy on the home screen during early MVP phases"
+  },
+  "categoryFood": "Food",
+  "@categoryFood": {
+    "description": "System category name key for food"
+  },
+  "categoryTransport": "Transport",
+  "@categoryTransport": {
+    "description": "System category name key for transport"
+  },
+  "categoryHousing": "Housing",
+  "@categoryHousing": {
+    "description": "System category name key for housing"
+  },
+  "categoryUtilities": "Utilities",
+  "@categoryUtilities": {
+    "description": "System category name key for utilities"
+  },
+  "categoryHealth": "Health",
+  "@categoryHealth": {
+    "description": "System category name key for health"
+  },
+  "categoryEntertainment": "Entertainment",
+  "@categoryEntertainment": {
+    "description": "System category name key for entertainment"
+  },
+  "categoryShopping": "Shopping",
+  "@categoryShopping": {
+    "description": "System category name key for shopping"
+  },
+  "categoryEducation": "Education",
+  "@categoryEducation": {
+    "description": "System category name key for education"
+  },
+  "categoryOtherExpense": "Other expense",
+  "@categoryOtherExpense": {
+    "description": "System category name key for miscellaneous expenses"
+  },
+  "categorySalary": "Salary",
+  "@categorySalary": {
+    "description": "System category name key for salary income"
+  },
+  "categoryOtherIncome": "Other income",
+  "@categoryOtherIncome": {
+    "description": "System category name key for miscellaneous income"
+  }
+}

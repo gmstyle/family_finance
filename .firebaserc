@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "family-finance-gmstyle-app",
+    "demo": "demo-family-finance"
+  }
+}

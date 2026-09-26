@@ -1,0 +1,252 @@
+rules_version = '2';
+
+// Family Finance — Firestore security rules (Phase 1 scaffold).
+//
+// Conventions:
+// - amountMinor is always a positive integer (cents). type decides ledger effect.
+// - Clients never write derived fields: balanceMinor, spentAmountMinor,
+//   accumulatedAmountMinor, stats, _projections, users.familyId, threshold flags.
+// - Membership (members, invites acceptance side-effects) is Admin SDK / callables only.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function uid() {
+      return request.auth.uid;
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(uid()));
+    }
+
+    function userFamilyId() {
+      return userDoc().data.familyId;
+    }
+
+    function isFamilyMember(familyId) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/families/$(familyId)/members/$(uid()));
+    }
+
+    function memberRole(familyId) {
+      return get(/databases/$(database)/documents/families/$(familyId)/members/$(uid())).data.role;
+    }
+
+    function isAdmin(familyId) {
+      return isFamilyMember(familyId) && memberRole(familyId) == 'admin';
+    }
+
+    function isPositiveInt(value) {
+      return value is int && value >= 0;
+    }
+
+    // ---------------------------------------------------------------------------
+    // users/{userId} — client may write own profile except familyId (function-only).
+    // ---------------------------------------------------------------------------
+    match /users/{userId} {
+      allow read: if signedIn() && uid() == userId;
+
+      allow create: if signedIn()
+        && uid() == userId
+        && !('familyId' in request.resource.data)
+        && request.resource.data.keys().hasOnly(['email', 'displayName', 'createdAt', 'updatedAt']);
+
+      allow update: if signedIn()
+        && uid() == userId
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['familyId'])
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['email', 'displayName', 'updatedAt']);
+
+      allow delete: if false;
+
+      match /devices/{deviceId} {
+        allow read, write: if signedIn() && uid() == userId;
+      }
+    }
+
+    // ---------------------------------------------------------------------------
+    // invites/{inviteId} — top-level; membership changes only via callables.
+    // ---------------------------------------------------------------------------
+    match /invites/{inviteId} {
+      // Invitee can read invites addressed to their verified email.
+      // Admin can read invites for their family.
+      allow read: if signedIn() && (
+        (resource.data.invitedEmail == request.auth.token.email
+          && request.auth.token.email_verified == true)
+        || isAdmin(resource.data.familyId)
+      );
+
+      // Creates / status changes are Admin SDK / callable only in production.
+      // Keep client create closed so tokens cannot be forged from the app.
+      allow create, update, delete: if false;
+    }
+
+    // ---------------------------------------------------------------------------
+    // families/{familyId}
+    // ---------------------------------------------------------------------------
+    match /families/{familyId} {
+      allow read: if isFamilyMember(familyId);
+
+      // Family creation is via createFamily callable (Admin SDK).
+      allow create: if false;
+
+      // Admin may update name / timezone only — currency and ownerId immutable here.
+      allow update: if isAdmin(familyId)
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['name', 'timezone', 'updatedAt'])
+        && request.resource.data.currency == resource.data.currency
+        && request.resource.data.ownerId == resource.data.ownerId;
+
+      allow delete: if false;
+
+      match /members/{memberId} {
+        allow read: if isFamilyMember(familyId);
+        // Membership writes: Admin SDK / callables only.
+        allow create, update, delete: if false;
+      }
+
+      // Accounts — client create must not set balanceMinor (function-derived).
+      match /accounts/{accountId} {
+        allow read: if isFamilyMember(familyId);
+
+        allow create: if isFamilyMember(familyId)
+          && !('balanceMinor' in request.resource.data)
+          && request.resource.data.keys()
+              .hasOnly([
+                'name', 'type', 'openingBalanceMinor', 'openingDate',
+                'archived', 'createdByUserId', 'createdAt'
+              ])
+          && request.resource.data.createdByUserId == uid()
+          && isPositiveInt(request.resource.data.openingBalanceMinor)
+          && request.resource.data.type in ['cash', 'bankAccount', 'card', 'wallet']
+          && request.resource.data.archived is bool;
+
+        allow update: if isFamilyMember(familyId)
+          && !request.resource.data.diff(resource.data).affectedKeys()
+              .hasAny(['balanceMinor', 'createdByUserId', 'createdAt'])
+          && request.resource.data.diff(resource.data).affectedKeys()
+              .hasOnly(['name', 'type', 'openingBalanceMinor', 'openingDate', 'archived', 'updatedAt']);
+
+        // Soft-archive only — hard delete forbidden.
+        allow delete: if false;
+      }
+
+      // Categories — type immutable; no delete (archive only).
+      match /categories/{categoryId} {
+        allow read: if isFamilyMember(familyId);
+
+        allow create: if isFamilyMember(familyId)
+          && request.resource.data.type in ['expense', 'income']
+          && (
+            ('nameKey' in request.resource.data && !('name' in request.resource.data))
+            || ('name' in request.resource.data && !('nameKey' in request.resource.data))
+          );
+
+        allow update: if isFamilyMember(familyId)
+          && request.resource.data.type == resource.data.type
+          && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['type']);
+
+        allow delete: if false;
+      }
+
+      // Transactions — shared ledger; amountMinor positive int; currency immutable.
+      match /transactions/{transactionId} {
+        allow read: if isFamilyMember(familyId);
+
+        allow create: if isFamilyMember(familyId)
+          && isPositiveInt(request.resource.data.amountMinor)
+          && request.resource.data.amountMinor > 0
+          && request.resource.data.createdByUserId == uid()
+          && request.resource.data.currency is string;
+
+        allow update: if isFamilyMember(familyId)
+          && request.resource.data.currency == resource.data.currency
+          && request.resource.data.createdByUserId == resource.data.createdByUserId
+          && isPositiveInt(request.resource.data.amountMinor)
+          && request.resource.data.amountMinor > 0;
+
+        allow delete: if isFamilyMember(familyId);
+      }
+
+      // Budgets — categoryId immutable on update.
+      match /budgets/{budgetId} {
+        allow read: if isFamilyMember(familyId);
+
+        allow create: if isFamilyMember(familyId)
+          && isPositiveInt(request.resource.data.limitAmountMinor)
+          && request.resource.data.limitAmountMinor > 0;
+
+        allow update: if isFamilyMember(familyId)
+          && request.resource.data.categoryId == resource.data.categoryId
+          && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['categoryId']);
+
+        allow delete: if isFamilyMember(familyId);
+
+        // Periods are function-only (spentAmountMinor, threshold flags).
+        match /periods/{periodId} {
+          allow read: if isFamilyMember(familyId);
+          allow create, update, delete: if false;
+        }
+      }
+
+      // Goals — accumulatedAmountMinor is function-only.
+      match /goals/{goalId} {
+        allow read: if isFamilyMember(familyId);
+
+        allow create: if isFamilyMember(familyId)
+          && !('accumulatedAmountMinor' in request.resource.data)
+          && isPositiveInt(request.resource.data.targetAmountMinor)
+          && request.resource.data.targetAmountMinor > 0;
+
+        allow update: if isFamilyMember(familyId)
+          && !request.resource.data.diff(resource.data)
+              .affectedKeys().hasAny(['accumulatedAmountMinor']);
+
+        allow delete: if isFamilyMember(familyId);
+
+        match /contributions/{contributionId} {
+          allow read: if isFamilyMember(familyId);
+
+          allow create: if isFamilyMember(familyId)
+            && request.resource.data.amountMinor is int
+            && request.resource.data.amountMinor != 0
+            && request.resource.data.createdByUserId == uid();
+
+          allow update, delete: if false;
+        }
+      }
+
+      // Stats & projections — function-only.
+      match /stats/{periodId} {
+        allow read: if isFamilyMember(familyId);
+        allow create, update, delete: if false;
+      }
+
+      match /_projections/{docId} {
+        allow read, write: if false;
+      }
+
+      // OCR / notification helpers (Phase 5–6).
+      match /merchantRules/{merchantKey} {
+        allow read, write: if isFamilyMember(familyId);
+      }
+
+      match /accountBindings/{bindingId} {
+        allow read, write: if isFamilyMember(familyId);
+      }
+
+      // Ingestion drafts — never silent ledger creates; client confirms later.
+      match /ingestion/{dedupKey} {
+        allow read: if isFamilyMember(familyId);
+        allow create, update: if isFamilyMember(familyId)
+          && request.resource.data.status in [
+            'needsReview', 'possibleDuplicate', 'confirmed', 'discarded'
+          ];
+        allow delete: if isFamilyMember(familyId);
+      }
+    }
+  }
+}

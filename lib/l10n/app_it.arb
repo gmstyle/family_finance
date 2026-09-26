@@ -1,0 +1,23 @@
+{
+  "@@locale": "it",
+  "appTitle": "Family Finance",
+  "navHome": "Home",
+  "navSettings": "Impostazioni",
+  "settingsTitle": "Impostazioni",
+  "settingsLanguage": "Lingua",
+  "languageEnglish": "Inglese",
+  "languageItalian": "Italiano",
+  "homePlaceholderTitle": "Home",
+  "homePlaceholderBody": "Qui compariranno il libro mastro condiviso, i budget e gli obiettivi.",
+  "categoryFood": "Cibo",
+  "categoryTransport": "Trasporti",
+  "categoryHousing": "Casa",
+  "categoryUtilities": "Utenze",
+  "categoryHealth": "Salute",
+  "categoryEntertainment": "Svago",
+  "categoryShopping": "Shopping",
+  "categoryEducation": "Istruzione",
+  "categoryOtherExpense": "Altre spese",
+  "categorySalary": "Stipendio",
+  "categoryOtherIncome": "Altre entrate"
+}

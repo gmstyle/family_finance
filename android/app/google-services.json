@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "393534396036",
+    "project_id": "family-finance-gmstyle-app",
+    "storage_bucket": "family-finance-gmstyle-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:393534396036:android:526f6e1761e439126a94d1",
+        "android_client_info": {
+          "package_name": "com.gmstyle.family_finance"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWZHG4RfIOamDNTBBygtsXeNJFxvsRwKU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

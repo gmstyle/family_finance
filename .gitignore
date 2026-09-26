@@ -50,3 +50,10 @@ app.*.map.json
 # Local planning / design artifacts (keep on disk, not in repo)
 docs/family-finance-mvp.plan.md
 docs/family-finance-ui-mock.canvas.tsx
+
+# Firebase emulators / CLI
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+*-debug.log
