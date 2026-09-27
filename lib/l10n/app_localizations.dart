@@ -104,115 +104,397 @@ abstract class AppLocalizations {
   /// **'Family Finance'**
   String get appTitle;
 
-  /// Bottom/rail navigation label for the home placeholder
+  /// No description provided for @navHome.
   ///
   /// In en, this message translates to:
   /// **'Home'**
   String get navHome;
 
-  /// Bottom/rail navigation label for settings
+  /// No description provided for @navSettings.
   ///
   /// In en, this message translates to:
   /// **'Settings'**
   String get navSettings;
 
-  /// Settings screen title
+  /// No description provided for @settingsTitle.
   ///
   /// In en, this message translates to:
   /// **'Settings'**
   String get settingsTitle;
 
-  /// Label for the language preference control
+  /// No description provided for @settingsLanguage.
   ///
   /// In en, this message translates to:
   /// **'Language'**
   String get settingsLanguage;
 
-  /// English language option
+  /// No description provided for @languageEnglish.
   ///
   /// In en, this message translates to:
   /// **'English'**
   String get languageEnglish;
 
-  /// Italian language option
+  /// No description provided for @languageItalian.
   ///
   /// In en, this message translates to:
   /// **'Italian'**
   String get languageItalian;
 
-  /// Placeholder home screen title
+  /// No description provided for @homePlaceholderTitle.
   ///
   /// In en, this message translates to:
   /// **'Home'**
   String get homePlaceholderTitle;
 
-  /// Placeholder copy on the home screen during early MVP phases
+  /// No description provided for @homePlaceholderBody.
   ///
   /// In en, this message translates to:
   /// **'Shared ledger, budgets, and goals will appear here.'**
   String get homePlaceholderBody;
 
-  /// System category name key for food
+  /// No description provided for @actionCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get actionCancel;
+
+  /// No description provided for @authSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get authSignIn;
+
+  /// No description provided for @authRegister.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get authRegister;
+
+  /// No description provided for @authCreateAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your account'**
+  String get authCreateAccount;
+
+  /// No description provided for @authEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get authEmail;
+
+  /// No description provided for @authPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get authPassword;
+
+  /// No description provided for @authDisplayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Display name'**
+  String get authDisplayName;
+
+  /// No description provided for @authEmailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email'**
+  String get authEmailInvalid;
+
+  /// No description provided for @authPasswordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get authPasswordTooShort;
+
+  /// No description provided for @authContinueGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get authContinueGoogle;
+
+  /// No description provided for @authHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? Sign in'**
+  String get authHaveAccount;
+
+  /// No description provided for @authNeedAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Need an account? Register'**
+  String get authNeedAccount;
+
+  /// No description provided for @authForgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get authForgotPassword;
+
+  /// No description provided for @authSendReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Send reset link'**
+  String get authSendReset;
+
+  /// No description provided for @authResetSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your inbox for the password reset link.'**
+  String get authResetSent;
+
+  /// No description provided for @authBackToSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to sign in'**
+  String get authBackToSignIn;
+
+  /// No description provided for @authSignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get authSignOut;
+
+  /// No description provided for @authVerifyEmailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your email'**
+  String get authVerifyEmailTitle;
+
+  /// No description provided for @authVerifyEmailBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a verification link to {email}. Open it, then tap below.'**
+  String authVerifyEmailBody(String email);
+
+  /// No description provided for @authIVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'I verified my email'**
+  String get authIVerified;
+
+  /// No description provided for @authResendVerification.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend verification email'**
+  String get authResendVerification;
+
+  /// No description provided for @familyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Family'**
+  String get familyTitle;
+
+  /// No description provided for @familyCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your family'**
+  String get familyCreateTitle;
+
+  /// No description provided for @familyCreateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A shared ledger starts with a family. Currency cannot be changed later.'**
+  String get familyCreateBody;
+
+  /// No description provided for @familyName.
+  ///
+  /// In en, this message translates to:
+  /// **'Family name'**
+  String get familyName;
+
+  /// No description provided for @familyNameInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter at least 2 characters'**
+  String get familyNameInvalid;
+
+  /// No description provided for @familyCurrencyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency is set to EUR for this MVP and is immutable.'**
+  String get familyCurrencyHint;
+
+  /// No description provided for @familyCreateAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Create family'**
+  String get familyCreateAction;
+
+  /// No description provided for @familyOrAcceptInvite.
+  ///
+  /// In en, this message translates to:
+  /// **'Or open an invite link you received.'**
+  String get familyOrAcceptInvite;
+
+  /// No description provided for @familyMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'You are not in a family yet.'**
+  String get familyMissing;
+
+  /// No description provided for @familyMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Members'**
+  String get familyMembers;
+
+  /// No description provided for @familyInvites.
+  ///
+  /// In en, this message translates to:
+  /// **'Invites'**
+  String get familyInvites;
+
+  /// No description provided for @familyInviteEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite by email'**
+  String get familyInviteEmail;
+
+  /// No description provided for @familyInviteCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite link copied to clipboard'**
+  String get familyInviteCopied;
+
+  /// No description provided for @familyInviteLinkHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this link (emulator: copy manually)'**
+  String get familyInviteLinkHint;
+
+  /// No description provided for @familyMakeAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Make admin'**
+  String get familyMakeAdmin;
+
+  /// No description provided for @familyMakeMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Make member'**
+  String get familyMakeMember;
+
+  /// No description provided for @familyTransferOwnership.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer ownership'**
+  String get familyTransferOwnership;
+
+  /// No description provided for @familyRemoveMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get familyRemoveMember;
+
+  /// No description provided for @familyLeaveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave family?'**
+  String get familyLeaveTitle;
+
+  /// No description provided for @familyLeaveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You will lose access until invited again. Last admin must promote someone first.'**
+  String get familyLeaveBody;
+
+  /// No description provided for @familyLeaveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave family'**
+  String get familyLeaveAction;
+
+  /// No description provided for @inviteAcceptTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Family invite'**
+  String get inviteAcceptTitle;
+
+  /// No description provided for @inviteAcceptBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept this invite to join the shared family ledger.'**
+  String get inviteAcceptBody;
+
+  /// No description provided for @inviteAcceptAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept invite'**
+  String get inviteAcceptAction;
+
+  /// No description provided for @settingsAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get settingsAccount;
+
+  /// No description provided for @settingsFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage family'**
+  String get settingsFamily;
+
+  /// No description provided for @categoryFood.
   ///
   /// In en, this message translates to:
   /// **'Food'**
   String get categoryFood;
 
-  /// System category name key for transport
+  /// No description provided for @categoryTransport.
   ///
   /// In en, this message translates to:
   /// **'Transport'**
   String get categoryTransport;
 
-  /// System category name key for housing
+  /// No description provided for @categoryHousing.
   ///
   /// In en, this message translates to:
   /// **'Housing'**
   String get categoryHousing;
 
-  /// System category name key for utilities
+  /// No description provided for @categoryUtilities.
   ///
   /// In en, this message translates to:
   /// **'Utilities'**
   String get categoryUtilities;
 
-  /// System category name key for health
+  /// No description provided for @categoryHealth.
   ///
   /// In en, this message translates to:
   /// **'Health'**
   String get categoryHealth;
 
-  /// System category name key for entertainment
+  /// No description provided for @categoryEntertainment.
   ///
   /// In en, this message translates to:
   /// **'Entertainment'**
   String get categoryEntertainment;
 
-  /// System category name key for shopping
+  /// No description provided for @categoryShopping.
   ///
   /// In en, this message translates to:
   /// **'Shopping'**
   String get categoryShopping;
 
-  /// System category name key for education
+  /// No description provided for @categoryEducation.
   ///
   /// In en, this message translates to:
   /// **'Education'**
   String get categoryEducation;
 
-  /// System category name key for miscellaneous expenses
+  /// No description provided for @categoryOtherExpense.
   ///
   /// In en, this message translates to:
   /// **'Other expense'**
   String get categoryOtherExpense;
 
-  /// System category name key for salary income
+  /// No description provided for @categorySalary.
   ///
   /// In en, this message translates to:
   /// **'Salary'**
   String get categorySalary;
 
-  /// System category name key for miscellaneous income
+  /// No description provided for @categoryOtherIncome.
   ///
   /// In en, this message translates to:
   /// **'Other income'**

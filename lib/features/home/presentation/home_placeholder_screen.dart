@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_tokens.dart';
+import '../../../core/ui/app_page.dart';
 import '../../../l10n/app_localizations.dart';
 
 /// Temporary home until dashboard / ledger land in later phases.
@@ -13,9 +15,9 @@ class HomePlaceholderScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.homePlaceholderTitle)),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
+      body: AppPage(
+        padding: AppInsets.page,
+        child: Center(
           child: Text(
             l10n.homePlaceholderBody,
             textAlign: TextAlign.center,

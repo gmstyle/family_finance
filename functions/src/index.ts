@@ -1,29 +1,37 @@
 /**
- * Family Finance Cloud Functions — Phase 1 scaffold.
+ * Family Finance Cloud Functions.
  *
- * Membership callables, ledger triggers, and FCM land in later phases.
- * Keep this entrypoint light so emulators and deploy wiring work now.
+ * Region: europe-west1. Client must call FirebaseFunctions.instanceFor(region: …).
  */
 import {initializeApp} from "firebase-admin/app";
-import {setGlobalOptions} from "firebase-functions/v2";
-import {onCall, HttpsError} from "firebase-functions/v2/https";
+import {onCall} from "firebase-functions/v2/https";
+
+import {callableOpts} from "./options";
+import {
+  acceptInvite,
+  createFamily,
+  createInvite,
+  leaveFamily,
+  removeMember,
+  revokeInvite,
+  transferOwnership,
+  updateMemberRole,
+} from "./membership";
 
 initializeApp();
 
-setGlobalOptions({
-  region: "europe-west1",
-  maxInstances: 10,
-});
-
-/**
- * Health-check callable used to verify Functions emulator wiring.
- * Real membership / transfer callables arrive in Phase 2+.
- */
-export const ping = onCall({enforceAppCheck: false}, () => {
+/** Health-check callable used to verify Functions emulator wiring. */
+export const ping = onCall(callableOpts, () => {
   return {ok: true, service: "family-finance-functions"};
 });
 
-/** Placeholder so unused-import lint stays quiet if HttpsError is needed later. */
-export function notImplemented(name: string): never {
-  throw new HttpsError("unimplemented", `${name} is not implemented yet`);
-}
+export {
+  createFamily,
+  createInvite,
+  revokeInvite,
+  acceptInvite,
+  removeMember,
+  updateMemberRole,
+  transferOwnership,
+  leaveFamily,
+};

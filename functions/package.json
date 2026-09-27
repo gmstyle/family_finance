@@ -2,7 +2,7 @@
   "name": "family-finance-functions",
   "description": "Cloud Functions for Family Finance (TypeScript scaffold — Phase 1)",
   "engines": {
-    "node": ">=20"
+    "node": "22"
   },
   "main": "lib/index.js",
   "scripts": {

@@ -6,15 +6,28 @@ import 'package:flutter/foundation.dart';
 
 import '../../firebase_options.dart';
 
+/// Keep in sync with `ffFunctionsRegion` / `functions/src/options.ts`.
+const String _functionsRegion = 'europe-west1';
+
 /// Firebase bootstrap for real projects and local emulators.
 ///
 /// Flags (compile-time `--dart-define`):
-/// - `USE_EMULATORS=true` — connect Auth, Firestore, and Functions to emulators.
-/// - `EMULATOR_ONLY=true` — use the `demo-family-finance` project id (no real
-///   credentials needed). Implies emulators.
+/// - `USE_EMULATORS=true` — connect Auth, Firestore, and Functions to emulators
+///   using project id [emulatorProjectId] (default `demo-family-finance`; must
+///   match `emulators:start --project …`).
+/// - `EMULATOR_ONLY=true` — same as [useEmulators] (alias; implies emulators).
+/// - `EMULATOR_PROJECT_ID=…` — override demo project id when emulators are on.
+/// - `EMULATOR_USE_FIREBASE_OPTIONS=true` — keep [DefaultFirebaseOptions]
+///   project id while using emulators. Start the suite with that same project
+///   id or Functions callables will 404 (unknown path).
+/// - `EMULATOR_HOST` — override emulator host (Android AVD defaults to
+///   `10.0.2.2`; web/desktop to `127.0.0.1`).
 ///
-/// When neither flag is set, [DefaultFirebaseOptions] from FlutterFire is used
-/// and the app talks to the configured cloud project.
+/// Emulator mode always [FirebaseAuth.signOut]s once after connecting the Auth
+/// emulator so cold starts never keep stale refresh tokens.
+///
+/// When neither emulator flag is set, [DefaultFirebaseOptions] from FlutterFire
+/// is used and the app talks to the configured cloud project.
 class FirebaseBootstrap {
   FirebaseBootstrap._();
 
@@ -28,10 +41,37 @@ class FirebaseBootstrap {
     defaultValue: false,
   );
 
-  static const String emulatorHost = String.fromEnvironment(
-    'EMULATOR_HOST',
-    defaultValue: '127.0.0.1',
+  /// Keep real FlutterFire project id while talking to local emulators.
+  /// Requires `emulators:start --project <same-as-firebase_options>`.
+  static const bool emulatorUseFirebaseOptions = bool.fromEnvironment(
+    'EMULATOR_USE_FIREBASE_OPTIONS',
+    defaultValue: false,
   );
+
+  static const String _emulatorProjectIdOverride = String.fromEnvironment(
+    'EMULATOR_PROJECT_ID',
+  );
+
+  /// Project id used for emulator mode (Functions URL path segment).
+  static String get emulatorProjectId => _emulatorProjectIdOverride.isNotEmpty
+      ? _emulatorProjectIdOverride
+      : 'demo-family-finance';
+
+  /// Optional override via `--dart-define=EMULATOR_HOST=...`.
+  /// When unset: Android → `10.0.2.2` (AVD loopback to host); else `127.0.0.1`.
+  static const String _emulatorHostOverride = String.fromEnvironment(
+    'EMULATOR_HOST',
+  );
+
+  static String get emulatorHost {
+    if (_emulatorHostOverride.isNotEmpty) {
+      return _emulatorHostOverride;
+    }
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      return '10.0.2.2';
+    }
+    return '127.0.0.1';
+  }
 
   static const int authEmulatorPort = int.fromEnvironment(
     'AUTH_EMULATOR_PORT',
@@ -52,76 +92,105 @@ class FirebaseBootstrap {
   static bool get shouldUseEmulators => useEmulators || emulatorOnly;
 
   static Future<void> initialize() async {
-    final options = emulatorOnly
-        ? _demoOptions
+    // Functions emulator routes by project id in the URL path. Default local
+    // workflow uses demo-family-finance; pairing USE_EMULATORS with the real
+    // FlutterFire project id causes "unknown request" / not-found on callables.
+    final options = shouldUseEmulators && !emulatorUseFirebaseOptions
+        ? _demoOptionsFor(emulatorProjectId)
         : DefaultFirebaseOptions.currentPlatform;
 
-    await Firebase.initializeApp(options: options);
+    await _initializeApp(options);
 
     if (shouldUseEmulators) {
       await _connectEmulators();
       if (kDebugMode) {
+        final actual = Firebase.app().options.projectId;
         debugPrint(
           'Firebase emulators: host=$emulatorHost '
           'auth=$authEmulatorPort firestore=$firestoreEmulatorPort '
           'functions=$functionsEmulatorPort '
-          'project=${options.projectId}',
+          'region=$_functionsRegion '
+          'projectRequested=${options.projectId} '
+          'projectActual=$actual '
+          'useEmulators=$useEmulators emulatorOnly=$emulatorOnly '
+          'useFirebaseOptions=$emulatorUseFirebaseOptions',
         );
+        if (actual != options.projectId) {
+          debugPrint(
+            'ERROR: Firebase projectId mismatch after init '
+            '(requested=${options.projectId}, actual=$actual). '
+            'Callables will 404 against the Functions emulator.',
+          );
+        }
+        if (emulatorUseFirebaseOptions &&
+            !options.projectId.startsWith('demo-')) {
+          debugPrint(
+            'WARNING: Emulators + project=${options.projectId}. '
+            'Start emulators with --project ${options.projectId} '
+            '(Functions 404 if the suite uses a different project id).',
+          );
+        }
       }
+    }
+  }
+
+  /// Initialize (or replace) the default Firebase app so [options] win.
+  ///
+  /// On Android, `google-services.json` can auto-init via
+  /// `FirebaseInitProvider` before Dart runs. If that happened with a different
+  /// project id, delete and re-create so Functions URLs match the emulator.
+  static Future<void> _initializeApp(FirebaseOptions options) async {
+    if (Firebase.apps.isNotEmpty) {
+      final existing = Firebase.app();
+      if (existing.options.projectId == options.projectId) {
+        return;
+      }
+      await existing.delete();
+    }
+
+    await Firebase.initializeApp(options: options);
+
+    final actual = Firebase.app().options.projectId;
+    if (actual != options.projectId) {
+      await Firebase.app().delete();
+      await Firebase.initializeApp(options: options);
     }
   }
 
   static Future<void> _connectEmulators() async {
     await FirebaseAuth.instance.useAuthEmulator(emulatorHost, authEmulatorPort);
+    // Emulator mode always starts signed out. Persisted tokens from a real
+    // project or a prior emulator session are invalid against the Auth
+    // emulator (e.g. "invalid refresh token") and must not stick across runs.
+    await FirebaseAuth.instance.signOut();
     FirebaseFirestore.instance.useFirestoreEmulator(
       emulatorHost,
       firestoreEmulatorPort,
     );
+    // Default instance + region-pinned instance (callables use europe-west1).
     FirebaseFunctions.instance.useFunctionsEmulator(
       emulatorHost,
       functionsEmulatorPort,
     );
+    FirebaseFunctions.instanceFor(region: _functionsRegion)
+        .useFunctionsEmulator(emulatorHost, functionsEmulatorPort);
   }
 
-  /// Hand-written options for emulator-only / `demo-*` project mode.
-  static FirebaseOptions get _demoOptions {
-    if (kIsWeb) {
-      return const FirebaseOptions(
-        apiKey: 'demo-api-key',
-        appId: '1:1234567890:web:demo',
-        messagingSenderId: '1234567890',
-        projectId: 'demo-family-finance',
-        authDomain: 'demo-family-finance.firebaseapp.com',
-        storageBucket: 'demo-family-finance.appspot.com',
-      );
-    }
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-        return const FirebaseOptions(
-          apiKey: 'demo-api-key',
-          appId: '1:1234567890:android:demo',
-          messagingSenderId: '1234567890',
-          projectId: 'demo-family-finance',
-          storageBucket: 'demo-family-finance.appspot.com',
-        );
-      case TargetPlatform.windows:
-        return const FirebaseOptions(
-          apiKey: 'demo-api-key',
-          appId: '1:1234567890:web:demo-windows',
-          messagingSenderId: '1234567890',
-          projectId: 'demo-family-finance',
-          authDomain: 'demo-family-finance.firebaseapp.com',
-          storageBucket: 'demo-family-finance.appspot.com',
-        );
-      default:
-        return const FirebaseOptions(
-          apiKey: 'demo-api-key',
-          appId: '1:1234567890:web:demo',
-          messagingSenderId: '1234567890',
-          projectId: 'demo-family-finance',
-          authDomain: 'demo-family-finance.firebaseapp.com',
-          storageBucket: 'demo-family-finance.appspot.com',
-        );
-    }
+  /// Emulator options: real FlutterFire credentials + demo [projectId].
+  ///
+  /// Auth rejects placeholder apiKeys; keep apiKey/appId/messagingSenderId/
+  /// storageBucket from [DefaultFirebaseOptions] and only override projectId
+  /// (and authDomain) so Functions URLs still match
+  /// `emulators:start --project demo-family-finance`.
+  static FirebaseOptions _demoOptionsFor(String projectId) {
+    final real = DefaultFirebaseOptions.currentPlatform;
+    return FirebaseOptions(
+      apiKey: real.apiKey,
+      appId: real.appId,
+      messagingSenderId: real.messagingSenderId,
+      projectId: projectId,
+      authDomain: '$projectId.firebaseapp.com',
+      storageBucket: real.storageBucket,
+    );
   }
 }

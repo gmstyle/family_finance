@@ -5,79 +5,74 @@
     "description": "Application title shown in the window and app bar"
   },
   "navHome": "Home",
-  "@navHome": {
-    "description": "Bottom/rail navigation label for the home placeholder"
-  },
   "navSettings": "Settings",
-  "@navSettings": {
-    "description": "Bottom/rail navigation label for settings"
-  },
   "settingsTitle": "Settings",
-  "@settingsTitle": {
-    "description": "Settings screen title"
-  },
   "settingsLanguage": "Language",
-  "@settingsLanguage": {
-    "description": "Label for the language preference control"
-  },
   "languageEnglish": "English",
-  "@languageEnglish": {
-    "description": "English language option"
-  },
   "languageItalian": "Italian",
-  "@languageItalian": {
-    "description": "Italian language option"
-  },
   "homePlaceholderTitle": "Home",
-  "@homePlaceholderTitle": {
-    "description": "Placeholder home screen title"
-  },
   "homePlaceholderBody": "Shared ledger, budgets, and goals will appear here.",
-  "@homePlaceholderBody": {
-    "description": "Placeholder copy on the home screen during early MVP phases"
+  "actionCancel": "Cancel",
+  "authSignIn": "Sign in",
+  "authRegister": "Create account",
+  "authCreateAccount": "Create your account",
+  "authEmail": "Email",
+  "authPassword": "Password",
+  "authDisplayName": "Display name",
+  "authEmailInvalid": "Enter a valid email",
+  "authPasswordTooShort": "Password must be at least 6 characters",
+  "authContinueGoogle": "Continue with Google",
+  "authHaveAccount": "Already have an account? Sign in",
+  "authNeedAccount": "Need an account? Register",
+  "authForgotPassword": "Forgot password?",
+  "authSendReset": "Send reset link",
+  "authResetSent": "Check your inbox for the password reset link.",
+  "authBackToSignIn": "Back to sign in",
+  "authSignOut": "Sign out",
+  "authVerifyEmailTitle": "Verify your email",
+  "authVerifyEmailBody": "We sent a verification link to {email}. Open it, then tap below.",
+  "@authVerifyEmailBody": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
   },
+  "authIVerified": "I verified my email",
+  "authResendVerification": "Resend verification email",
+  "familyTitle": "Family",
+  "familyCreateTitle": "Create your family",
+  "familyCreateBody": "A shared ledger starts with a family. Currency cannot be changed later.",
+  "familyName": "Family name",
+  "familyNameInvalid": "Enter at least 2 characters",
+  "familyCurrencyHint": "Currency is set to EUR for this MVP and is immutable.",
+  "familyCreateAction": "Create family",
+  "familyOrAcceptInvite": "Or open an invite link you received.",
+  "familyMissing": "You are not in a family yet.",
+  "familyMembers": "Members",
+  "familyInvites": "Invites",
+  "familyInviteEmail": "Invite by email",
+  "familyInviteCopied": "Invite link copied to clipboard",
+  "familyInviteLinkHint": "Share this link (emulator: copy manually)",
+  "familyMakeAdmin": "Make admin",
+  "familyMakeMember": "Make member",
+  "familyTransferOwnership": "Transfer ownership",
+  "familyRemoveMember": "Remove",
+  "familyLeaveTitle": "Leave family?",
+  "familyLeaveBody": "You will lose access until invited again. Last admin must promote someone first.",
+  "familyLeaveAction": "Leave family",
+  "inviteAcceptTitle": "Family invite",
+  "inviteAcceptBody": "Accept this invite to join the shared family ledger.",
+  "inviteAcceptAction": "Accept invite",
+  "settingsAccount": "Account",
+  "settingsFamily": "Manage family",
   "categoryFood": "Food",
-  "@categoryFood": {
-    "description": "System category name key for food"
-  },
   "categoryTransport": "Transport",
-  "@categoryTransport": {
-    "description": "System category name key for transport"
-  },
   "categoryHousing": "Housing",
-  "@categoryHousing": {
-    "description": "System category name key for housing"
-  },
   "categoryUtilities": "Utilities",
-  "@categoryUtilities": {
-    "description": "System category name key for utilities"
-  },
   "categoryHealth": "Health",
-  "@categoryHealth": {
-    "description": "System category name key for health"
-  },
   "categoryEntertainment": "Entertainment",
-  "@categoryEntertainment": {
-    "description": "System category name key for entertainment"
-  },
   "categoryShopping": "Shopping",
-  "@categoryShopping": {
-    "description": "System category name key for shopping"
-  },
   "categoryEducation": "Education",
-  "@categoryEducation": {
-    "description": "System category name key for education"
-  },
   "categoryOtherExpense": "Other expense",
-  "@categoryOtherExpense": {
-    "description": "System category name key for miscellaneous expenses"
-  },
   "categorySalary": "Salary",
-  "@categorySalary": {
-    "description": "System category name key for salary income"
-  },
-  "categoryOtherIncome": "Other income",
-  "@categoryOtherIncome": {
-    "description": "System category name key for miscellaneous income"
-  }
+  "categoryOtherIncome": "Other income"
 }
