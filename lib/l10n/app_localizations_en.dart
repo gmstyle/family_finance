@@ -16,6 +16,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navHome => 'Home';
 
   @override
+  String get navTransactions => 'Transactions';
+
+  @override
+  String get navAccounts => 'Accounts';
+
+  @override
+  String get navCategories => 'Categories';
+
+  @override
   String get navSettings => 'Settings';
 
   @override
@@ -31,14 +40,231 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageItalian => 'Italian';
 
   @override
-  String get homePlaceholderTitle => 'Home';
-
-  @override
-  String get homePlaceholderBody =>
-      'Shared ledger, budgets, and goals will appear here.';
-
-  @override
   String get actionCancel => 'Cancel';
+
+  @override
+  String get actionSave => 'Save';
+
+  @override
+  String get actionRetry => 'Retry';
+
+  @override
+  String get actionDelete => 'Delete';
+
+  @override
+  String get actionArchive => 'Archive';
+
+  @override
+  String get actionUnarchive => 'Unarchive';
+
+  @override
+  String get actionLoadMore => 'Load more';
+
+  @override
+  String get actionApply => 'Apply';
+
+  @override
+  String get actionClearFilters => 'Clear filters';
+
+  @override
+  String get moneyInvalid => 'Enter a valid amount';
+
+  @override
+  String get ledgerErrorTitle => 'Something went wrong';
+
+  @override
+  String get ledgerNotFound => 'Item not found';
+
+  @override
+  String get ledgerHomeTitle => 'Ledger';
+
+  @override
+  String get ledgerHomeBody =>
+      'Manage shared accounts, categories, and transactions.';
+
+  @override
+  String get ledgerHubTransactionsSubtitle =>
+      'Expenses, income, refunds, and transfers';
+
+  @override
+  String get ledgerHubAccountsSubtitle => 'Balances and opening amounts';
+
+  @override
+  String get ledgerHubCategoriesSubtitle => 'System and custom categories';
+
+  @override
+  String get ledgerHubTransferSubtitle => 'Move money between accounts';
+
+  @override
+  String get accountsTitle => 'Accounts';
+
+  @override
+  String get accountsEmpty =>
+      'No accounts yet. Create one to start tracking balances.';
+
+  @override
+  String get accountsArchived => 'Archived';
+
+  @override
+  String get accountCreateTitle => 'New account';
+
+  @override
+  String get accountEditTitle => 'Edit account';
+
+  @override
+  String get accountName => 'Account name';
+
+  @override
+  String get accountNameInvalid => 'Enter at least 2 characters';
+
+  @override
+  String get accountType => 'Account type';
+
+  @override
+  String get accountTypeCash => 'Cash';
+
+  @override
+  String get accountTypeBank => 'Bank account';
+
+  @override
+  String get accountTypeCard => 'Card';
+
+  @override
+  String get accountTypeWallet => 'Wallet';
+
+  @override
+  String get accountOpeningBalance => 'Opening balance';
+
+  @override
+  String get accountOpeningDate => 'Opening date';
+
+  @override
+  String accountBalanceHint(String amount) {
+    return 'Current balance: $amount';
+  }
+
+  @override
+  String get categoriesTitle => 'Categories';
+
+  @override
+  String get categoriesEmpty => 'No categories yet.';
+
+  @override
+  String get categoriesShowArchived => 'Show archived';
+
+  @override
+  String get categoryCreateTitle => 'New category';
+
+  @override
+  String get categoryName => 'Category name';
+
+  @override
+  String get categoryType => 'Type';
+
+  @override
+  String get categoryTypeExpense => 'Expense';
+
+  @override
+  String get categoryTypeIncome => 'Income';
+
+  @override
+  String get categoryTypeImmutableHint =>
+      'Type cannot be changed after creation.';
+
+  @override
+  String get categorySystemBadge => 'System';
+
+  @override
+  String get categoryCustomBadge => 'Custom';
+
+  @override
+  String get transactionsTitle => 'Transactions';
+
+  @override
+  String get transactionsEmpty => 'No transactions match these filters.';
+
+  @override
+  String get transactionsFilters => 'Filters';
+
+  @override
+  String get filterAccount => 'Account';
+
+  @override
+  String get filterCategory => 'Category';
+
+  @override
+  String get filterMember => 'Member';
+
+  @override
+  String get filterDateFrom => 'From date';
+
+  @override
+  String get filterDateTo => 'To date';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get transactionCreateTitle => 'New transaction';
+
+  @override
+  String get transactionEditTitle => 'Edit transaction';
+
+  @override
+  String get transactionType => 'Type';
+
+  @override
+  String get transactionTypeExpense => 'Expense';
+
+  @override
+  String get transactionTypeIncome => 'Income';
+
+  @override
+  String get transactionTypeRefund => 'Refund';
+
+  @override
+  String get transactionTypeTransfer => 'Transfer';
+
+  @override
+  String get transactionAmount => 'Amount';
+
+  @override
+  String get transactionBookingDate => 'Booking date';
+
+  @override
+  String get transactionMerchant => 'Merchant';
+
+  @override
+  String get transactionNote => 'Note';
+
+  @override
+  String get transactionFormIncomplete => 'Select account and category';
+
+  @override
+  String get transactionDeleteTitle => 'Delete transaction?';
+
+  @override
+  String get transactionDeleteBody =>
+      'This removes the transaction from the shared ledger.';
+
+  @override
+  String get transferCreateTitle => 'Transfer';
+
+  @override
+  String get transferCreateBody =>
+      'Creates two linked movements. They are deleted together.';
+
+  @override
+  String get transferSourceAccount => 'From account';
+
+  @override
+  String get transferDestinationAccount => 'To account';
+
+  @override
+  String get transferAccountsInvalid => 'Choose two different accounts';
+
+  @override
+  String get transferDeleteBody => 'Deletes both legs of this transfer.';
 
   @override
   String get authSignIn => 'Sign in';

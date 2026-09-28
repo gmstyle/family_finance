@@ -110,6 +110,24 @@ abstract class AppLocalizations {
   /// **'Home'**
   String get navHome;
 
+  /// No description provided for @navTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions'**
+  String get navTransactions;
+
+  /// No description provided for @navAccounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Accounts'**
+  String get navAccounts;
+
+  /// No description provided for @navCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get navCategories;
+
   /// No description provided for @navSettings.
   ///
   /// In en, this message translates to:
@@ -140,23 +158,443 @@ abstract class AppLocalizations {
   /// **'Italian'**
   String get languageItalian;
 
-  /// No description provided for @homePlaceholderTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Home'**
-  String get homePlaceholderTitle;
-
-  /// No description provided for @homePlaceholderBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Shared ledger, budgets, and goals will appear here.'**
-  String get homePlaceholderBody;
-
   /// No description provided for @actionCancel.
   ///
   /// In en, this message translates to:
   /// **'Cancel'**
   String get actionCancel;
+
+  /// No description provided for @actionSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get actionSave;
+
+  /// No description provided for @actionRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get actionRetry;
+
+  /// No description provided for @actionDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get actionDelete;
+
+  /// No description provided for @actionArchive.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get actionArchive;
+
+  /// No description provided for @actionUnarchive.
+  ///
+  /// In en, this message translates to:
+  /// **'Unarchive'**
+  String get actionUnarchive;
+
+  /// No description provided for @actionLoadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load more'**
+  String get actionLoadMore;
+
+  /// No description provided for @actionApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get actionApply;
+
+  /// No description provided for @actionClearFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get actionClearFilters;
+
+  /// No description provided for @moneyInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid amount'**
+  String get moneyInvalid;
+
+  /// No description provided for @ledgerErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get ledgerErrorTitle;
+
+  /// No description provided for @ledgerNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Item not found'**
+  String get ledgerNotFound;
+
+  /// No description provided for @ledgerHomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ledger'**
+  String get ledgerHomeTitle;
+
+  /// No description provided for @ledgerHomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage shared accounts, categories, and transactions.'**
+  String get ledgerHomeBody;
+
+  /// No description provided for @ledgerHubTransactionsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses, income, refunds, and transfers'**
+  String get ledgerHubTransactionsSubtitle;
+
+  /// No description provided for @ledgerHubAccountsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Balances and opening amounts'**
+  String get ledgerHubAccountsSubtitle;
+
+  /// No description provided for @ledgerHubCategoriesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'System and custom categories'**
+  String get ledgerHubCategoriesSubtitle;
+
+  /// No description provided for @ledgerHubTransferSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Move money between accounts'**
+  String get ledgerHubTransferSubtitle;
+
+  /// No description provided for @accountsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Accounts'**
+  String get accountsTitle;
+
+  /// No description provided for @accountsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No accounts yet. Create one to start tracking balances.'**
+  String get accountsEmpty;
+
+  /// No description provided for @accountsArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get accountsArchived;
+
+  /// No description provided for @accountCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New account'**
+  String get accountCreateTitle;
+
+  /// No description provided for @accountEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit account'**
+  String get accountEditTitle;
+
+  /// No description provided for @accountName.
+  ///
+  /// In en, this message translates to:
+  /// **'Account name'**
+  String get accountName;
+
+  /// No description provided for @accountNameInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter at least 2 characters'**
+  String get accountNameInvalid;
+
+  /// No description provided for @accountType.
+  ///
+  /// In en, this message translates to:
+  /// **'Account type'**
+  String get accountType;
+
+  /// No description provided for @accountTypeCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get accountTypeCash;
+
+  /// No description provided for @accountTypeBank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank account'**
+  String get accountTypeBank;
+
+  /// No description provided for @accountTypeCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Card'**
+  String get accountTypeCard;
+
+  /// No description provided for @accountTypeWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get accountTypeWallet;
+
+  /// No description provided for @accountOpeningBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening balance'**
+  String get accountOpeningBalance;
+
+  /// No description provided for @accountOpeningDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening date'**
+  String get accountOpeningDate;
+
+  /// No description provided for @accountBalanceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Current balance: {amount}'**
+  String accountBalanceHint(String amount);
+
+  /// No description provided for @categoriesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get categoriesTitle;
+
+  /// No description provided for @categoriesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories yet.'**
+  String get categoriesEmpty;
+
+  /// No description provided for @categoriesShowArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Show archived'**
+  String get categoriesShowArchived;
+
+  /// No description provided for @categoryCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New category'**
+  String get categoryCreateTitle;
+
+  /// No description provided for @categoryName.
+  ///
+  /// In en, this message translates to:
+  /// **'Category name'**
+  String get categoryName;
+
+  /// No description provided for @categoryType.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get categoryType;
+
+  /// No description provided for @categoryTypeExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense'**
+  String get categoryTypeExpense;
+
+  /// No description provided for @categoryTypeIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Income'**
+  String get categoryTypeIncome;
+
+  /// No description provided for @categoryTypeImmutableHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type cannot be changed after creation.'**
+  String get categoryTypeImmutableHint;
+
+  /// No description provided for @categorySystemBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get categorySystemBadge;
+
+  /// No description provided for @categoryCustomBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get categoryCustomBadge;
+
+  /// No description provided for @transactionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions'**
+  String get transactionsTitle;
+
+  /// No description provided for @transactionsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No transactions match these filters.'**
+  String get transactionsEmpty;
+
+  /// No description provided for @transactionsFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get transactionsFilters;
+
+  /// No description provided for @filterAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get filterAccount;
+
+  /// No description provided for @filterCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get filterCategory;
+
+  /// No description provided for @filterMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Member'**
+  String get filterMember;
+
+  /// No description provided for @filterDateFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From date'**
+  String get filterDateFrom;
+
+  /// No description provided for @filterDateTo.
+  ///
+  /// In en, this message translates to:
+  /// **'To date'**
+  String get filterDateTo;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// No description provided for @transactionCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New transaction'**
+  String get transactionCreateTitle;
+
+  /// No description provided for @transactionEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit transaction'**
+  String get transactionEditTitle;
+
+  /// No description provided for @transactionType.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get transactionType;
+
+  /// No description provided for @transactionTypeExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense'**
+  String get transactionTypeExpense;
+
+  /// No description provided for @transactionTypeIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Income'**
+  String get transactionTypeIncome;
+
+  /// No description provided for @transactionTypeRefund.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund'**
+  String get transactionTypeRefund;
+
+  /// No description provided for @transactionTypeTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer'**
+  String get transactionTypeTransfer;
+
+  /// No description provided for @transactionAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get transactionAmount;
+
+  /// No description provided for @transactionBookingDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking date'**
+  String get transactionBookingDate;
+
+  /// No description provided for @transactionMerchant.
+  ///
+  /// In en, this message translates to:
+  /// **'Merchant'**
+  String get transactionMerchant;
+
+  /// No description provided for @transactionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get transactionNote;
+
+  /// No description provided for @transactionFormIncomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Select account and category'**
+  String get transactionFormIncomplete;
+
+  /// No description provided for @transactionDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete transaction?'**
+  String get transactionDeleteTitle;
+
+  /// No description provided for @transactionDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This removes the transaction from the shared ledger.'**
+  String get transactionDeleteBody;
+
+  /// No description provided for @transferCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer'**
+  String get transferCreateTitle;
+
+  /// No description provided for @transferCreateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Creates two linked movements. They are deleted together.'**
+  String get transferCreateBody;
+
+  /// No description provided for @transferSourceAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'From account'**
+  String get transferSourceAccount;
+
+  /// No description provided for @transferDestinationAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'To account'**
+  String get transferDestinationAccount;
+
+  /// No description provided for @transferAccountsInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose two different accounts'**
+  String get transferAccountsInvalid;
+
+  /// No description provided for @transferDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Deletes both legs of this transfer.'**
+  String get transferDeleteBody;
 
   /// No description provided for @authSignIn.
   ///

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/accounts/presentation/accounts_screens.dart';
 import '../../features/auth/presentation/auth_controller.dart';
 import '../../features/auth/presentation/forgot_password_screen.dart';
 import '../../features/auth/presentation/sign_in_screen.dart';
 import '../../features/auth/presentation/verify_email_screen.dart';
+import '../../features/categories/presentation/categories_screens.dart';
 import '../../features/family/presentation/create_family_screen.dart';
 import '../../features/family/presentation/family_screens.dart';
-import '../../features/home/presentation/home_placeholder_screen.dart';
+import '../../features/ledger/presentation/ledger_home_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/transactions/presentation/transactions_screens.dart';
+import '../../features/transactions/presentation/transfer_screen.dart';
 import '../../l10n/app_localizations.dart';
 import '../locale/locale_controller.dart';
 import '../theme/app_breakpoints.dart';
@@ -17,6 +21,14 @@ import 'listenable_merge.dart';
 /// Application routes.
 abstract final class AppRoutes {
   static const home = '/';
+  static const transactions = '/transactions';
+  static const transactionNew = '/transactions/new';
+  static const transactionEdit = '/transactions/:id';
+  static const accounts = '/accounts';
+  static const accountNew = '/accounts/new';
+  static const accountEdit = '/accounts/:id';
+  static const categories = '/categories';
+  static const transferNew = '/transfers/new';
   static const settings = '/settings';
   static const family = '/family';
   static const signIn = '/sign-in';
@@ -26,6 +38,8 @@ abstract final class AppRoutes {
   static const invite = '/invite/:token';
 
   static String invitePath(String token) => '/invite/$token';
+  static String accountEditPath(String id) => '/accounts/$id';
+  static String transactionEditPath(String id) => '/transactions/$id';
 }
 
 GoRouter createAppRouter({
@@ -116,6 +130,37 @@ GoRouter createAppRouter({
         name: 'family',
         builder: (context, state) => const FamilyManageScreen(),
       ),
+      GoRoute(
+        path: AppRoutes.accountNew,
+        name: 'accountNew',
+        builder: (context, state) => const AccountEditorScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.accountEdit,
+        name: 'accountEdit',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return AccountEditorScreen(accountId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.transactionNew,
+        name: 'transactionNew',
+        builder: (context, state) => const TransactionEditorScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.transactionEdit,
+        name: 'transactionEdit',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return TransactionEditorScreen(transactionId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.transferNew,
+        name: 'transferNew',
+        builder: (context, state) => const TransferEditorScreen(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return AppShell(navigationShell: navigationShell);
@@ -126,7 +171,34 @@ GoRouter createAppRouter({
               GoRoute(
                 path: AppRoutes.home,
                 name: 'home',
-                builder: (context, state) => const HomePlaceholderScreen(),
+                builder: (context, state) => const LedgerHomeScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.transactions,
+                name: 'transactions',
+                builder: (context, state) => const TransactionsListScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.accounts,
+                name: 'accounts',
+                builder: (context, state) => const AccountsListScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.categories,
+                name: 'categories',
+                builder: (context, state) => const CategoriesListScreen(),
               ),
             ],
           ),
@@ -163,6 +235,21 @@ class AppShell extends StatelessWidget {
         label: l10n.navHome,
       ),
       NavigationDestination(
+        icon: const Icon(Icons.receipt_long_outlined),
+        selectedIcon: const Icon(Icons.receipt_long),
+        label: l10n.navTransactions,
+      ),
+      NavigationDestination(
+        icon: const Icon(Icons.account_balance_wallet_outlined),
+        selectedIcon: const Icon(Icons.account_balance_wallet),
+        label: l10n.navAccounts,
+      ),
+      NavigationDestination(
+        icon: const Icon(Icons.category_outlined),
+        selectedIcon: const Icon(Icons.category),
+        label: l10n.navCategories,
+      ),
+      NavigationDestination(
         icon: const Icon(Icons.settings_outlined),
         selectedIcon: const Icon(Icons.settings),
         label: l10n.navSettings,
@@ -182,6 +269,21 @@ class AppShell extends StatelessWidget {
                   icon: const Icon(Icons.home_outlined),
                   selectedIcon: const Icon(Icons.home),
                   label: Text(l10n.navHome),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.receipt_long_outlined),
+                  selectedIcon: const Icon(Icons.receipt_long),
+                  label: Text(l10n.navTransactions),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.account_balance_wallet_outlined),
+                  selectedIcon: const Icon(Icons.account_balance_wallet),
+                  label: Text(l10n.navAccounts),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.category_outlined),
+                  selectedIcon: const Icon(Icons.category),
+                  label: Text(l10n.navCategories),
                 ),
                 NavigationRailDestination(
                   icon: const Icon(Icons.settings_outlined),

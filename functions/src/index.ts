@@ -4,6 +4,7 @@
  * Region: europe-west1. Client must call FirebaseFunctions.instanceFor(region: …).
  */
 import {initializeApp} from "firebase-admin/app";
+
 import {onCall} from "firebase-functions/v2/https";
 
 import {callableOpts} from "./options";
@@ -17,6 +18,8 @@ import {
   transferOwnership,
   updateMemberRole,
 } from "./membership";
+import {createTransfer, deleteTransfer} from "./ledger/transfers";
+import {onAccountWritten, onTransactionWritten} from "./ledger/triggers";
 
 initializeApp();
 
@@ -34,4 +37,8 @@ export {
   updateMemberRole,
   transferOwnership,
   leaveFamily,
+  createTransfer,
+  deleteTransfer,
+  onTransactionWritten,
+  onAccountWritten,
 };

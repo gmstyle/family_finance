@@ -16,6 +16,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get navHome => 'Home';
 
   @override
+  String get navTransactions => 'Movimenti';
+
+  @override
+  String get navAccounts => 'Conti';
+
+  @override
+  String get navCategories => 'Categorie';
+
+  @override
   String get navSettings => 'Impostazioni';
 
   @override
@@ -31,14 +40,233 @@ class AppLocalizationsIt extends AppLocalizations {
   String get languageItalian => 'Italiano';
 
   @override
-  String get homePlaceholderTitle => 'Home';
-
-  @override
-  String get homePlaceholderBody =>
-      'Qui compariranno libro mastro, budget e obiettivi.';
-
-  @override
   String get actionCancel => 'Annulla';
+
+  @override
+  String get actionSave => 'Salva';
+
+  @override
+  String get actionRetry => 'Riprova';
+
+  @override
+  String get actionDelete => 'Elimina';
+
+  @override
+  String get actionArchive => 'Archivia';
+
+  @override
+  String get actionUnarchive => 'Ripristina';
+
+  @override
+  String get actionLoadMore => 'Carica altri';
+
+  @override
+  String get actionApply => 'Applica';
+
+  @override
+  String get actionClearFilters => 'Pulisci filtri';
+
+  @override
+  String get moneyInvalid => 'Inserisci un importo valido';
+
+  @override
+  String get ledgerErrorTitle => 'Qualcosa è andato storto';
+
+  @override
+  String get ledgerNotFound => 'Elemento non trovato';
+
+  @override
+  String get ledgerHomeTitle => 'Libro mastro';
+
+  @override
+  String get ledgerHomeBody =>
+      'Gestisci conti, categorie e movimenti condivisi.';
+
+  @override
+  String get ledgerHubTransactionsSubtitle =>
+      'Spese, entrate, rimborsi e trasferimenti';
+
+  @override
+  String get ledgerHubAccountsSubtitle => 'Saldi e saldo iniziale';
+
+  @override
+  String get ledgerHubCategoriesSubtitle =>
+      'Categorie di sistema e personalizzate';
+
+  @override
+  String get ledgerHubTransferSubtitle => 'Sposta denaro tra conti';
+
+  @override
+  String get accountsTitle => 'Conti';
+
+  @override
+  String get accountsEmpty =>
+      'Nessun conto. Creane uno per iniziare a tracciare i saldi.';
+
+  @override
+  String get accountsArchived => 'Archiviati';
+
+  @override
+  String get accountCreateTitle => 'Nuovo conto';
+
+  @override
+  String get accountEditTitle => 'Modifica conto';
+
+  @override
+  String get accountName => 'Nome conto';
+
+  @override
+  String get accountNameInvalid => 'Inserisci almeno 2 caratteri';
+
+  @override
+  String get accountType => 'Tipo di conto';
+
+  @override
+  String get accountTypeCash => 'Contanti';
+
+  @override
+  String get accountTypeBank => 'Conto bancario';
+
+  @override
+  String get accountTypeCard => 'Carta';
+
+  @override
+  String get accountTypeWallet => 'Portafoglio';
+
+  @override
+  String get accountOpeningBalance => 'Saldo iniziale';
+
+  @override
+  String get accountOpeningDate => 'Data apertura';
+
+  @override
+  String accountBalanceHint(String amount) {
+    return 'Saldo attuale: $amount';
+  }
+
+  @override
+  String get categoriesTitle => 'Categorie';
+
+  @override
+  String get categoriesEmpty => 'Nessuna categoria.';
+
+  @override
+  String get categoriesShowArchived => 'Mostra archiviate';
+
+  @override
+  String get categoryCreateTitle => 'Nuova categoria';
+
+  @override
+  String get categoryName => 'Nome categoria';
+
+  @override
+  String get categoryType => 'Tipo';
+
+  @override
+  String get categoryTypeExpense => 'Spesa';
+
+  @override
+  String get categoryTypeIncome => 'Entrata';
+
+  @override
+  String get categoryTypeImmutableHint =>
+      'Il tipo non si può cambiare dopo la creazione.';
+
+  @override
+  String get categorySystemBadge => 'Sistema';
+
+  @override
+  String get categoryCustomBadge => 'Personalizzata';
+
+  @override
+  String get transactionsTitle => 'Movimenti';
+
+  @override
+  String get transactionsEmpty => 'Nessun movimento con questi filtri.';
+
+  @override
+  String get transactionsFilters => 'Filtri';
+
+  @override
+  String get filterAccount => 'Conto';
+
+  @override
+  String get filterCategory => 'Categoria';
+
+  @override
+  String get filterMember => 'Membro';
+
+  @override
+  String get filterDateFrom => 'Dal';
+
+  @override
+  String get filterDateTo => 'Al';
+
+  @override
+  String get filterAll => 'Tutti';
+
+  @override
+  String get transactionCreateTitle => 'Nuovo movimento';
+
+  @override
+  String get transactionEditTitle => 'Modifica movimento';
+
+  @override
+  String get transactionType => 'Tipo';
+
+  @override
+  String get transactionTypeExpense => 'Spesa';
+
+  @override
+  String get transactionTypeIncome => 'Entrata';
+
+  @override
+  String get transactionTypeRefund => 'Rimborso';
+
+  @override
+  String get transactionTypeTransfer => 'Trasferimento';
+
+  @override
+  String get transactionAmount => 'Importo';
+
+  @override
+  String get transactionBookingDate => 'Data contabile';
+
+  @override
+  String get transactionMerchant => 'Esercente';
+
+  @override
+  String get transactionNote => 'Nota';
+
+  @override
+  String get transactionFormIncomplete => 'Seleziona conto e categoria';
+
+  @override
+  String get transactionDeleteTitle => 'Eliminare il movimento?';
+
+  @override
+  String get transactionDeleteBody =>
+      'Il movimento sarà rimosso dal libro mastro condiviso.';
+
+  @override
+  String get transferCreateTitle => 'Trasferimento';
+
+  @override
+  String get transferCreateBody =>
+      'Crea due movimenti collegati. Si cancellano insieme.';
+
+  @override
+  String get transferSourceAccount => 'Dal conto';
+
+  @override
+  String get transferDestinationAccount => 'Al conto';
+
+  @override
+  String get transferAccountsInvalid => 'Scegli due conti diversi';
+
+  @override
+  String get transferDeleteBody =>
+      'Elimina entrambe le gambe del trasferimento.';
 
   @override
   String get authSignIn => 'Accedi';
