@@ -19,7 +19,11 @@ import {
   updateMemberRole,
 } from "./membership";
 import {createTransfer, deleteTransfer} from "./ledger/transfers";
-import {onAccountWritten, onTransactionWritten} from "./ledger/triggers";
+import {
+  onAccountWritten,
+  onGoalContributionWritten,
+  onTransactionWritten,
+} from "./ledger/triggers";
 
 initializeApp();
 
@@ -41,4 +45,5 @@ export {
   deleteTransfer,
   onTransactionWritten,
   onAccountWritten,
+  onGoalContributionWritten,
 };

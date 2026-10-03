@@ -6,10 +6,12 @@ import '../../features/auth/presentation/auth_controller.dart';
 import '../../features/auth/presentation/forgot_password_screen.dart';
 import '../../features/auth/presentation/sign_in_screen.dart';
 import '../../features/auth/presentation/verify_email_screen.dart';
+import '../../features/budgets/presentation/budgets_screens.dart';
 import '../../features/categories/presentation/categories_screens.dart';
+import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/family/presentation/create_family_screen.dart';
 import '../../features/family/presentation/family_screens.dart';
-import '../../features/ledger/presentation/ledger_home_screen.dart';
+import '../../features/goals/presentation/goals_screens.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/transactions/presentation/transactions_screens.dart';
 import '../../features/transactions/presentation/transfer_screen.dart';
@@ -28,6 +30,13 @@ abstract final class AppRoutes {
   static const accountNew = '/accounts/new';
   static const accountEdit = '/accounts/:id';
   static const categories = '/categories';
+  static const budgets = '/budgets';
+  static const budgetNew = '/budgets/new';
+  static const budgetEdit = '/budgets/:id';
+  static const goals = '/goals';
+  static const goalNew = '/goals/new';
+  static const goalEdit = '/goals/:id';
+  static const goalContribute = '/goals/:id/contribute';
   static const transferNew = '/transfers/new';
   static const settings = '/settings';
   static const family = '/family';
@@ -40,6 +49,9 @@ abstract final class AppRoutes {
   static String invitePath(String token) => '/invite/$token';
   static String accountEditPath(String id) => '/accounts/$id';
   static String transactionEditPath(String id) => '/transactions/$id';
+  static String budgetEditPath(String id) => '/budgets/$id';
+  static String goalEditPath(String id) => '/goals/$id';
+  static String goalContributePath(String id) => '/goals/$id/contribute';
 }
 
 GoRouter createAppRouter({
@@ -161,6 +173,40 @@ GoRouter createAppRouter({
         name: 'transferNew',
         builder: (context, state) => const TransferEditorScreen(),
       ),
+      GoRoute(
+        path: AppRoutes.budgetNew,
+        name: 'budgetNew',
+        builder: (context, state) => const BudgetEditorScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.budgetEdit,
+        name: 'budgetEdit',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return BudgetEditorScreen(budgetId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.goalNew,
+        name: 'goalNew',
+        builder: (context, state) => const GoalEditorScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.goalEdit,
+        name: 'goalEdit',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return GoalEditorScreen(goalId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.goalContribute,
+        name: 'goalContribute',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return GoalContributeScreen(goalId: id);
+        },
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return AppShell(navigationShell: navigationShell);
@@ -171,7 +217,7 @@ GoRouter createAppRouter({
               GoRoute(
                 path: AppRoutes.home,
                 name: 'home',
-                builder: (context, state) => const LedgerHomeScreen(),
+                builder: (context, state) => const DashboardScreen(),
               ),
             ],
           ),
@@ -187,18 +233,18 @@ GoRouter createAppRouter({
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: AppRoutes.accounts,
-                name: 'accounts',
-                builder: (context, state) => const AccountsListScreen(),
+                path: AppRoutes.budgets,
+                name: 'budgets',
+                builder: (context, state) => const BudgetsListScreen(),
               ),
             ],
           ),
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: AppRoutes.categories,
-                name: 'categories',
-                builder: (context, state) => const CategoriesListScreen(),
+                path: AppRoutes.goals,
+                name: 'goals',
+                builder: (context, state) => const GoalsListScreen(),
               ),
             ],
           ),
@@ -212,6 +258,17 @@ GoRouter createAppRouter({
             ],
           ),
         ],
+      ),
+      // Accounts & categories remain reachable (settings / dashboard chips).
+      GoRoute(
+        path: AppRoutes.accounts,
+        name: 'accounts',
+        builder: (context, state) => const AccountsListScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.categories,
+        name: 'categories',
+        builder: (context, state) => const CategoriesListScreen(),
       ),
     ],
   );
@@ -230,8 +287,8 @@ class AppShell extends StatelessWidget {
 
     final destinations = [
       NavigationDestination(
-        icon: const Icon(Icons.home_outlined),
-        selectedIcon: const Icon(Icons.home),
+        icon: const Icon(Icons.dashboard_outlined),
+        selectedIcon: const Icon(Icons.dashboard),
         label: l10n.navHome,
       ),
       NavigationDestination(
@@ -240,14 +297,14 @@ class AppShell extends StatelessWidget {
         label: l10n.navTransactions,
       ),
       NavigationDestination(
-        icon: const Icon(Icons.account_balance_wallet_outlined),
-        selectedIcon: const Icon(Icons.account_balance_wallet),
-        label: l10n.navAccounts,
+        icon: const Icon(Icons.pie_chart_outline),
+        selectedIcon: const Icon(Icons.pie_chart),
+        label: l10n.navBudgets,
       ),
       NavigationDestination(
-        icon: const Icon(Icons.category_outlined),
-        selectedIcon: const Icon(Icons.category),
-        label: l10n.navCategories,
+        icon: const Icon(Icons.flag_outlined),
+        selectedIcon: const Icon(Icons.flag),
+        label: l10n.navGoals,
       ),
       NavigationDestination(
         icon: const Icon(Icons.settings_outlined),
@@ -266,8 +323,8 @@ class AppShell extends StatelessWidget {
               labelType: NavigationRailLabelType.all,
               destinations: [
                 NavigationRailDestination(
-                  icon: const Icon(Icons.home_outlined),
-                  selectedIcon: const Icon(Icons.home),
+                  icon: const Icon(Icons.dashboard_outlined),
+                  selectedIcon: const Icon(Icons.dashboard),
                   label: Text(l10n.navHome),
                 ),
                 NavigationRailDestination(
@@ -276,14 +333,14 @@ class AppShell extends StatelessWidget {
                   label: Text(l10n.navTransactions),
                 ),
                 NavigationRailDestination(
-                  icon: const Icon(Icons.account_balance_wallet_outlined),
-                  selectedIcon: const Icon(Icons.account_balance_wallet),
-                  label: Text(l10n.navAccounts),
+                  icon: const Icon(Icons.pie_chart_outline),
+                  selectedIcon: const Icon(Icons.pie_chart),
+                  label: Text(l10n.navBudgets),
                 ),
                 NavigationRailDestination(
-                  icon: const Icon(Icons.category_outlined),
-                  selectedIcon: const Icon(Icons.category),
-                  label: Text(l10n.navCategories),
+                  icon: const Icon(Icons.flag_outlined),
+                  selectedIcon: const Icon(Icons.flag),
+                  label: Text(l10n.navGoals),
                 ),
                 NavigationRailDestination(
                   icon: const Icon(Icons.settings_outlined),

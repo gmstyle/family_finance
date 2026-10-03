@@ -1,6 +1,6 @@
 {
   "name": "family-finance-functions",
-  "description": "Cloud Functions for Family Finance (membership + ledger projections)",
+  "description": "Cloud Functions for Family Finance (membership, ledger, goals, budget FCM)",
   "engines": {
     "node": "22"
   },
@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "test": "npm run build && node --test lib/ledger/projection_math.test.js",
+    "test": "npm run build && node --test lib/ledger/*.test.js",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",

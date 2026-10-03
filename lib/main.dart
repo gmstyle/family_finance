@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,7 @@ import 'core/locale/locale_controller.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/presentation/auth_controller.dart';
+import 'features/devices/data/devices_repository.dart';
 import 'l10n/app_localizations.dart';
 
 Future<void> main() async {
@@ -15,10 +17,12 @@ Future<void> main() async {
   await FirebaseBootstrap.initialize();
   final localeController = await LocaleController.create();
   final authController = AuthController();
+  final fcm = FcmRegistration(auth: FirebaseAuth.instance)..start();
   runApp(
     FamilyFinanceApp(
       localeController: localeController,
       authController: authController,
+      fcmRegistration: fcm,
     ),
   );
 }
@@ -28,10 +32,12 @@ class FamilyFinanceApp extends StatefulWidget {
     super.key,
     required this.localeController,
     required this.authController,
+    this.fcmRegistration,
   });
 
   final LocaleController localeController;
   final AuthController authController;
+  final FcmRegistration? fcmRegistration;
 
   @override
   State<FamilyFinanceApp> createState() => _FamilyFinanceAppState();
@@ -42,6 +48,12 @@ class _FamilyFinanceAppState extends State<FamilyFinanceApp> {
     localeController: widget.localeController,
     authController: widget.authController,
   );
+
+  @override
+  void dispose() {
+    widget.fcmRegistration?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

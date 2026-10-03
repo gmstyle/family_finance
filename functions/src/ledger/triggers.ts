@@ -1,19 +1,20 @@
 /**
- * Firestore triggers for ledger projections.
+ * Firestore triggers for ledger projections, goals, and budget FCM.
  */
 import {FieldValue, getFirestore} from "firebase-admin/firestore";
-import {getMessaging} from "firebase-admin/messaging";
 import {logger} from "firebase-functions";
 import {onDocumentWritten} from "firebase-functions/v2/firestore";
 
 import {FUNCTIONS_REGION} from "../options";
+import {applyGoalContributionProjection} from "./apply_goal_contribution";
 import {applyTransactionProjection} from "./apply_projection";
-import {ThresholdCrossing} from "./types";
+import {notifyBudgetThresholds} from "./budget_fcm";
 
 const db = () => getFirestore();
 
 /**
  * Create / update / delete on transactions → idempotent projection apply.
+ * On first-time 80%/100% budget threshold flips, notify member devices once.
  */
 export const onTransactionWritten = onDocumentWritten(
   {
@@ -34,7 +35,7 @@ export const onTransactionWritten = onDocumentWritten(
         newData,
       );
       if (result.applied && result.crossings.length > 0) {
-        await maybeNotifyBudgetThresholds(familyId, result.crossings);
+        await notifyBudgetThresholds(db(), familyId, result.crossings);
       }
     } catch (err) {
       logger.error("onTransactionWritten failed", {
@@ -87,53 +88,39 @@ export const onAccountWritten = onDocumentWritten(
   },
 );
 
-/** Best-effort FCM when devices exist; flags already persisted by projection. */
-async function maybeNotifyBudgetThresholds(
-  familyId: string,
-  crossings: ThresholdCrossing[],
-): Promise<void> {
-  try {
-    const members = await db()
-      .collection("families")
-      .doc(familyId)
-      .collection("members")
-      .get();
-    const tokens: string[] = [];
-    for (const member of members.docs) {
-      const devices = await db()
-        .collection("users")
-        .doc(member.id)
-        .collection("devices")
-        .get();
-      for (const device of devices.docs) {
-        const token = device.data().token as string | undefined;
-        if (token) tokens.push(token);
-      }
-    }
-    if (tokens.length === 0) return;
+/**
+ * Goal contribution create/delete → idempotent `accumulatedAmountMinor`.
+ * Virtual goals: never touches account balances.
+ */
+export const onGoalContributionWritten = onDocumentWritten(
+  {
+    document:
+      "families/{familyId}/goals/{goalId}/contributions/{contributionId}",
+    region: FUNCTIONS_REGION,
+  },
+  async (event) => {
+    const familyId = event.params.familyId as string;
+    const goalId = event.params.goalId as string;
+    const contributionId = event.params.contributionId as string;
+    const after = event.data?.after;
+    const newData = after?.exists ? after.data() : null;
 
-    for (const crossing of crossings) {
-      const parts: string[] = [];
-      if (crossing.crossed80) parts.push("80%");
-      if (crossing.crossed100) parts.push("100%");
-      if (parts.length === 0) continue;
-
-      await getMessaging().sendEachForMulticast({
-        tokens,
-        notification: {
-          title: "Budget alert",
-          body: `Budget reached ${parts.join(" / ")} for ${crossing.periodId}.`,
-        },
-        data: {
-          type: "budget_threshold",
-          familyId,
-          budgetId: crossing.budgetId,
-          periodId: crossing.periodId,
-        },
+    try {
+      await applyGoalContributionProjection(
+        db(),
+        familyId,
+        goalId,
+        contributionId,
+        newData,
+      );
+    } catch (err) {
+      logger.error("onGoalContributionWritten failed", {
+        familyId,
+        goalId,
+        contributionId,
+        err,
       });
+      throw err;
     }
-  } catch (err) {
-    // Phase 4 owns full FCM; never fail the projection over notify.
-    logger.warn("Budget threshold FCM skipped", {familyId, err});
-  }
-}
+  },
+);

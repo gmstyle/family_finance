@@ -128,6 +128,18 @@ abstract class AppLocalizations {
   /// **'Categories'**
   String get navCategories;
 
+  /// No description provided for @navBudgets.
+  ///
+  /// In en, this message translates to:
+  /// **'Budgets'**
+  String get navBudgets;
+
+  /// No description provided for @navGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Goals'**
+  String get navGoals;
+
   /// No description provided for @navSettings.
   ///
   /// In en, this message translates to:
@@ -937,6 +949,252 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other income'**
   String get categoryOtherIncome;
+
+  /// No description provided for @dashboardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get dashboardTitle;
+
+  /// No description provided for @dashboardPeriodLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Period {period}'**
+  String dashboardPeriodLabel(String period);
+
+  /// No description provided for @dashboardTotalIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Income'**
+  String get dashboardTotalIncome;
+
+  /// No description provided for @dashboardTotalExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses'**
+  String get dashboardTotalExpense;
+
+  /// No description provided for @dashboardNet.
+  ///
+  /// In en, this message translates to:
+  /// **'Net'**
+  String get dashboardNet;
+
+  /// No description provided for @dashboardExpensesByCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Expenses by category'**
+  String get dashboardExpensesByCategory;
+
+  /// No description provided for @dashboardIncomeByCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Income by category'**
+  String get dashboardIncomeByCategory;
+
+  /// No description provided for @dashboardNoExpenses.
+  ///
+  /// In en, this message translates to:
+  /// **'No expenses this period yet.'**
+  String get dashboardNoExpenses;
+
+  /// No description provided for @dashboardNoIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'No income this period yet.'**
+  String get dashboardNoIncome;
+
+  /// No description provided for @dashboardQuickLinks.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick links'**
+  String get dashboardQuickLinks;
+
+  /// No description provided for @budgetsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Budgets'**
+  String get budgetsTitle;
+
+  /// No description provided for @budgetsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No budgets yet. Set a monthly limit for an expense category.'**
+  String get budgetsEmpty;
+
+  /// No description provided for @budgetCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New budget'**
+  String get budgetCreateTitle;
+
+  /// No description provided for @budgetEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit budget'**
+  String get budgetEditTitle;
+
+  /// No description provided for @budgetCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get budgetCategory;
+
+  /// No description provided for @budgetCategoryRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an expense category'**
+  String get budgetCategoryRequired;
+
+  /// No description provided for @budgetCategoryImmutableHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Category cannot be changed after creation.'**
+  String get budgetCategoryImmutableHint;
+
+  /// No description provided for @budgetLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly limit'**
+  String get budgetLimit;
+
+  /// No description provided for @budgetPeriodLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{period}'**
+  String budgetPeriodLabel(String period);
+
+  /// No description provided for @budgetSpentOfLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'{spent} of {limit}'**
+  String budgetSpentOfLimit(String spent, String limit);
+
+  /// No description provided for @budgetAlert80.
+  ///
+  /// In en, this message translates to:
+  /// **'80% of budget reached'**
+  String get budgetAlert80;
+
+  /// No description provided for @budgetAlert100.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget limit reached'**
+  String get budgetAlert100;
+
+  /// No description provided for @goalsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Goals'**
+  String get goalsTitle;
+
+  /// No description provided for @goalsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No goals yet. Create one and track virtual contributions.'**
+  String get goalsEmpty;
+
+  /// No description provided for @goalCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New goal'**
+  String get goalCreateTitle;
+
+  /// No description provided for @goalEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit goal'**
+  String get goalEditTitle;
+
+  /// No description provided for @goalName.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal name'**
+  String get goalName;
+
+  /// No description provided for @goalNameInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter at least 2 characters'**
+  String get goalNameInvalid;
+
+  /// No description provided for @goalTargetAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Target amount'**
+  String get goalTargetAmount;
+
+  /// No description provided for @goalDueDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Due date'**
+  String get goalDueDate;
+
+  /// No description provided for @goalDueDateOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get goalDueDateOptional;
+
+  /// No description provided for @goalDueDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Due {date}'**
+  String goalDueDateLabel(String date);
+
+  /// No description provided for @goalProgressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{accumulated} of {target}'**
+  String goalProgressLabel(String accumulated, String target);
+
+  /// No description provided for @goalAccumulatedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Accumulated (server): {amount}'**
+  String goalAccumulatedHint(String amount);
+
+  /// No description provided for @goalContributeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Contribute'**
+  String get goalContributeTitle;
+
+  /// No description provided for @goalContributeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Deposit / withdraw'**
+  String get goalContributeAction;
+
+  /// No description provided for @goalContributeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Virtual only — does not change account balances.'**
+  String get goalContributeHint;
+
+  /// No description provided for @goalDeposit.
+  ///
+  /// In en, this message translates to:
+  /// **'Deposit'**
+  String get goalDeposit;
+
+  /// No description provided for @goalWithdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw'**
+  String get goalWithdraw;
+
+  /// No description provided for @goalContributionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent contributions'**
+  String get goalContributionsTitle;
+
+  /// No description provided for @goalContributionsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No contributions yet.'**
+  String get goalContributionsEmpty;
 }
 
 class _AppLocalizationsDelegate

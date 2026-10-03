@@ -3,8 +3,12 @@ import 'package:provider/single_child_widget.dart';
 
 import '../../features/accounts/data/accounts_repository.dart';
 import '../../features/auth/presentation/auth_controller.dart';
+import '../../features/budgets/data/budgets_repository.dart';
 import '../../features/categories/data/categories_repository.dart';
+import '../../features/dashboard/data/stats_repository.dart';
+import '../../features/devices/data/devices_repository.dart';
 import '../../features/family/data/family_repository.dart';
+import '../../features/goals/data/goals_repository.dart';
 import '../../features/transactions/data/transactions_repository.dart';
 import '../../features/transactions/presentation/transactions_controller.dart';
 import '../locale/locale_controller.dart';
@@ -18,10 +22,18 @@ List<SingleChildWidget> buildAppProviders({
   CategoriesRepository? categoriesRepository,
   TransactionsRepository? transactionsRepository,
   TransactionsController? transactionsController,
+  BudgetsRepository? budgetsRepository,
+  GoalsRepository? goalsRepository,
+  StatsRepository? statsRepository,
+  DevicesRepository? devicesRepository,
 }) {
   final accounts = accountsRepository ?? AccountsRepository();
   final categories = categoriesRepository ?? CategoriesRepository();
   final transactions = transactionsRepository ?? TransactionsRepository();
+  final budgets = budgetsRepository ?? BudgetsRepository();
+  final goals = goalsRepository ?? GoalsRepository();
+  final stats = statsRepository ?? StatsRepository();
+  final devices = devicesRepository ?? DevicesRepository();
 
   return [
     ChangeNotifierProvider<LocaleController>.value(value: localeController),
@@ -32,6 +44,10 @@ List<SingleChildWidget> buildAppProviders({
     Provider<AccountsRepository>.value(value: accounts),
     Provider<CategoriesRepository>.value(value: categories),
     Provider<TransactionsRepository>.value(value: transactions),
+    Provider<BudgetsRepository>.value(value: budgets),
+    Provider<GoalsRepository>.value(value: goals),
+    Provider<StatsRepository>.value(value: stats),
+    Provider<DevicesRepository>.value(value: devices),
     ChangeNotifierProvider<TransactionsController>(
       create: (_) =>
           transactionsController ??

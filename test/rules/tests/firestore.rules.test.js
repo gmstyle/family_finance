@@ -236,3 +236,27 @@ describe("invites read", () => {
     await assertFails(getDoc(doc(db, "invites", "inviteAdminFamily")));
   });
 });
+
+describe("user devices", () => {
+  it("allows user to write own device doc", async () => {
+    const db = authedDb(MEMBER_UID, { email: "member@example.com" });
+    await assertSucceeds(
+      setDoc(doc(db, "users", MEMBER_UID, "devices", "phone1"), {
+        token: "fcm-token-abc",
+        platform: "android",
+        updatedAt: new Date(),
+      }),
+    );
+  });
+
+  it("rejects writing another user device doc", async () => {
+    const db = authedDb(MEMBER_UID, { email: "member@example.com" });
+    await assertFails(
+      setDoc(doc(db, "users", ADMIN_UID, "devices", "phone1"), {
+        token: "fcm-token-abc",
+        platform: "android",
+        updatedAt: new Date(),
+      }),
+    );
+  });
+});

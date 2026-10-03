@@ -25,6 +25,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navCategories => 'Categories';
 
   @override
+  String get navBudgets => 'Budgets';
+
+  @override
+  String get navGoals => 'Goals';
+
+  @override
   String get navSettings => 'Settings';
 
   @override
@@ -443,4 +449,143 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get categoryOtherIncome => 'Other income';
+
+  @override
+  String get dashboardTitle => 'Dashboard';
+
+  @override
+  String dashboardPeriodLabel(String period) {
+    return 'Period $period';
+  }
+
+  @override
+  String get dashboardTotalIncome => 'Income';
+
+  @override
+  String get dashboardTotalExpense => 'Expenses';
+
+  @override
+  String get dashboardNet => 'Net';
+
+  @override
+  String get dashboardExpensesByCategory => 'Expenses by category';
+
+  @override
+  String get dashboardIncomeByCategory => 'Income by category';
+
+  @override
+  String get dashboardNoExpenses => 'No expenses this period yet.';
+
+  @override
+  String get dashboardNoIncome => 'No income this period yet.';
+
+  @override
+  String get dashboardQuickLinks => 'Quick links';
+
+  @override
+  String get budgetsTitle => 'Budgets';
+
+  @override
+  String get budgetsEmpty =>
+      'No budgets yet. Set a monthly limit for an expense category.';
+
+  @override
+  String get budgetCreateTitle => 'New budget';
+
+  @override
+  String get budgetEditTitle => 'Edit budget';
+
+  @override
+  String get budgetCategory => 'Category';
+
+  @override
+  String get budgetCategoryRequired => 'Select an expense category';
+
+  @override
+  String get budgetCategoryImmutableHint =>
+      'Category cannot be changed after creation.';
+
+  @override
+  String get budgetLimit => 'Monthly limit';
+
+  @override
+  String budgetPeriodLabel(String period) {
+    return '$period';
+  }
+
+  @override
+  String budgetSpentOfLimit(String spent, String limit) {
+    return '$spent of $limit';
+  }
+
+  @override
+  String get budgetAlert80 => '80% of budget reached';
+
+  @override
+  String get budgetAlert100 => 'Budget limit reached';
+
+  @override
+  String get goalsTitle => 'Goals';
+
+  @override
+  String get goalsEmpty =>
+      'No goals yet. Create one and track virtual contributions.';
+
+  @override
+  String get goalCreateTitle => 'New goal';
+
+  @override
+  String get goalEditTitle => 'Edit goal';
+
+  @override
+  String get goalName => 'Goal name';
+
+  @override
+  String get goalNameInvalid => 'Enter at least 2 characters';
+
+  @override
+  String get goalTargetAmount => 'Target amount';
+
+  @override
+  String get goalDueDate => 'Due date';
+
+  @override
+  String get goalDueDateOptional => 'Optional';
+
+  @override
+  String goalDueDateLabel(String date) {
+    return 'Due $date';
+  }
+
+  @override
+  String goalProgressLabel(String accumulated, String target) {
+    return '$accumulated of $target';
+  }
+
+  @override
+  String goalAccumulatedHint(String amount) {
+    return 'Accumulated (server): $amount';
+  }
+
+  @override
+  String get goalContributeTitle => 'Contribute';
+
+  @override
+  String get goalContributeAction => 'Deposit / withdraw';
+
+  @override
+  String get goalContributeHint =>
+      'Virtual only — does not change account balances.';
+
+  @override
+  String get goalDeposit => 'Deposit';
+
+  @override
+  String get goalWithdraw => 'Withdraw';
+
+  @override
+  String get goalContributionsTitle => 'Recent contributions';
+
+  @override
+  String get goalContributionsEmpty => 'No contributions yet.';
 }

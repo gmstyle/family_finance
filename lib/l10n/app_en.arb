@@ -8,6 +8,8 @@
   "navTransactions": "Transactions",
   "navAccounts": "Accounts",
   "navCategories": "Categories",
+  "navBudgets": "Budgets",
+  "navGoals": "Goals",
   "navSettings": "Settings",
   "settingsTitle": "Settings",
   "settingsLanguage": "Language",
@@ -152,5 +154,78 @@
   "categoryEducation": "Education",
   "categoryOtherExpense": "Other expense",
   "categorySalary": "Salary",
-  "categoryOtherIncome": "Other income"
+  "categoryOtherIncome": "Other income",
+  "dashboardTitle": "Dashboard",
+  "dashboardPeriodLabel": "Period {period}",
+  "@dashboardPeriodLabel": {
+    "placeholders": {
+      "period": { "type": "String" }
+    }
+  },
+  "dashboardTotalIncome": "Income",
+  "dashboardTotalExpense": "Expenses",
+  "dashboardNet": "Net",
+  "dashboardExpensesByCategory": "Expenses by category",
+  "dashboardIncomeByCategory": "Income by category",
+  "dashboardNoExpenses": "No expenses this period yet.",
+  "dashboardNoIncome": "No income this period yet.",
+  "dashboardQuickLinks": "Quick links",
+  "budgetsTitle": "Budgets",
+  "budgetsEmpty": "No budgets yet. Set a monthly limit for an expense category.",
+  "budgetCreateTitle": "New budget",
+  "budgetEditTitle": "Edit budget",
+  "budgetCategory": "Category",
+  "budgetCategoryRequired": "Select an expense category",
+  "budgetCategoryImmutableHint": "Category cannot be changed after creation.",
+  "budgetLimit": "Monthly limit",
+  "budgetPeriodLabel": "{period}",
+  "@budgetPeriodLabel": {
+    "placeholders": {
+      "period": { "type": "String" }
+    }
+  },
+  "budgetSpentOfLimit": "{spent} of {limit}",
+  "@budgetSpentOfLimit": {
+    "placeholders": {
+      "spent": { "type": "String" },
+      "limit": { "type": "String" }
+    }
+  },
+  "budgetAlert80": "80% of budget reached",
+  "budgetAlert100": "Budget limit reached",
+  "goalsTitle": "Goals",
+  "goalsEmpty": "No goals yet. Create one and track virtual contributions.",
+  "goalCreateTitle": "New goal",
+  "goalEditTitle": "Edit goal",
+  "goalName": "Goal name",
+  "goalNameInvalid": "Enter at least 2 characters",
+  "goalTargetAmount": "Target amount",
+  "goalDueDate": "Due date",
+  "goalDueDateOptional": "Optional",
+  "goalDueDateLabel": "Due {date}",
+  "@goalDueDateLabel": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "goalProgressLabel": "{accumulated} of {target}",
+  "@goalProgressLabel": {
+    "placeholders": {
+      "accumulated": { "type": "String" },
+      "target": { "type": "String" }
+    }
+  },
+  "goalAccumulatedHint": "Accumulated (server): {amount}",
+  "@goalAccumulatedHint": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "goalContributeTitle": "Contribute",
+  "goalContributeAction": "Deposit / withdraw",
+  "goalContributeHint": "Virtual only — does not change account balances.",
+  "goalDeposit": "Deposit",
+  "goalWithdraw": "Withdraw",
+  "goalContributionsTitle": "Recent contributions",
+  "goalContributionsEmpty": "No contributions yet."
 }
