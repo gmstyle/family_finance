@@ -9,6 +9,9 @@ import '../../features/dashboard/data/stats_repository.dart';
 import '../../features/devices/data/devices_repository.dart';
 import '../../features/family/data/family_repository.dart';
 import '../../features/goals/data/goals_repository.dart';
+import '../../features/receipt_ocr/data/ingestion_repository.dart';
+import '../../features/receipt_ocr/data/receipt_ocr_factory.dart';
+import '../../features/receipt_ocr/domain/receipt_ocr_service.dart';
 import '../../features/transactions/data/transactions_repository.dart';
 import '../../features/transactions/presentation/transactions_controller.dart';
 import '../locale/locale_controller.dart';
@@ -26,6 +29,8 @@ List<SingleChildWidget> buildAppProviders({
   GoalsRepository? goalsRepository,
   StatsRepository? statsRepository,
   DevicesRepository? devicesRepository,
+  IngestionRepository? ingestionRepository,
+  ReceiptOcrService? receiptOcrService,
 }) {
   final accounts = accountsRepository ?? AccountsRepository();
   final categories = categoriesRepository ?? CategoriesRepository();
@@ -34,6 +39,9 @@ List<SingleChildWidget> buildAppProviders({
   final goals = goalsRepository ?? GoalsRepository();
   final stats = statsRepository ?? StatsRepository();
   final devices = devicesRepository ?? DevicesRepository();
+  final ingestion =
+      ingestionRepository ?? IngestionRepository(transactions: transactions);
+  final ocr = receiptOcrService ?? createReceiptOcrService();
 
   return [
     ChangeNotifierProvider<LocaleController>.value(value: localeController),
@@ -48,6 +56,8 @@ List<SingleChildWidget> buildAppProviders({
     Provider<GoalsRepository>.value(value: goals),
     Provider<StatsRepository>.value(value: stats),
     Provider<DevicesRepository>.value(value: devices),
+    Provider<IngestionRepository>.value(value: ingestion),
+    Provider<ReceiptOcrService>.value(value: ocr),
     ChangeNotifierProvider<TransactionsController>(
       create: (_) =>
           transactionsController ??

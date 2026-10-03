@@ -21,7 +21,9 @@ const String _functionsRegion = 'europe-west1';
 ///   project id while using emulators. Start the suite with that same project
 ///   id or Functions callables will 404 (unknown path).
 /// - `EMULATOR_HOST` — override emulator host (Android AVD defaults to
-///   `10.0.2.2`; web/desktop to `127.0.0.1`).
+///   `10.0.2.2`; web/desktop to `127.0.0.1`). On a **physical Android**
+///   device you must pass the PC LAN IP. Do not pass `127.0.0.1`: the
+///   Firebase Flutter plugins remap it to `10.0.2.2` (AVD-only).
 ///
 /// Emulator mode always [FirebaseAuth.signOut]s once after connecting the Auth
 /// emulator so cold starts never keep stale refresh tokens.
@@ -159,6 +161,11 @@ class FirebaseBootstrap {
 
   static Future<void> _connectEmulators() async {
     await FirebaseAuth.instance.useAuthEmulator(emulatorHost, authEmulatorPort);
+    // Physical Android + email/password can still attempt reCAPTCHA against
+    // Google if verification is left enabled; disable for local emulators.
+    await FirebaseAuth.instance.setSettings(
+      appVerificationDisabledForTesting: true,
+    );
     // Emulator mode always starts signed out. Persisted tokens from a real
     // project or a prior emulator session are invalid against the Auth
     // emulator (e.g. "invalid refresh token") and must not stick across runs.

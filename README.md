@@ -49,13 +49,18 @@ flutter run -d android \
   --dart-define=USE_EMULATORS=true
 ```
 
-**Physical Android device:** pass your machine’s LAN IP (emulators must listen on
-`0.0.0.0` / be reachable on the LAN):
+**Physical Android device:** phone and PC on the same Wi‑Fi. Emulators bind
+`0.0.0.0` (`firebase.json`). Pass the PC’s **LAN IP** — never `127.0.0.1` /
+`localhost` on Android: the Firebase Flutter plugins remap those to
+`10.0.2.2` (AVD-only), which breaks physical devices.
 
 ```bash
+# emulators already running
+./scripts/run_physical_android_emulators.sh
+# or explicitly:
 flutter run -d <device> \
   --dart-define=USE_EMULATORS=true \
-  --dart-define=EMULATOR_HOST=192.168.1.10
+  --dart-define=EMULATOR_HOST=192.168.31.205
 ```
 
 **Advanced — keep real FlutterFire project id** (must start emulators with the

@@ -200,6 +200,20 @@ class DashboardScreen extends StatelessWidget {
                                     onPressed: () =>
                                         context.push(AppRoutes.transferNew),
                                   ),
+                                  ActionChip(
+                                    avatar: const Icon(Icons.inbox_outlined),
+                                    label: Text(l10n.ingestionTitle),
+                                    onPressed: () =>
+                                        context.push(AppRoutes.ingestion),
+                                  ),
+                                  ActionChip(
+                                    avatar: const Icon(
+                                      Icons.document_scanner_outlined,
+                                    ),
+                                    label: Text(l10n.receiptScanTitle),
+                                    onPressed: () =>
+                                        context.push(AppRoutes.receiptScan),
+                                  ),
                                 ],
                               ),
                               const SizedBox(height: AppSpacing.xl),

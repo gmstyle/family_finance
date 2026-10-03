@@ -70,6 +70,16 @@ class SettingsScreen extends StatelessWidget {
               onTap: () => context.push(AppRoutes.categories),
             ),
             ListTile(
+              leading: const Icon(Icons.inbox_outlined),
+              title: Text(l10n.ingestionTitle),
+              onTap: () => context.push(AppRoutes.ingestion),
+            ),
+            ListTile(
+              leading: const Icon(Icons.document_scanner_outlined),
+              title: Text(l10n.receiptScanTitle),
+              onTap: () => context.push(AppRoutes.receiptScan),
+            ),
+            ListTile(
               leading: const Icon(Icons.logout),
               title: Text(l10n.authSignOut),
               onTap: auth.busy ? null : () => auth.signOut(),

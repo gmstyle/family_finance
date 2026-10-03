@@ -68,6 +68,14 @@
         { "fieldPath": "createdByUserId", "order": "ASCENDING" },
         { "fieldPath": "bookingDate", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "transactions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "bookingDate", "order": "ASCENDING" },
+        { "fieldPath": "amountMinor", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

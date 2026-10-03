@@ -12,6 +12,7 @@ import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/family/presentation/create_family_screen.dart';
 import '../../features/family/presentation/family_screens.dart';
 import '../../features/goals/presentation/goals_screens.dart';
+import '../../features/receipt_ocr/presentation/ingestion_screens.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/transactions/presentation/transactions_screens.dart';
 import '../../features/transactions/presentation/transfer_screen.dart';
@@ -38,6 +39,9 @@ abstract final class AppRoutes {
   static const goalEdit = '/goals/:id';
   static const goalContribute = '/goals/:id/contribute';
   static const transferNew = '/transfers/new';
+  static const ingestion = '/ingestion';
+  static const ingestionDetail = '/ingestion/:id';
+  static const receiptScan = '/receipt-scan';
   static const settings = '/settings';
   static const family = '/family';
   static const signIn = '/sign-in';
@@ -52,6 +56,7 @@ abstract final class AppRoutes {
   static String budgetEditPath(String id) => '/budgets/$id';
   static String goalEditPath(String id) => '/goals/$id';
   static String goalContributePath(String id) => '/goals/$id/contribute';
+  static String ingestionDetailPath(String id) => '/ingestion/$id';
 }
 
 GoRouter createAppRouter({
@@ -206,6 +211,24 @@ GoRouter createAppRouter({
           final id = state.pathParameters['id']!;
           return GoalContributeScreen(goalId: id);
         },
+      ),
+      GoRoute(
+        path: AppRoutes.ingestion,
+        name: 'ingestion',
+        builder: (context, state) => const IngestionInboxScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.ingestionDetail,
+        name: 'ingestionDetail',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return IngestionDetailScreen(dedupKey: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.receiptScan,
+        name: 'receiptScan',
+        builder: (context, state) => const ReceiptScanScreen(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {

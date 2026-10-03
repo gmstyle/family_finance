@@ -588,4 +588,87 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get goalContributionsEmpty => 'No contributions yet.';
+
+  @override
+  String get ingestionTitle => 'Review queue';
+
+  @override
+  String get ingestionEmpty =>
+      'No drafts to review. Scan a receipt on Android to add one.';
+
+  @override
+  String get ingestionReviewTitle => 'Review draft';
+
+  @override
+  String get ingestionUnknownMerchant => 'Unknown merchant';
+
+  @override
+  String get ingestionStatusNeedsReview => 'Needs review';
+
+  @override
+  String get ingestionStatusPossibleDuplicate => 'Possible duplicate';
+
+  @override
+  String get ingestionSourceReceiptOcr => 'Receipt scan';
+
+  @override
+  String get ingestionSourceNotification => 'Notification';
+
+  @override
+  String get ingestionPossibleDuplicateHint =>
+      'A similar transaction may already exist. Review carefully before confirming.';
+
+  @override
+  String get ingestionConfirmAction => 'Confirm transaction';
+
+  @override
+  String get ingestionDiscardAction => 'Discard';
+
+  @override
+  String get ingestionDiscardTitle => 'Discard draft?';
+
+  @override
+  String get ingestionDiscardBody =>
+      'This draft will be discarded. No transaction will be created.';
+
+  @override
+  String get ingestionSaveMerchantRule =>
+      'Remember category and account for this merchant';
+
+  @override
+  String get ingestionSaveMerchantRuleHint =>
+      'Used as suggestions the next time this merchant appears.';
+
+  @override
+  String get ingestionOpenQueue => 'Open review queue';
+
+  @override
+  String get receiptScanTitle => 'Scan receipt';
+
+  @override
+  String get receiptScanAction => 'Scan receipt';
+
+  @override
+  String get receiptScanBody =>
+      'Take a photo or choose an image. The app extracts amount, date, and merchant into a draft you must confirm — nothing is posted silently.';
+
+  @override
+  String get receiptScanCamera => 'Take photo';
+
+  @override
+  String get receiptScanGallery => 'Choose from gallery';
+
+  @override
+  String get receiptScanProcessing => 'Reading receipt…';
+
+  @override
+  String get receiptScanAndroidOnlyTitle => 'Receipt scan is Android-only';
+
+  @override
+  String get receiptScanAndroidOnlyBody =>
+      'On-device OCR runs only on Android. You can still review and confirm drafts from the queue on this device.';
+
+  @override
+  String get receiptScanAndroidOnlyBanner =>
+      'Receipt scanning is available on Android. You can review drafts here.';
 }

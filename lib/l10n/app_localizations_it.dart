@@ -592,4 +592,88 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get goalContributionsEmpty => 'Nessun versamento ancora.';
+
+  @override
+  String get ingestionTitle => 'Coda di revisione';
+
+  @override
+  String get ingestionEmpty =>
+      'Nessuna bozza da revisionare. Scansiona uno scontrino su Android per aggiungerne una.';
+
+  @override
+  String get ingestionReviewTitle => 'Revisiona bozza';
+
+  @override
+  String get ingestionUnknownMerchant => 'Esercente sconosciuto';
+
+  @override
+  String get ingestionStatusNeedsReview => 'Da revisionare';
+
+  @override
+  String get ingestionStatusPossibleDuplicate => 'Possibile duplicato';
+
+  @override
+  String get ingestionSourceReceiptOcr => 'Scansione scontrino';
+
+  @override
+  String get ingestionSourceNotification => 'Notifica';
+
+  @override
+  String get ingestionPossibleDuplicateHint =>
+      'Potrebbe già esistere una transazione simile. Controlla prima di confermare.';
+
+  @override
+  String get ingestionConfirmAction => 'Conferma transazione';
+
+  @override
+  String get ingestionDiscardAction => 'Scarta';
+
+  @override
+  String get ingestionDiscardTitle => 'Scartare la bozza?';
+
+  @override
+  String get ingestionDiscardBody =>
+      'La bozza verrà scartata. Non verrà creata alcuna transazione.';
+
+  @override
+  String get ingestionSaveMerchantRule =>
+      'Ricorda categoria e conto per questo esercente';
+
+  @override
+  String get ingestionSaveMerchantRuleHint =>
+      'Usato come suggerimento la prossima volta che compare questo esercente.';
+
+  @override
+  String get ingestionOpenQueue => 'Apri coda di revisione';
+
+  @override
+  String get receiptScanTitle => 'Scansiona scontrino';
+
+  @override
+  String get receiptScanAction => 'Scansiona scontrino';
+
+  @override
+  String get receiptScanBody =>
+      'Scatta una foto o scegli un\'immagine. L\'app estrae importo, data ed esercente in una bozza da confermare — niente viene registrato in silenzio.';
+
+  @override
+  String get receiptScanCamera => 'Scatta foto';
+
+  @override
+  String get receiptScanGallery => 'Scegli dalla galleria';
+
+  @override
+  String get receiptScanProcessing => 'Lettura scontrino…';
+
+  @override
+  String get receiptScanAndroidOnlyTitle =>
+      'Scansione scontrino solo su Android';
+
+  @override
+  String get receiptScanAndroidOnlyBody =>
+      'L\'OCR on-device è disponibile solo su Android. Puoi comunque revisionare e confermare le bozze da questa coda.';
+
+  @override
+  String get receiptScanAndroidOnlyBanner =>
+      'La scansione scontrini è disponibile su Android. Qui puoi revisionare le bozze.';
 }

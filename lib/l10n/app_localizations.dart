@@ -1195,6 +1195,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No contributions yet.'**
   String get goalContributionsEmpty;
+
+  /// No description provided for @ingestionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review queue'**
+  String get ingestionTitle;
+
+  /// No description provided for @ingestionEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No drafts to review. Scan a receipt on Android to add one.'**
+  String get ingestionEmpty;
+
+  /// No description provided for @ingestionReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review draft'**
+  String get ingestionReviewTitle;
+
+  /// No description provided for @ingestionUnknownMerchant.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown merchant'**
+  String get ingestionUnknownMerchant;
+
+  /// No description provided for @ingestionStatusNeedsReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs review'**
+  String get ingestionStatusNeedsReview;
+
+  /// No description provided for @ingestionStatusPossibleDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'Possible duplicate'**
+  String get ingestionStatusPossibleDuplicate;
+
+  /// No description provided for @ingestionSourceReceiptOcr.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt scan'**
+  String get ingestionSourceReceiptOcr;
+
+  /// No description provided for @ingestionSourceNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification'**
+  String get ingestionSourceNotification;
+
+  /// No description provided for @ingestionPossibleDuplicateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A similar transaction may already exist. Review carefully before confirming.'**
+  String get ingestionPossibleDuplicateHint;
+
+  /// No description provided for @ingestionConfirmAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm transaction'**
+  String get ingestionConfirmAction;
+
+  /// No description provided for @ingestionDiscardAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get ingestionDiscardAction;
+
+  /// No description provided for @ingestionDiscardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard draft?'**
+  String get ingestionDiscardTitle;
+
+  /// No description provided for @ingestionDiscardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This draft will be discarded. No transaction will be created.'**
+  String get ingestionDiscardBody;
+
+  /// No description provided for @ingestionSaveMerchantRule.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember category and account for this merchant'**
+  String get ingestionSaveMerchantRule;
+
+  /// No description provided for @ingestionSaveMerchantRuleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Used as suggestions the next time this merchant appears.'**
+  String get ingestionSaveMerchantRuleHint;
+
+  /// No description provided for @ingestionOpenQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Open review queue'**
+  String get ingestionOpenQueue;
+
+  /// No description provided for @receiptScanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan receipt'**
+  String get receiptScanTitle;
+
+  /// No description provided for @receiptScanAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan receipt'**
+  String get receiptScanAction;
+
+  /// No description provided for @receiptScanBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo or choose an image. The app extracts amount, date, and merchant into a draft you must confirm — nothing is posted silently.'**
+  String get receiptScanBody;
+
+  /// No description provided for @receiptScanCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get receiptScanCamera;
+
+  /// No description provided for @receiptScanGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get receiptScanGallery;
+
+  /// No description provided for @receiptScanProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading receipt…'**
+  String get receiptScanProcessing;
+
+  /// No description provided for @receiptScanAndroidOnlyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt scan is Android-only'**
+  String get receiptScanAndroidOnlyTitle;
+
+  /// No description provided for @receiptScanAndroidOnlyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'On-device OCR runs only on Android. You can still review and confirm drafts from the queue on this device.'**
+  String get receiptScanAndroidOnlyBody;
+
+  /// No description provided for @receiptScanAndroidOnlyBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt scanning is available on Android. You can review drafts here.'**
+  String get receiptScanAndroidOnlyBanner;
 }
 
 class _AppLocalizationsDelegate
