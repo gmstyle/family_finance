@@ -162,6 +162,8 @@ class _IngestionTile extends StatelessWidget {
         leading: Icon(
           draft.status == IngestionStatus.possibleDuplicate
               ? Icons.copy_all_outlined
+              : draft.source == IngestionSource.notification
+              ? Icons.notifications_outlined
               : Icons.inbox_outlined,
         ),
         title: Text(
@@ -382,6 +384,26 @@ class _IngestionDetailScreenState extends State<IngestionDetailScreen> {
                 key: _formKey,
                 child: ListView(
                   children: [
+                    if (_draft != null)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Chip(
+                            avatar: Icon(
+                              _draft!.source == IngestionSource.notification
+                                  ? Icons.notifications_outlined
+                                  : Icons.document_scanner_outlined,
+                              size: 18,
+                            ),
+                            label: Text(
+                              _draft!.source == IngestionSource.notification
+                                  ? l10n.ingestionSourceNotification
+                                  : l10n.ingestionSourceReceiptOcr,
+                            ),
+                          ),
+                        ),
+                      ),
                     if (_draft?.status == IngestionStatus.possibleDuplicate)
                       Padding(
                         padding: const EdgeInsets.only(bottom: AppSpacing.md),

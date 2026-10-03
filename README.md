@@ -141,7 +141,21 @@ Prefer tokens over magic numbers when adding Phase 3+ screens. Interactive mock:
 
 - **Phase 1** — foundations (done)
 - **Phase 2** — Auth + family (done): email/password, Google Sign-In, verify/reset, createFamily / invites / accept / leave, router gates, invite deep link `/invite/:token`
-- **Phase 3+** — ledger, budgets, OCR, notifications (not started)
+- **Phase 3** — ledger (done)
+- **Phase 4** — budgets, goals, dashboard, FCM (done)
+- **Phase 5** — receipt OCR → Ingestion drafts (done)
+- **Phase 6** — Android notification ingest → Ingestion drafts (done): `NotificationListenerService` (Google Wallet allowlist via Remote Config), parse → draft only, aggregated local alerts, confirm/discard in review queue
+- **Phase 7** — pre-release (pending): account deletion, export, privacy / Play declaration
+
+### Notification ingest (Android)
+
+1. Sign in with a family, open **Settings → Payment notification capture**, and enable Family Finance in the system notification-access screen.
+2. Optionally set **Account bindings** (package → suggested account).
+3. Trigger a Google Wallet / allowlisted payment notification (or post a test notification from that package).
+4. The app creates an Ingestion draft (`needsReview` / `possibleDuplicate`) — never a ledger transaction — and shows an aggregated local notification unless you are already on the review queue.
+5. Confirm or discard in **Review queue** (same UI as OCR; works on web too). Capture itself is Android-only / no-op on web.
+
+Remote Config keys (optional): `notification_package_allowlist` (JSON string array), `notification_parse_patterns` (JSON with `amountPatterns` / `merchantPatterns` / `datePatterns` regex lists).
 
 ### Auth notes
 

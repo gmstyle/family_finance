@@ -10,6 +10,11 @@ import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/presentation/auth_controller.dart';
 import 'features/devices/data/devices_repository.dart';
+import 'features/notification_ingest/data/notification_capture_factory.dart';
+import 'features/notification_ingest/domain/notification_capture_service.dart';
+import 'features/notification_ingest/presentation/ingestion_route_tracker.dart';
+import 'features/notification_ingest/presentation/notification_ingest_controller.dart';
+import 'features/receipt_ocr/data/ingestion_repository.dart';
 import 'l10n/app_localizations.dart';
 
 Future<void> main() async {
@@ -18,11 +23,26 @@ Future<void> main() async {
   final localeController = await LocaleController.create();
   final authController = AuthController();
   final fcm = FcmRegistration(auth: FirebaseAuth.instance)..start();
+
+  final routeTracker = IngestionRouteTracker();
+  final capture = createNotificationCaptureService();
+  final ingestion = IngestionRepository();
+  final notificationIngest = NotificationIngestController(
+    auth: authController,
+    ingestion: ingestion,
+    capture: capture,
+    routeTracker: routeTracker,
+  )..start();
+
   runApp(
     FamilyFinanceApp(
       localeController: localeController,
       authController: authController,
       fcmRegistration: fcm,
+      ingestionRouteTracker: routeTracker,
+      notificationIngestController: notificationIngest,
+      ingestionRepository: ingestion,
+      notificationCaptureService: capture,
     ),
   );
 }
@@ -33,25 +53,38 @@ class FamilyFinanceApp extends StatefulWidget {
     required this.localeController,
     required this.authController,
     this.fcmRegistration,
+    this.ingestionRouteTracker,
+    this.notificationIngestController,
+    this.ingestionRepository,
+    this.notificationCaptureService,
   });
 
   final LocaleController localeController;
   final AuthController authController;
   final FcmRegistration? fcmRegistration;
+  final IngestionRouteTracker? ingestionRouteTracker;
+  final NotificationIngestController? notificationIngestController;
+  final IngestionRepository? ingestionRepository;
+  final NotificationCaptureService? notificationCaptureService;
 
   @override
   State<FamilyFinanceApp> createState() => _FamilyFinanceAppState();
 }
 
 class _FamilyFinanceAppState extends State<FamilyFinanceApp> {
+  late final _routeTracker =
+      widget.ingestionRouteTracker ?? IngestionRouteTracker();
+
   late final _router = createAppRouter(
     localeController: widget.localeController,
     authController: widget.authController,
+    ingestionRouteTracker: _routeTracker,
   );
 
   @override
   void dispose() {
     widget.fcmRegistration?.dispose();
+    widget.notificationIngestController?.dispose();
     super.dispose();
   }
 
@@ -61,6 +94,10 @@ class _FamilyFinanceAppState extends State<FamilyFinanceApp> {
       providers: buildAppProviders(
         localeController: widget.localeController,
         authController: widget.authController,
+        ingestionRepository: widget.ingestionRepository,
+        ingestionRouteTracker: _routeTracker,
+        notificationIngestController: widget.notificationIngestController,
+        notificationCaptureService: widget.notificationCaptureService,
       ),
       child: ListenableBuilder(
         listenable: widget.localeController,
@@ -79,6 +116,16 @@ class _FamilyFinanceAppState extends State<FamilyFinanceApp> {
               GlobalCupertinoLocalizations.delegate,
             ],
             routerConfig: _router,
+            builder: (context, child) {
+              final l10n = AppLocalizations.of(context);
+              final ingest = widget.notificationIngestController;
+              if (l10n != null && ingest != null) {
+                ingest.titleForCount = l10n.notificationDraftAlertTitle;
+                ingest.bodyForCount = (_) => l10n.notificationDraftAlertBody;
+                ingest.onOpenInbox = () => _router.go(AppRoutes.ingestion);
+              }
+              return child ?? const SizedBox.shrink();
+            },
           );
         },
       ),

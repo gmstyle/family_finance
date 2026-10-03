@@ -252,5 +252,22 @@
   "receiptScanProcessing": "Reading receipt…",
   "receiptScanAndroidOnlyTitle": "Receipt scan is Android-only",
   "receiptScanAndroidOnlyBody": "On-device OCR runs only on Android. You can still review and confirm drafts from the queue on this device.",
-  "receiptScanAndroidOnlyBanner": "Receipt scanning is available on Android. You can review drafts here."
+  "receiptScanAndroidOnlyBanner": "Receipt scanning is available on Android. You can review drafts here.",
+  "notificationListenerTitle": "Payment notification capture",
+  "notificationListenerEnabled": "Listener enabled — Wallet notifications create review drafts",
+  "notificationListenerDisabled": "Listener off — tap to enable in system settings",
+  "notificationListenerAndroidOnly": "Payment notification capture is available on Android only. You can still review drafts here.",
+  "notificationListenerOpenSettings": "Open notification access settings",
+  "notificationDraftAlertTitle": "{count} drafts to review",
+  "@notificationDraftAlertTitle": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "notificationDraftAlertBody": "Open the review queue to confirm or discard. Nothing is posted without your confirmation.",
+  "accountBindingsTitle": "Notification account bindings",
+  "accountBindingsHint": "Suggest a default account when a draft is created from each app’s notifications. You can still change the account before confirming.",
+  "accountBindingsEmpty": "No notification packages configured.",
+  "accountBindingsNone": "No account",
+  "accountBindingsOpen": "Account bindings"
 }

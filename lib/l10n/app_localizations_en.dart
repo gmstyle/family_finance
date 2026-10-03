@@ -671,4 +671,48 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get receiptScanAndroidOnlyBanner =>
       'Receipt scanning is available on Android. You can review drafts here.';
+
+  @override
+  String get notificationListenerTitle => 'Payment notification capture';
+
+  @override
+  String get notificationListenerEnabled =>
+      'Listener enabled — Wallet notifications create review drafts';
+
+  @override
+  String get notificationListenerDisabled =>
+      'Listener off — tap to enable in system settings';
+
+  @override
+  String get notificationListenerAndroidOnly =>
+      'Payment notification capture is available on Android only. You can still review drafts here.';
+
+  @override
+  String get notificationListenerOpenSettings =>
+      'Open notification access settings';
+
+  @override
+  String notificationDraftAlertTitle(int count) {
+    return '$count drafts to review';
+  }
+
+  @override
+  String get notificationDraftAlertBody =>
+      'Open the review queue to confirm or discard. Nothing is posted without your confirmation.';
+
+  @override
+  String get accountBindingsTitle => 'Notification account bindings';
+
+  @override
+  String get accountBindingsHint =>
+      'Suggest a default account when a draft is created from each app’s notifications. You can still change the account before confirming.';
+
+  @override
+  String get accountBindingsEmpty => 'No notification packages configured.';
+
+  @override
+  String get accountBindingsNone => 'No account';
+
+  @override
+  String get accountBindingsOpen => 'Account bindings';
 }

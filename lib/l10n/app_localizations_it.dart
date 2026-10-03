@@ -676,4 +676,47 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get receiptScanAndroidOnlyBanner =>
       'La scansione scontrini è disponibile su Android. Qui puoi revisionare le bozze.';
+
+  @override
+  String get notificationListenerTitle => 'Cattura notifiche di pagamento';
+
+  @override
+  String get notificationListenerEnabled =>
+      'Listener attivo — le notifiche Wallet creano bozze da revisionare';
+
+  @override
+  String get notificationListenerDisabled =>
+      'Listener spento — tocca per attivarlo nelle impostazioni di sistema';
+
+  @override
+  String get notificationListenerAndroidOnly =>
+      'La cattura delle notifiche di pagamento è disponibile solo su Android. Qui puoi comunque revisionare le bozze.';
+
+  @override
+  String get notificationListenerOpenSettings => 'Apri accesso alle notifiche';
+
+  @override
+  String notificationDraftAlertTitle(int count) {
+    return '$count bozze da revisionare';
+  }
+
+  @override
+  String get notificationDraftAlertBody =>
+      'Apri la coda di revisione per confermare o scartare. Niente viene registrato senza la tua conferma.';
+
+  @override
+  String get accountBindingsTitle => 'Associazioni conto notifiche';
+
+  @override
+  String get accountBindingsHint =>
+      'Suggerisci un conto predefinito quando una bozza viene creata dalle notifiche di ciascuna app. Puoi comunque cambiarlo prima di confermare.';
+
+  @override
+  String get accountBindingsEmpty => 'Nessun pacchetto notifiche configurato.';
+
+  @override
+  String get accountBindingsNone => 'Nessun conto';
+
+  @override
+  String get accountBindingsOpen => 'Associazioni conto';
 }

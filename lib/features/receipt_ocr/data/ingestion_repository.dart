@@ -4,8 +4,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../notification_ingest/data/account_bindings_repository.dart';
+import '../../notification_ingest/domain/bank_notification_parser.dart';
 import '../../transactions/data/transactions_repository.dart';
 import '../domain/italian_receipt_parser.dart';
+
+/// Result of creating (or finding) an ingestion draft from a notification.
+class NotificationDraftResult {
+  const NotificationDraftResult({
+    required this.dedupKey,
+    required this.created,
+    required this.status,
+  });
+
+  final String dedupKey;
+  final bool created;
+  final IngestionStatus status;
+}
 
 /// Ingestion draft status (Firestore `status` field).
 enum IngestionStatus {
@@ -137,13 +152,16 @@ class IngestionRepository {
     FirebaseFirestore? firestore,
     FirebaseAuth? auth,
     TransactionsRepository? transactions,
+    AccountBindingsRepository? accountBindings,
   }) : _firestore = firestore ?? FirebaseFirestore.instance,
        _auth = auth ?? FirebaseAuth.instance,
-       _transactions = transactions ?? TransactionsRepository();
+       _transactions = transactions ?? TransactionsRepository(),
+       _accountBindings = accountBindings ?? AccountBindingsRepository();
 
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
   final TransactionsRepository _transactions;
+  final AccountBindingsRepository _accountBindings;
 
   CollectionReference<Map<String, dynamic>> _ingestion(String familyId) =>
       _firestore.collection('families').doc(familyId).collection('ingestion');
@@ -267,6 +285,81 @@ class IngestionRepository {
     });
 
     return dedupKey;
+  }
+
+  /// Creates an Ingestion draft from a parsed bank notification.
+  ///
+  /// Applies [merchantRules] and [accountBindings] as editable suggestions.
+  /// Never persists raw notification text. Never creates a ledger transaction.
+  /// Dedup key is stable from amount + date + merchant + package.
+  Future<NotificationDraftResult> createDraftFromNotification({
+    required String familyId,
+    required ParsedBankNotification parsed,
+  }) async {
+    final uid = _auth.currentUser?.uid;
+    if (uid == null) {
+      throw StateError('Sign in required to create an ingestion draft.');
+    }
+
+    final packageName = parsed.packageName.trim();
+    final merchant = parsed.merchant?.trim();
+    final merchantKey = merchantKeyFor(merchant);
+    final rule = merchantKey.isEmpty
+        ? null
+        : await getMerchantRule(familyId, merchantKey);
+    final binding = packageName.isEmpty
+        ? null
+        : await _accountBindings.getBindingForPackage(familyId, packageName);
+
+    // Merchant rule wins for account; binding is the package-level default.
+    final accountId = rule?.accountId ?? binding?.accountId;
+    final categoryId = rule?.categoryId;
+    final bookingDate = parsed.bookingDate;
+    final amountMinor = parsed.amountMinor;
+
+    final dedupKey = _buildNotificationDedupKey(
+      amountMinor: amountMinor,
+      bookingDate: bookingDate,
+      merchant: merchant,
+      packageName: packageName,
+    );
+
+    final existing = await getDraft(familyId, dedupKey);
+    if (existing != null) {
+      return NotificationDraftResult(
+        dedupKey: dedupKey,
+        created: false,
+        status: existing.status,
+      );
+    }
+
+    final status = await _detectDuplicateStatus(
+      familyId: familyId,
+      amountMinor: amountMinor,
+      bookingDate: bookingDate,
+      merchant: merchant,
+    );
+
+    await _ingestion(familyId).doc(dedupKey).set({
+      'status': status.name,
+      'source': IngestionSource.notification.name,
+      'createdByUserId': uid,
+      'amountMinor': ?amountMinor,
+      if (merchant != null && merchant.isNotEmpty) 'merchant': merchant,
+      if (bookingDate != null && bookingDate.isNotEmpty)
+        'bookingDate': bookingDate,
+      if (accountId != null && accountId.isNotEmpty) 'accountId': accountId,
+      if (categoryId != null && categoryId.isNotEmpty) 'categoryId': categoryId,
+      if (packageName.isNotEmpty) 'sourcePackage': packageName,
+      'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+
+    return NotificationDraftResult(
+      dedupKey: dedupKey,
+      created: true,
+      status: status,
+    );
   }
 
   Future<void> updateDraft({
@@ -421,5 +514,20 @@ class IngestionRepository {
         '${DateTime.now().microsecondsSinceEpoch}';
     final digest = sha256.convert(utf8.encode(material)).toString();
     return 'ocr_${digest.substring(0, 32)}';
+  }
+
+  /// Stable dedup key from amount + date + merchant + package (no raw text).
+  String _buildNotificationDedupKey({
+    required int? amountMinor,
+    required String? bookingDate,
+    required String? merchant,
+    required String packageName,
+  }) {
+    final material =
+        'notif|${amountMinor ?? ''}|${bookingDate ?? ''}|'
+        '${(merchant ?? '').trim().toLowerCase()}|'
+        '${packageName.trim().toLowerCase()}';
+    final digest = sha256.convert(utf8.encode(material)).toString();
+    return 'notif_${digest.substring(0, 32)}';
   }
 }

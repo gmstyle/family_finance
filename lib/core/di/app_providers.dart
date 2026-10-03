@@ -9,6 +9,11 @@ import '../../features/dashboard/data/stats_repository.dart';
 import '../../features/devices/data/devices_repository.dart';
 import '../../features/family/data/family_repository.dart';
 import '../../features/goals/data/goals_repository.dart';
+import '../../features/notification_ingest/data/account_bindings_repository.dart';
+import '../../features/notification_ingest/data/notification_capture_factory.dart';
+import '../../features/notification_ingest/domain/notification_capture_service.dart';
+import '../../features/notification_ingest/presentation/ingestion_route_tracker.dart';
+import '../../features/notification_ingest/presentation/notification_ingest_controller.dart';
 import '../../features/receipt_ocr/data/ingestion_repository.dart';
 import '../../features/receipt_ocr/data/receipt_ocr_factory.dart';
 import '../../features/receipt_ocr/domain/receipt_ocr_service.dart';
@@ -31,6 +36,10 @@ List<SingleChildWidget> buildAppProviders({
   DevicesRepository? devicesRepository,
   IngestionRepository? ingestionRepository,
   ReceiptOcrService? receiptOcrService,
+  AccountBindingsRepository? accountBindingsRepository,
+  NotificationCaptureService? notificationCaptureService,
+  IngestionRouteTracker? ingestionRouteTracker,
+  NotificationIngestController? notificationIngestController,
 }) {
   final accounts = accountsRepository ?? AccountsRepository();
   final categories = categoriesRepository ?? CategoriesRepository();
@@ -39,9 +48,26 @@ List<SingleChildWidget> buildAppProviders({
   final goals = goalsRepository ?? GoalsRepository();
   final stats = statsRepository ?? StatsRepository();
   final devices = devicesRepository ?? DevicesRepository();
+  final accountBindings =
+      accountBindingsRepository ?? AccountBindingsRepository();
   final ingestion =
-      ingestionRepository ?? IngestionRepository(transactions: transactions);
+      ingestionRepository ??
+      IngestionRepository(
+        transactions: transactions,
+        accountBindings: accountBindings,
+      );
   final ocr = receiptOcrService ?? createReceiptOcrService();
+  final capture =
+      notificationCaptureService ?? createNotificationCaptureService();
+  final routeTracker = ingestionRouteTracker ?? IngestionRouteTracker();
+  final notificationIngest =
+      notificationIngestController ??
+      NotificationIngestController(
+        auth: authController,
+        ingestion: ingestion,
+        capture: capture,
+        routeTracker: routeTracker,
+      );
 
   return [
     ChangeNotifierProvider<LocaleController>.value(value: localeController),
@@ -49,6 +75,7 @@ List<SingleChildWidget> buildAppProviders({
     ChangeNotifierProvider<FamilyController>.value(
       value: familyController ?? FamilyController(),
     ),
+    ChangeNotifierProvider<IngestionRouteTracker>.value(value: routeTracker),
     Provider<AccountsRepository>.value(value: accounts),
     Provider<CategoriesRepository>.value(value: categories),
     Provider<TransactionsRepository>.value(value: transactions),
@@ -56,8 +83,11 @@ List<SingleChildWidget> buildAppProviders({
     Provider<GoalsRepository>.value(value: goals),
     Provider<StatsRepository>.value(value: stats),
     Provider<DevicesRepository>.value(value: devices),
+    Provider<AccountBindingsRepository>.value(value: accountBindings),
     Provider<IngestionRepository>.value(value: ingestion),
     Provider<ReceiptOcrService>.value(value: ocr),
+    Provider<NotificationCaptureService>.value(value: capture),
+    Provider<NotificationIngestController>.value(value: notificationIngest),
     ChangeNotifierProvider<TransactionsController>(
       create: (_) =>
           transactionsController ??

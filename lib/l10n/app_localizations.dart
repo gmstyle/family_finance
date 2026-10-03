@@ -1345,6 +1345,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Receipt scanning is available on Android. You can review drafts here.'**
   String get receiptScanAndroidOnlyBanner;
+
+  /// No description provided for @notificationListenerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment notification capture'**
+  String get notificationListenerTitle;
+
+  /// No description provided for @notificationListenerEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Listener enabled — Wallet notifications create review drafts'**
+  String get notificationListenerEnabled;
+
+  /// No description provided for @notificationListenerDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Listener off — tap to enable in system settings'**
+  String get notificationListenerDisabled;
+
+  /// No description provided for @notificationListenerAndroidOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment notification capture is available on Android only. You can still review drafts here.'**
+  String get notificationListenerAndroidOnly;
+
+  /// No description provided for @notificationListenerOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open notification access settings'**
+  String get notificationListenerOpenSettings;
+
+  /// No description provided for @notificationDraftAlertTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} drafts to review'**
+  String notificationDraftAlertTitle(int count);
+
+  /// No description provided for @notificationDraftAlertBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the review queue to confirm or discard. Nothing is posted without your confirmation.'**
+  String get notificationDraftAlertBody;
+
+  /// No description provided for @accountBindingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification account bindings'**
+  String get accountBindingsTitle;
+
+  /// No description provided for @accountBindingsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggest a default account when a draft is created from each app’s notifications. You can still change the account before confirming.'**
+  String get accountBindingsHint;
+
+  /// No description provided for @accountBindingsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No notification packages configured.'**
+  String get accountBindingsEmpty;
+
+  /// No description provided for @accountBindingsNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No account'**
+  String get accountBindingsNone;
+
+  /// No description provided for @accountBindingsOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Account bindings'**
+  String get accountBindingsOpen;
 }
 
 class _AppLocalizationsDelegate

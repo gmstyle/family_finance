@@ -207,5 +207,22 @@
   "receiptScanProcessing": "Lettura scontrino…",
   "receiptScanAndroidOnlyTitle": "Scansione scontrino solo su Android",
   "receiptScanAndroidOnlyBody": "L'OCR on-device è disponibile solo su Android. Puoi comunque revisionare e confermare le bozze da questa coda.",
-  "receiptScanAndroidOnlyBanner": "La scansione scontrini è disponibile su Android. Qui puoi revisionare le bozze."
+  "receiptScanAndroidOnlyBanner": "La scansione scontrini è disponibile su Android. Qui puoi revisionare le bozze.",
+  "notificationListenerTitle": "Cattura notifiche di pagamento",
+  "notificationListenerEnabled": "Listener attivo — le notifiche Wallet creano bozze da revisionare",
+  "notificationListenerDisabled": "Listener spento — tocca per attivarlo nelle impostazioni di sistema",
+  "notificationListenerAndroidOnly": "La cattura delle notifiche di pagamento è disponibile solo su Android. Qui puoi comunque revisionare le bozze.",
+  "notificationListenerOpenSettings": "Apri accesso alle notifiche",
+  "notificationDraftAlertTitle": "{count} bozze da revisionare",
+  "@notificationDraftAlertTitle": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "notificationDraftAlertBody": "Apri la coda di revisione per confermare o scartare. Niente viene registrato senza la tua conferma.",
+  "accountBindingsTitle": "Associazioni conto notifiche",
+  "accountBindingsHint": "Suggerisci un conto predefinito quando una bozza viene creata dalle notifiche di ciascuna app. Puoi comunque cambiarlo prima di confermare.",
+  "accountBindingsEmpty": "Nessun pacchetto notifiche configurato.",
+  "accountBindingsNone": "Nessun conto",
+  "accountBindingsOpen": "Associazioni conto"
 }

@@ -12,6 +12,8 @@ import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/family/presentation/create_family_screen.dart';
 import '../../features/family/presentation/family_screens.dart';
 import '../../features/goals/presentation/goals_screens.dart';
+import '../../features/notification_ingest/presentation/account_bindings_screen.dart';
+import '../../features/notification_ingest/presentation/ingestion_route_tracker.dart';
 import '../../features/receipt_ocr/presentation/ingestion_screens.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/transactions/presentation/transactions_screens.dart';
@@ -42,6 +44,7 @@ abstract final class AppRoutes {
   static const ingestion = '/ingestion';
   static const ingestionDetail = '/ingestion/:id';
   static const receiptScan = '/receipt-scan';
+  static const accountBindings = '/account-bindings';
   static const settings = '/settings';
   static const family = '/family';
   static const signIn = '/sign-in';
@@ -62,6 +65,7 @@ abstract final class AppRoutes {
 GoRouter createAppRouter({
   required LocaleController localeController,
   required AuthController authController,
+  IngestionRouteTracker? ingestionRouteTracker,
 }) {
   final refresh = ListenableMerge([localeController, authController]);
 
@@ -69,6 +73,7 @@ GoRouter createAppRouter({
     initialLocation: AppRoutes.home,
     refreshListenable: refresh,
     redirect: (context, state) {
+      ingestionRouteTracker?.updateFromLocation(state.matchedLocation);
       final loc = state.matchedLocation;
       final loggedIn = authController.isSignedIn;
       final profileReady = authController.profileReady;
@@ -229,6 +234,11 @@ GoRouter createAppRouter({
         path: AppRoutes.receiptScan,
         name: 'receiptScan',
         builder: (context, state) => const ReceiptScanScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.accountBindings,
+        name: 'accountBindings',
+        builder: (context, state) => const AccountBindingsScreen(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
