@@ -10,27 +10,42 @@ import '../../../core/ui/app_page.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/ledger_async_body.dart';
 import '../../auth/presentation/auth_controller.dart';
-import '../../budgets/data/budgets_repository.dart';
-import '../../categories/data/categories_repository.dart';
-import '../../family/data/family_repository.dart';
+import '../../budgets/domain/budget.dart';
+import '../../categories/domain/category.dart';
 import '../../ledger/ledger_labels.dart';
-import '../data/stats_repository.dart';
+import 'dashboard_controller.dart';
 
 /// Home dashboard: monthly rollup from `stats/{yyyy-MM}` + budget alerts.
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  String? _boundFamilyId;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final familyId = context.watch<AuthController>().familyId;
+    if (familyId != _boundFamilyId) {
+      _boundFamilyId = familyId;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.read<DashboardController>().bindFamily(familyId);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final auth = context.watch<AuthController>();
-    final familyId = auth.familyId;
+    final familyId = context.select((AuthController c) => c.familyId);
     final locale = context.watch<LocaleController>().locale.languageCode;
-    final periodId = currentBudgetPeriodId();
-    final statsRepo = context.read<StatsRepository>();
-    final budgetsRepo = context.read<BudgetsRepository>();
-    final categoriesRepo = context.read<CategoriesRepository>();
-    final familyRepo = context.read<FamilyController>().repository;
+    final dash = context.watch<DashboardController>();
+    final state = dash.state;
 
     if (familyId == null) {
       return Scaffold(
@@ -43,190 +58,123 @@ class DashboardScreen extends StatelessWidget {
       appBar: AppBar(title: Text(l10n.dashboardTitle)),
       body: AppPage(
         padding: AppInsets.pageCompact,
-        child: StreamBuilder<FamilyInfo?>(
-          stream: familyRepo.watchFamily(familyId),
-          builder: (context, familySnap) {
-            final currency = familySnap.data?.currency ?? 'EUR';
-            return StreamBuilder<MonthStats>(
-              stream: statsRepo.watchMonthStats(familyId, periodId),
-              builder: (context, statsSnap) {
-                final statsError = statsSnap.hasError
-                    ? statsSnap.error.toString()
-                    : null;
-                final stats = statsSnap.data;
-
-                return StreamBuilder<List<BudgetWithPeriod>>(
-                  stream: budgetsRepo.watchBudgetsWithPeriod(
-                    familyId,
-                    periodId,
+        child: LedgerAsyncBody(
+          isLoading: state.loading,
+          errorMessage: state.errorMessage,
+          isEmpty: false,
+          emptyMessage: '',
+          child: ListView(
+            children: [
+              Text(
+                l10n.dashboardPeriodLabel(state.periodId),
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              if (state.alerts.isNotEmpty) ...[
+                for (final alert in state.alerts)
+                  _BudgetAlertBanner(
+                    item: alert,
+                    categoryName: () {
+                      final cat = state.categoriesById[alert.budget.categoryId];
+                      if (cat == null) {
+                        return alert.budget.categoryId;
+                      }
+                      return categoryLabel(l10n, cat);
+                    }(),
+                    currency: state.currency,
+                    locale: locale,
+                    onOpen: () => context.go(AppRoutes.budgets),
                   ),
-                  builder: (context, budgetSnap) {
-                    final budgets =
-                        budgetSnap.data ?? const <BudgetWithPeriod>[];
-                    final alerts = budgets.where((b) {
-                      final p = b.period;
-                      return p.threshold80Notified ||
-                          p.threshold100Notified ||
-                          p.thresholdState(b.budget.limitAmountMinor) !=
-                              BudgetThresholdState.ok;
-                    }).toList();
-
-                    return StreamBuilder<List<Category>>(
-                      stream: categoriesRepo.watchCategories(
-                        familyId,
-                        includeArchived: true,
-                      ),
-                      builder: (context, catSnap) {
-                        final categories = {
-                          for (final c in catSnap.data ?? const <Category>[])
-                            c.id: c,
-                        };
-
-                        final isLoading =
-                            statsSnap.connectionState ==
-                                ConnectionState.waiting &&
-                            stats == null;
-
-                        return LedgerAsyncBody(
-                          isLoading: isLoading,
-                          errorMessage: statsError,
-                          isEmpty: false,
-                          emptyMessage: '',
-                          child: ListView(
-                            children: [
-                              Text(
-                                l10n.dashboardPeriodLabel(periodId),
-                                style: Theme.of(context).textTheme.titleMedium,
-                              ),
-                              const SizedBox(height: AppSpacing.sm),
-                              if (alerts.isNotEmpty) ...[
-                                for (final alert in alerts)
-                                  _BudgetAlertBanner(
-                                    item: alert,
-                                    categoryName: () {
-                                      final cat =
-                                          categories[alert.budget.categoryId];
-                                      if (cat == null) {
-                                        return alert.budget.categoryId;
-                                      }
-                                      return categoryLabel(l10n, cat);
-                                    }(),
-                                    currency: currency,
-                                    locale: locale,
-                                    onOpen: () => context.go(AppRoutes.budgets),
-                                  ),
-                                const SizedBox(height: AppSpacing.sm),
-                              ],
-                              _SummaryCard(
-                                income: stats?.totalIncomeMinor ?? 0,
-                                expense: stats?.totalExpenseMinor ?? 0,
-                                currency: currency,
-                                locale: locale,
-                              ),
-                              const SizedBox(height: AppSpacing.lg),
-                              AppSectionTitle(
-                                l10n.dashboardExpensesByCategory,
-                                padding: EdgeInsets.zero,
-                              ),
-                              const SizedBox(height: AppSpacing.xs),
-                              _CategoryBars(
-                                amounts: stats?.expenseByCategory ?? const {},
-                                categories: categories,
-                                currency: currency,
-                                locale: locale,
-                                emptyLabel: l10n.dashboardNoExpenses,
-                              ),
-                              const SizedBox(height: AppSpacing.lg),
-                              AppSectionTitle(
-                                l10n.dashboardIncomeByCategory,
-                                padding: EdgeInsets.zero,
-                              ),
-                              const SizedBox(height: AppSpacing.xs),
-                              _CategoryBars(
-                                amounts: stats?.incomeByCategory ?? const {},
-                                categories: categories,
-                                currency: currency,
-                                locale: locale,
-                                emptyLabel: l10n.dashboardNoIncome,
-                                income: true,
-                              ),
-                              const SizedBox(height: AppSpacing.lg),
-                              AppSectionTitle(
-                                l10n.dashboardQuickLinks,
-                                padding: EdgeInsets.zero,
-                              ),
-                              const SizedBox(height: AppSpacing.xs),
-                              Wrap(
-                                spacing: AppSpacing.xs,
-                                runSpacing: AppSpacing.xs,
-                                children: [
-                                  ActionChip(
-                                    avatar: const Icon(Icons.pie_chart_outline),
-                                    label: Text(l10n.budgetsTitle),
-                                    onPressed: () =>
-                                        context.go(AppRoutes.budgets),
-                                  ),
-                                  ActionChip(
-                                    avatar: const Icon(Icons.flag_outlined),
-                                    label: Text(l10n.goalsTitle),
-                                    onPressed: () =>
-                                        context.go(AppRoutes.goals),
-                                  ),
-                                  ActionChip(
-                                    avatar: const Icon(
-                                      Icons.receipt_long_outlined,
-                                    ),
-                                    label: Text(l10n.transactionsTitle),
-                                    onPressed: () =>
-                                        context.go(AppRoutes.transactions),
-                                  ),
-                                  ActionChip(
-                                    avatar: const Icon(
-                                      Icons.account_balance_wallet_outlined,
-                                    ),
-                                    label: Text(l10n.accountsTitle),
-                                    onPressed: () =>
-                                        context.push(AppRoutes.accounts),
-                                  ),
-                                  ActionChip(
-                                    avatar: const Icon(Icons.category_outlined),
-                                    label: Text(l10n.categoriesTitle),
-                                    onPressed: () =>
-                                        context.push(AppRoutes.categories),
-                                  ),
-                                  ActionChip(
-                                    avatar: const Icon(Icons.swap_horiz),
-                                    label: Text(l10n.transferCreateTitle),
-                                    onPressed: () =>
-                                        context.push(AppRoutes.transferNew),
-                                  ),
-                                  ActionChip(
-                                    avatar: const Icon(Icons.inbox_outlined),
-                                    label: Text(l10n.ingestionTitle),
-                                    onPressed: () =>
-                                        context.push(AppRoutes.ingestion),
-                                  ),
-                                  ActionChip(
-                                    avatar: const Icon(
-                                      Icons.document_scanner_outlined,
-                                    ),
-                                    label: Text(l10n.receiptScanTitle),
-                                    onPressed: () =>
-                                        context.push(AppRoutes.receiptScan),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: AppSpacing.xl),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-            );
-          },
+                const SizedBox(height: AppSpacing.sm),
+              ],
+              _SummaryCard(
+                income: state.stats.totalIncomeMinor,
+                expense: state.stats.totalExpenseMinor,
+                currency: state.currency,
+                locale: locale,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              AppSectionTitle(
+                l10n.dashboardExpensesByCategory,
+                padding: EdgeInsets.zero,
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              _CategoryBars(
+                amounts: state.stats.expenseByCategory,
+                categories: state.categoriesById,
+                currency: state.currency,
+                locale: locale,
+                emptyLabel: l10n.dashboardNoExpenses,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              AppSectionTitle(
+                l10n.dashboardIncomeByCategory,
+                padding: EdgeInsets.zero,
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              _CategoryBars(
+                amounts: state.stats.incomeByCategory,
+                categories: state.categoriesById,
+                currency: state.currency,
+                locale: locale,
+                emptyLabel: l10n.dashboardNoIncome,
+                income: true,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              AppSectionTitle(
+                l10n.dashboardQuickLinks,
+                padding: EdgeInsets.zero,
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Wrap(
+                spacing: AppSpacing.xs,
+                runSpacing: AppSpacing.xs,
+                children: [
+                  ActionChip(
+                    avatar: const Icon(Icons.pie_chart_outline),
+                    label: Text(l10n.budgetsTitle),
+                    onPressed: () => context.go(AppRoutes.budgets),
+                  ),
+                  ActionChip(
+                    avatar: const Icon(Icons.flag_outlined),
+                    label: Text(l10n.goalsTitle),
+                    onPressed: () => context.go(AppRoutes.goals),
+                  ),
+                  ActionChip(
+                    avatar: const Icon(Icons.receipt_long_outlined),
+                    label: Text(l10n.transactionsTitle),
+                    onPressed: () => context.go(AppRoutes.transactions),
+                  ),
+                  ActionChip(
+                    avatar: const Icon(Icons.account_balance_wallet_outlined),
+                    label: Text(l10n.accountsTitle),
+                    onPressed: () => context.push(AppRoutes.accounts),
+                  ),
+                  ActionChip(
+                    avatar: const Icon(Icons.category_outlined),
+                    label: Text(l10n.categoriesTitle),
+                    onPressed: () => context.push(AppRoutes.categories),
+                  ),
+                  ActionChip(
+                    avatar: const Icon(Icons.swap_horiz),
+                    label: Text(l10n.transferCreateTitle),
+                    onPressed: () => context.push(AppRoutes.transferNew),
+                  ),
+                  ActionChip(
+                    avatar: const Icon(Icons.inbox_outlined),
+                    label: Text(l10n.ingestionTitle),
+                    onPressed: () => context.push(AppRoutes.ingestion),
+                  ),
+                  ActionChip(
+                    avatar: const Icon(Icons.document_scanner_outlined),
+                    label: Text(l10n.receiptScanTitle),
+                    onPressed: () => context.push(AppRoutes.receiptScan),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.xl),
+            ],
+          ),
         ),
       ),
     );

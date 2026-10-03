@@ -7,7 +7,8 @@ import '../../../core/money/money.dart';
 import '../../../core/theme/app_tokens.dart';
 import '../../../core/ui/app_page.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../accounts/data/accounts_repository.dart';
+import '../../accounts/domain/account.dart';
+import '../../accounts/presentation/accounts_controller.dart';
 import '../../auth/presentation/auth_controller.dart';
 import '../../ledger/ledger_labels.dart';
 import '../data/transactions_repository.dart';
@@ -30,11 +31,25 @@ class _TransferEditorScreenState extends State<TransferEditorScreen> {
   String _bookingDate = '';
   bool _saving = false;
   String? _error;
+  String? _boundFamilyId;
 
   @override
   void initState() {
     super.initState();
     _bookingDate = formatBookingDate(DateTime.now());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final familyId = context.watch<AuthController>().familyId;
+    if (familyId != _boundFamilyId) {
+      _boundFamilyId = familyId;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.read<AccountsController>().bindFamily(familyId);
+      });
+    }
   }
 
   @override
@@ -68,7 +83,7 @@ class _TransferEditorScreenState extends State<TransferEditorScreen> {
       _error = null;
     });
     try {
-      await context.read<TransactionsController>().repository.createTransfer(
+      await context.read<TransactionsController>().createTransfer(
         sourceAccountId: _sourceId!,
         destinationAccountId: _destinationId!,
         amountMinor: amountMinor,
@@ -91,8 +106,9 @@ class _TransferEditorScreenState extends State<TransferEditorScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final familyId = context.watch<AuthController>().familyId;
+    final familyId = context.select((AuthController c) => c.familyId);
     final theme = Theme.of(context);
+    final accountsCtrl = context.watch<AccountsController>();
 
     if (familyId == null) {
       return Scaffold(
@@ -109,7 +125,7 @@ class _TransferEditorScreenState extends State<TransferEditorScreen> {
         child: Form(
           key: _formKey,
           child: StreamBuilder(
-            stream: context.read<AccountsRepository>().watchAccounts(familyId),
+            stream: accountsCtrl.watchAccounts(),
             builder: (context, snap) {
               final accounts = snap.data ?? const <Account>[];
               return ListView(

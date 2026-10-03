@@ -5,23 +5,41 @@ import '../../../core/theme/app_tokens.dart';
 import '../../../core/ui/app_page.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/ledger_async_body.dart';
-import '../../accounts/data/accounts_repository.dart';
+import '../../accounts/domain/account.dart';
 import '../../auth/presentation/auth_controller.dart';
-import '../data/account_bindings_repository.dart';
+import 'account_bindings_controller.dart';
 import 'notification_ingest_controller.dart';
 
 /// Map allowlisted notification packages → suggested ledger accounts.
-class AccountBindingsScreen extends StatelessWidget {
+class AccountBindingsScreen extends StatefulWidget {
   const AccountBindingsScreen({super.key});
+
+  @override
+  State<AccountBindingsScreen> createState() => _AccountBindingsScreenState();
+}
+
+class _AccountBindingsScreenState extends State<AccountBindingsScreen> {
+  String? _boundFamilyId;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final familyId = context.watch<AuthController>().familyId;
+    if (familyId != _boundFamilyId) {
+      _boundFamilyId = familyId;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.read<AccountBindingsController>().bindFamily(familyId);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final auth = context.watch<AuthController>();
-    final familyId = auth.familyId;
+    final familyId = context.select((AuthController c) => c.familyId);
     final ingest = context.read<NotificationIngestController>();
-    final bindingsRepo = context.read<AccountBindingsRepository>();
-    final accountsRepo = context.read<AccountsRepository>();
+    final ctrl = context.watch<AccountBindingsController>();
 
     if (familyId == null) {
       return Scaffold(
@@ -31,78 +49,49 @@ class AccountBindingsScreen extends StatelessWidget {
     }
 
     final packages = ingest.allowedPackages;
+    final accounts = ctrl.accounts;
+    final bindingsByPackage = ctrl.bindingsByPackage;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.accountBindingsTitle)),
       body: AppPage(
-        child: StreamBuilder<List<Account>>(
-          stream: accountsRepo.watchAccounts(familyId),
-          builder: (context, accountsSnap) {
-            final accounts = accountsSnap.data ?? const <Account>[];
-            return StreamBuilder<List<AccountBinding>>(
-              stream: bindingsRepo.watchBindings(familyId),
-              builder: (context, bindingsSnap) {
-                final error = bindingsSnap.hasError
-                    ? bindingsSnap.error.toString()
-                    : accountsSnap.hasError
-                    ? accountsSnap.error.toString()
-                    : null;
-                final bindingsByPackage = <String, AccountBinding>{
-                  for (final b in bindingsSnap.data ?? const <AccountBinding>[])
-                    b.packageName: b,
-                };
-
-                return LedgerAsyncBody(
-                  isLoading:
-                      (bindingsSnap.connectionState ==
-                              ConnectionState.waiting &&
-                          bindingsSnap.data == null) ||
-                      (accountsSnap.connectionState ==
-                              ConnectionState.waiting &&
-                          accountsSnap.data == null),
-                  errorMessage: error,
-                  isEmpty: packages.isEmpty,
-                  emptyMessage: l10n.accountBindingsEmpty,
-                  child: ListView(
-                    padding: AppInsets.pageCompact,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                        child: Text(
-                          l10n.accountBindingsHint,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ),
-                      for (final package in packages)
-                        _BindingTile(
-                          packageName: package,
-                          accounts: accounts,
-                          selectedAccountId: _selectedAccountId(
-                            bindingsByPackage[package]?.accountId,
-                            accounts,
-                          ),
-                          noneLabel: l10n.accountBindingsNone,
-                          onChanged: (accountId) async {
-                            if (accountId == null || accountId.isEmpty) {
-                              await bindingsRepo.clearBinding(
-                                familyId: familyId,
-                                packageName: package,
-                              );
-                            } else {
-                              await bindingsRepo.setBinding(
-                                familyId: familyId,
-                                packageName: package,
-                                accountId: accountId,
-                              );
-                            }
-                          },
-                        ),
-                    ],
+        child: LedgerAsyncBody(
+          isLoading: ctrl.loading,
+          errorMessage: ctrl.errorMessage,
+          isEmpty: packages.isEmpty,
+          emptyMessage: l10n.accountBindingsEmpty,
+          child: ListView(
+            padding: AppInsets.pageCompact,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                child: Text(
+                  l10n.accountBindingsHint,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+              for (final package in packages)
+                _BindingTile(
+                  packageName: package,
+                  accounts: accounts,
+                  selectedAccountId: _selectedAccountId(
+                    bindingsByPackage[package]?.accountId,
+                    accounts,
                   ),
-                );
-              },
-            );
-          },
+                  noneLabel: l10n.accountBindingsNone,
+                  onChanged: (accountId) async {
+                    if (accountId == null || accountId.isEmpty) {
+                      await ctrl.clearBinding(package);
+                    } else {
+                      await ctrl.setBinding(
+                        packageName: package,
+                        accountId: accountId,
+                      );
+                    }
+                  },
+                ),
+            ],
+          ),
         ),
       ),
     );

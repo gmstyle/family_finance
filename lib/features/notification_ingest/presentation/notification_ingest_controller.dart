@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 
 import '../../auth/presentation/auth_controller.dart';
 import '../../receipt_ocr/data/ingestion_repository.dart';
+import '../../receipt_ocr/domain/ingestion.dart';
 import '../data/draft_alert_notifications.dart';
 import '../data/notification_remote_config.dart';
 import '../domain/bank_notification_parser.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
-import '../categories/data/categories_repository.dart';
+import '../categories/domain/category.dart';
 
 /// Resolves system `nameKey` or custom `name` for display.
 String categoryLabel(AppLocalizations l10n, Category category) {

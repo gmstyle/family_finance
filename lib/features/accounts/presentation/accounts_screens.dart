@@ -10,9 +10,9 @@ import '../../../core/ui/app_page.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/ledger_async_body.dart';
 import '../../auth/presentation/auth_controller.dart';
-import '../../family/data/family_repository.dart';
 import '../../ledger/ledger_labels.dart';
-import '../data/accounts_repository.dart';
+import '../domain/account.dart';
+import 'accounts_controller.dart';
 
 String accountTypeLabel(AppLocalizations l10n, AccountType type) {
   return switch (type) {
@@ -23,17 +23,35 @@ String accountTypeLabel(AppLocalizations l10n, AccountType type) {
   };
 }
 
-class AccountsListScreen extends StatelessWidget {
+class AccountsListScreen extends StatefulWidget {
   const AccountsListScreen({super.key});
+
+  @override
+  State<AccountsListScreen> createState() => _AccountsListScreenState();
+}
+
+class _AccountsListScreenState extends State<AccountsListScreen> {
+  String? _boundFamilyId;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final familyId = context.watch<AuthController>().familyId;
+    if (familyId != _boundFamilyId) {
+      _boundFamilyId = familyId;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.read<AccountsController>().bindFamily(familyId);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final auth = context.watch<AuthController>();
-    final familyId = auth.familyId;
+    final familyId = context.select((AuthController c) => c.familyId);
     final locale = context.watch<LocaleController>().locale.languageCode;
-    final repo = context.read<AccountsRepository>();
-    final familyRepo = context.read<FamilyController>().repository;
+    final ctrl = context.watch<AccountsController>();
 
     if (familyId == null) {
       return Scaffold(
@@ -49,68 +67,54 @@ class AccountsListScreen extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
       body: AppPage(
-        child: StreamBuilder<FamilyInfo?>(
-          stream: familyRepo.watchFamily(familyId),
-          builder: (context, familySnap) {
-            final currency = familySnap.data?.currency ?? 'EUR';
-            return StreamBuilder<List<Account>>(
-              stream: repo.watchAccounts(familyId, includeArchived: true),
-              builder: (context, snap) {
-                final error = snap.hasError ? snap.error.toString() : null;
-                final accounts = snap.data;
-                final active =
-                    accounts?.where((a) => !a.archived).toList() ?? const [];
-                final archived =
-                    accounts?.where((a) => a.archived).toList() ?? const [];
+        child: StreamBuilder<List<Account>>(
+          stream: ctrl.watchAccounts(includeArchived: true),
+          builder: (context, snap) {
+            final error = snap.hasError ? snap.error.toString() : null;
+            final accounts = snap.data;
+            final active =
+                accounts?.where((a) => !a.archived).toList() ?? const [];
+            final archived =
+                accounts?.where((a) => a.archived).toList() ?? const [];
 
-                return LedgerAsyncBody(
-                  isLoading:
-                      snap.connectionState == ConnectionState.waiting &&
-                      accounts == null,
-                  errorMessage: error,
-                  isEmpty: accounts != null && accounts.isEmpty,
-                  emptyMessage: l10n.accountsEmpty,
-                  child: ListView(
-                    padding: AppInsets.pageCompact,
-                    children: [
-                      for (final account in active)
-                        _AccountTile(
-                          account: account,
-                          currency: currency,
-                          locale: locale,
-                          onTap: () => context.push(
-                            AppRoutes.accountEditPath(account.id),
-                          ),
-                          onArchive: () => repo.archiveAccount(
-                            familyId: familyId,
-                            accountId: account.id,
-                          ),
-                        ),
-                      if (archived.isNotEmpty) ...[
-                        AppSectionTitle(
-                          l10n.accountsArchived,
-                          padding: AppInsets.sectionTight,
-                        ),
-                        for (final account in archived)
-                          _AccountTile(
-                            account: account,
-                            currency: currency,
-                            locale: locale,
-                            archived: true,
-                            onTap: () => context.push(
-                              AppRoutes.accountEditPath(account.id),
-                            ),
-                            onArchive: () => repo.archiveAccount(
-                              familyId: familyId,
-                              accountId: account.id,
-                              archived: false,
-                            ),
-                          ),
-                      ],
-                    ],
-                  ),
-                );
-              },
+            return LedgerAsyncBody(
+              isLoading:
+                  snap.connectionState == ConnectionState.waiting &&
+                  accounts == null,
+              errorMessage: error ?? ctrl.errorMessage,
+              isEmpty: accounts != null && accounts.isEmpty,
+              emptyMessage: l10n.accountsEmpty,
+              child: ListView(
+                padding: AppInsets.pageCompact,
+                children: [
+                  for (final account in active)
+                    _AccountTile(
+                      account: account,
+                      currency: ctrl.currency,
+                      locale: locale,
+                      onTap: () =>
+                          context.push(AppRoutes.accountEditPath(account.id)),
+                      onArchive: () => ctrl.archiveAccount(account.id),
+                    ),
+                  if (archived.isNotEmpty) ...[
+                    AppSectionTitle(
+                      l10n.accountsArchived,
+                      padding: AppInsets.sectionTight,
+                    ),
+                    for (final account in archived)
+                      _AccountTile(
+                        account: account,
+                        currency: ctrl.currency,
+                        locale: locale,
+                        archived: true,
+                        onTap: () =>
+                            context.push(AppRoutes.accountEditPath(account.id)),
+                        onArchive: () =>
+                            ctrl.archiveAccount(account.id, archived: false),
+                      ),
+                  ],
+                ],
+              ),
             );
           },
         ),
@@ -199,6 +203,7 @@ class _AccountEditorScreenState extends State<AccountEditorScreen> {
   bool _saving = false;
   String? _error;
   Account? _existing;
+  String? _boundFamilyId;
 
   bool get _isEdit => widget.accountId != null;
 
@@ -206,19 +211,30 @@ class _AccountEditorScreenState extends State<AccountEditorScreen> {
   void initState() {
     super.initState();
     _openingDate = formatBookingDate(DateTime.now());
-    WidgetsBinding.instance.addPostFrameCallback((_) => _load());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final familyId = context.watch<AuthController>().familyId;
+    if (familyId != _boundFamilyId) {
+      _boundFamilyId = familyId;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.read<AccountsController>().bindFamily(familyId);
+        if (_loading) _load();
+      });
+    }
   }
 
   Future<void> _load() async {
-    final familyId = context.read<AuthController>().familyId;
     final locale = context.read<LocaleController>().locale.languageCode;
-    if (familyId == null || widget.accountId == null) {
+    if (widget.accountId == null) {
       setState(() => _loading = false);
       return;
     }
     try {
-      final account = await context.read<AccountsRepository>().getAccount(
-        familyId,
+      final account = await context.read<AccountsController>().getAccount(
         widget.accountId!,
       );
       if (account == null) {
@@ -248,8 +264,6 @@ class _AccountEditorScreenState extends State<AccountEditorScreen> {
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     final l10n = AppLocalizations.of(context)!;
-    final familyId = context.read<AuthController>().familyId;
-    if (familyId == null) return;
     final locale = context.read<LocaleController>().locale.languageCode;
 
     late final int openingMinor;
@@ -265,10 +279,9 @@ class _AccountEditorScreenState extends State<AccountEditorScreen> {
       _error = null;
     });
     try {
-      final repo = context.read<AccountsRepository>();
+      final ctrl = context.read<AccountsController>();
       if (_isEdit) {
-        await repo.updateAccount(
-          familyId: familyId,
+        await ctrl.updateAccount(
           accountId: widget.accountId!,
           name: _name.text,
           type: _type,
@@ -276,8 +289,7 @@ class _AccountEditorScreenState extends State<AccountEditorScreen> {
           openingDate: _openingDate,
         );
       } else {
-        await repo.createAccount(
-          familyId: familyId,
+        await ctrl.createAccount(
           name: _name.text,
           type: _type,
           openingBalanceMinor: openingMinor,

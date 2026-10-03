@@ -8,25 +8,34 @@ import 'core/firebase/firebase_bootstrap.dart';
 import 'core/locale/locale_controller.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/auth/data/auth_repository.dart';
 import 'features/auth/presentation/auth_controller.dart';
 import 'features/devices/data/devices_repository.dart';
+import 'features/notification_ingest/data/account_bindings_repository.dart';
 import 'features/notification_ingest/data/notification_capture_factory.dart';
 import 'features/notification_ingest/domain/notification_capture_service.dart';
 import 'features/notification_ingest/presentation/ingestion_route_tracker.dart';
 import 'features/notification_ingest/presentation/notification_ingest_controller.dart';
 import 'features/receipt_ocr/data/ingestion_repository.dart';
+import 'features/transactions/data/transactions_repository.dart';
 import 'l10n/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FirebaseBootstrap.initialize();
   final localeController = await LocaleController.create();
-  final authController = AuthController();
+  final authRepository = AuthRepository();
+  final authController = AuthController(repository: authRepository);
   final fcm = FcmRegistration(auth: FirebaseAuth.instance)..start();
 
   final routeTracker = IngestionRouteTracker();
   final capture = createNotificationCaptureService();
-  final ingestion = IngestionRepository();
+  final transactions = TransactionsRepository();
+  final accountBindings = AccountBindingsRepository();
+  final ingestion = IngestionRepository(
+    transactions: transactions,
+    accountBindings: accountBindings,
+  );
   final notificationIngest = NotificationIngestController(
     auth: authController,
     ingestion: ingestion,
@@ -38,10 +47,13 @@ Future<void> main() async {
     FamilyFinanceApp(
       localeController: localeController,
       authController: authController,
+      authRepository: authRepository,
       fcmRegistration: fcm,
       ingestionRouteTracker: routeTracker,
       notificationIngestController: notificationIngest,
       ingestionRepository: ingestion,
+      transactionsRepository: transactions,
+      accountBindingsRepository: accountBindings,
       notificationCaptureService: capture,
     ),
   );
@@ -56,15 +68,21 @@ class FamilyFinanceApp extends StatefulWidget {
     this.ingestionRouteTracker,
     this.notificationIngestController,
     this.ingestionRepository,
+    this.transactionsRepository,
+    this.accountBindingsRepository,
     this.notificationCaptureService,
+    this.authRepository,
   });
 
   final LocaleController localeController;
   final AuthController authController;
+  final AuthRepository? authRepository;
   final FcmRegistration? fcmRegistration;
   final IngestionRouteTracker? ingestionRouteTracker;
   final NotificationIngestController? notificationIngestController;
   final IngestionRepository? ingestionRepository;
+  final TransactionsRepository? transactionsRepository;
+  final AccountBindingsRepository? accountBindingsRepository;
   final NotificationCaptureService? notificationCaptureService;
 
   @override
@@ -94,7 +112,10 @@ class _FamilyFinanceAppState extends State<FamilyFinanceApp> {
       providers: buildAppProviders(
         localeController: widget.localeController,
         authController: widget.authController,
+        authRepository: widget.authRepository,
         ingestionRepository: widget.ingestionRepository,
+        transactionsRepository: widget.transactionsRepository,
+        accountBindingsRepository: widget.accountBindingsRepository,
         ingestionRouteTracker: _routeTracker,
         notificationIngestController: widget.notificationIngestController,
         notificationCaptureService: widget.notificationCaptureService,

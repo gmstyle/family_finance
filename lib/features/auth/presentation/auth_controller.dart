@@ -1,23 +1,22 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../data/auth_repository.dart';
+
 /// Auth + lightweight user profile (familyId from Firestore).
 class AuthController extends ChangeNotifier {
-  AuthController({FirebaseAuth? auth, FirebaseFirestore? firestore})
-    : _auth = auth ?? FirebaseAuth.instance,
-      _firestore = firestore ?? FirebaseFirestore.instance {
-    _authSub = _auth.authStateChanges().listen(_onAuthChanged);
+  AuthController({AuthRepository? repository})
+    : _repository = repository ?? AuthRepository() {
+    _authSub = _repository.authStateChanges.listen(_onAuthChanged);
   }
 
-  final FirebaseAuth _auth;
-  final FirebaseFirestore _firestore;
+  final AuthRepository _repository;
 
   StreamSubscription<User?>? _authSub;
-  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? _userDocSub;
+  StreamSubscription<String?>? _familyIdSub;
 
   User? _user;
   String? _familyId;
@@ -39,8 +38,8 @@ class AuthController extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> _onAuthChanged(User? user) async {
-    await _userDocSub?.cancel();
-    _userDocSub = null;
+    await _familyIdSub?.cancel();
+    _familyIdSub = null;
     _user = user;
     _familyId = null;
     _profileReady = false;
@@ -57,32 +56,31 @@ class AuthController extends ChangeNotifier {
       return;
     }
 
-    if (!await _ensureFreshToken(user)) {
+    if (!await _repository.ensureFreshToken(user)) {
+      await _forceSignOutForInvalidSession();
       return;
     }
 
     try {
-      await _ensureUserProfile(user);
+      await _repository.ensureUserProfile(user);
     } on FirebaseAuthException catch (e) {
-      if (_isInvalidSession(e)) {
+      if (_repository.isInvalidSession(e)) {
         await _forceSignOutForInvalidSession();
         return;
       }
       rethrow;
     }
 
-    _userDocSub = _firestore
-        .collection('users')
-        .doc(user.uid)
-        .snapshots()
+    _familyIdSub = _repository
+        .watchFamilyId(user.uid)
         .listen(
-          (snap) {
-            _familyId = snap.data()?['familyId'] as String?;
+          (familyId) {
+            _familyId = familyId;
             _profileReady = true;
             notifyListeners();
           },
           onError: (Object e) {
-            if (_looksLikeInvalidSession(e)) {
+            if (_repository.looksLikeInvalidSession(e)) {
               unawaited(_forceSignOutForInvalidSession());
               return;
             }
@@ -93,51 +91,17 @@ class AuthController extends ChangeNotifier {
         );
   }
 
-  /// Returns false if the session was cleared due to a bad/expired token.
-  Future<bool> _ensureFreshToken(User user) async {
-    try {
-      await user.getIdToken(true);
-      return true;
-    } catch (e) {
-      if (_looksLikeInvalidSession(e)) {
-        await _forceSignOutForInvalidSession();
-        return false;
-      }
-      rethrow;
-    }
-  }
-
-  bool _isInvalidSession(FirebaseAuthException e) {
-    final code = e.code.toLowerCase();
-    final message = (e.message ?? '').toLowerCase();
-    return code == 'invalid-refresh-token' ||
-        code == 'user-token-expired' ||
-        code == 'invalid-user-token' ||
-        message.contains('invalid refresh token') ||
-        message.contains('token has been expired') ||
-        message.contains('user token expired');
-  }
-
-  bool _looksLikeInvalidSession(Object e) {
-    if (e is FirebaseAuthException) return _isInvalidSession(e);
-    final text = e.toString().toLowerCase();
-    return text.contains('invalid refresh token') ||
-        text.contains('user-token-expired') ||
-        text.contains('invalid-user-token') ||
-        text.contains('user token expired');
-  }
-
   Future<void> _forceSignOutForInvalidSession() async {
     if (_clearingInvalidSession) return;
     _clearingInvalidSession = true;
-    await _userDocSub?.cancel();
-    _userDocSub = null;
+    await _familyIdSub?.cancel();
+    _familyIdSub = null;
     _user = null;
     _familyId = null;
     _profileReady = true;
     _errorMessage = _invalidSessionMessage;
     try {
-      await _auth.signOut();
+      await _repository.signOut();
     } catch (_) {
       // Already cleared locally; ignore secondary signOut failures.
     } finally {
@@ -147,18 +111,6 @@ class AuthController extends ChangeNotifier {
     }
   }
 
-  Future<void> _ensureUserProfile(User user) async {
-    final ref = _firestore.collection('users').doc(user.uid);
-    final snap = await ref.get();
-    if (snap.exists) return;
-    await ref.set({
-      'email': user.email ?? '',
-      'displayName': user.displayName ?? user.email?.split('@').first ?? 'User',
-      'createdAt': FieldValue.serverTimestamp(),
-      'updatedAt': FieldValue.serverTimestamp(),
-    });
-  }
-
   Future<void> _guard(Future<void> Function() action) async {
     _busy = true;
     _errorMessage = null;
@@ -166,14 +118,14 @@ class AuthController extends ChangeNotifier {
     try {
       await action();
     } on FirebaseAuthException catch (e) {
-      if (_isInvalidSession(e)) {
+      if (_repository.isInvalidSession(e)) {
         await _forceSignOutForInvalidSession();
         return;
       }
       _errorMessage = e.message ?? e.code;
       rethrow;
     } catch (e) {
-      if (_looksLikeInvalidSession(e)) {
+      if (_repository.looksLikeInvalidSession(e)) {
         await _forceSignOutForInvalidSession();
         return;
       }
@@ -190,7 +142,7 @@ class AuthController extends ChangeNotifier {
     required String password,
   }) {
     return _guard(() async {
-      await _auth.signInWithEmailAndPassword(
+      await _repository.firebaseAuth.signInWithEmailAndPassword(
         email: email.trim(),
         password: password,
       );
@@ -203,22 +155,25 @@ class AuthController extends ChangeNotifier {
     String? displayName,
   }) {
     return _guard(() async {
-      final cred = await _auth.createUserWithEmailAndPassword(
-        email: email.trim(),
-        password: password,
-      );
+      final cred = await _repository.firebaseAuth
+          .createUserWithEmailAndPassword(
+            email: email.trim(),
+            password: password,
+          );
       if (displayName != null && displayName.trim().isNotEmpty) {
         await cred.user?.updateDisplayName(displayName.trim());
       }
       await cred.user?.sendEmailVerification();
       await cred.user?.reload();
-      _user = _auth.currentUser;
+      _user = _repository.currentUser;
     });
   }
 
   Future<void> sendPasswordReset(String email) {
     return _guard(() async {
-      await _auth.sendPasswordResetEmail(email: email.trim());
+      await _repository.firebaseAuth.sendPasswordResetEmail(
+        email: email.trim(),
+      );
     });
   }
 
@@ -230,7 +185,7 @@ class AuthController extends ChangeNotifier {
 
   Future<void> reloadUser() async {
     await _user?.reload();
-    _user = _auth.currentUser;
+    _user = _repository.currentUser;
     notifyListeners();
   }
 
@@ -244,7 +199,7 @@ class AuthController extends ChangeNotifier {
         throw StateError('Google Sign-In did not return an idToken.');
       }
       final credential = GoogleAuthProvider.credential(idToken: idToken);
-      await _auth.signInWithCredential(credential);
+      await _repository.firebaseAuth.signInWithCredential(credential);
     });
   }
 
@@ -255,7 +210,7 @@ class AuthController extends ChangeNotifier {
       } catch (_) {
         // Google may not be initialized (email-only sessions).
       }
-      await _auth.signOut();
+      await _repository.signOut();
     });
   }
 
@@ -267,7 +222,7 @@ class AuthController extends ChangeNotifier {
   @override
   void dispose() {
     _authSub?.cancel();
-    _userDocSub?.cancel();
+    _familyIdSub?.cancel();
     super.dispose();
   }
 }

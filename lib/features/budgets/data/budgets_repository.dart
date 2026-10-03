@@ -2,81 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Budget document: monthly limit for one expense category.
-class Budget {
-  const Budget({
-    required this.id,
-    required this.categoryId,
-    required this.limitAmountMinor,
-  });
-
-  final String id;
-  final String categoryId;
-  final int limitAmountMinor;
-
-  factory Budget.fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
-    final d = doc.data() ?? const <String, dynamic>{};
-    return Budget(
-      id: doc.id,
-      categoryId: d['categoryId'] as String? ?? '',
-      limitAmountMinor: (d['limitAmountMinor'] as num?)?.toInt() ?? 0,
-    );
-  }
-}
-
-/// Function-owned period rollup under `budgets/{id}/periods/{yyyy-MM}`.
-class BudgetPeriod {
-  const BudgetPeriod({
-    required this.id,
-    required this.spentAmountMinor,
-    required this.threshold80Notified,
-    required this.threshold100Notified,
-  });
-
-  final String id;
-  final int spentAmountMinor;
-  final bool threshold80Notified;
-  final bool threshold100Notified;
-
-  factory BudgetPeriod.fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
-    final d = doc.data() ?? const <String, dynamic>{};
-    return BudgetPeriod(
-      id: doc.id,
-      spentAmountMinor: (d['spentAmountMinor'] as num?)?.toInt() ?? 0,
-      threshold80Notified: d['threshold80Notified'] as bool? ?? false,
-      threshold100Notified: d['threshold100Notified'] as bool? ?? false,
-    );
-  }
-
-  /// Visual threshold from spent vs limit (independent of FCM flags).
-  BudgetThresholdState thresholdState(int limitAmountMinor) {
-    if (limitAmountMinor <= 0) return BudgetThresholdState.ok;
-    if (spentAmountMinor >= limitAmountMinor) {
-      return BudgetThresholdState.atOrOver100;
-    }
-    if (spentAmountMinor >= (limitAmountMinor * 0.8).floor()) {
-      return BudgetThresholdState.atOrOver80;
-    }
-    return BudgetThresholdState.ok;
-  }
-}
-
-enum BudgetThresholdState { ok, atOrOver80, atOrOver100 }
-
-class BudgetWithPeriod {
-  const BudgetWithPeriod({required this.budget, required this.period});
-
-  final Budget budget;
-  final BudgetPeriod period;
-}
-
-/// Current calendar period id `yyyy-MM` (booking-date period, local clock).
-String currentBudgetPeriodId([DateTime? now]) {
-  final d = now ?? DateTime.now();
-  final y = d.year.toString().padLeft(4, '0');
-  final m = d.month.toString().padLeft(2, '0');
-  return '$y-$m';
-}
+import '../domain/budget.dart';
 
 /// Firestore CRUD for budgets; periods are read-only for the client.
 class BudgetsRepository {
@@ -120,23 +46,69 @@ class BudgetsRepository {
   }
 
   /// Live budgets joined with the current period doc (spent + threshold flags).
+  ///
+  /// Diff-based: keeps the budgets listener and only adds/cancels period
+  /// subscriptions when the set of budget ids changes.
   Stream<List<BudgetWithPeriod>> watchBudgetsWithPeriod(
     String familyId,
     String periodId,
   ) {
-    return watchBudgets(familyId).asyncExpand((budgets) {
-      if (budgets.isEmpty) {
-        return Stream.value(const <BudgetWithPeriod>[]);
+    return Stream.multi((controller) {
+      final periodByBudgetId = <String, BudgetPeriod>{};
+      final periodSubs = <String, StreamSubscription<BudgetPeriod>>{};
+      var currentBudgets = <Budget>[];
+      var budgetsReady = false;
+      StreamSubscription<List<Budget>>? budgetsSub;
+
+      void emit() {
+        if (!budgetsReady) return;
+        if (currentBudgets.isEmpty) {
+          controller.add(const <BudgetWithPeriod>[]);
+          return;
+        }
+        if (!currentBudgets.every((b) => periodByBudgetId.containsKey(b.id))) {
+          return;
+        }
+        controller.add([
+          for (final b in currentBudgets)
+            BudgetWithPeriod(budget: b, period: periodByBudgetId[b.id]!),
+        ]);
       }
-      final periodStreams = budgets
-          .map((b) => watchPeriod(familyId, b.id, periodId))
-          .toList();
-      return _combineLatest(periodStreams).map((periods) {
-        return [
-          for (var i = 0; i < budgets.length; i++)
-            BudgetWithPeriod(budget: budgets[i], period: periods[i]),
-        ];
-      });
+
+      void syncPeriodSubs(List<Budget> budgets) {
+        final nextIds = budgets.map((b) => b.id).toSet();
+        final prevIds = periodSubs.keys.toSet();
+
+        for (final id in prevIds.difference(nextIds)) {
+          unawaited(periodSubs.remove(id)?.cancel() ?? Future<void>.value());
+          periodByBudgetId.remove(id);
+        }
+
+        for (final budget in budgets) {
+          if (periodSubs.containsKey(budget.id)) continue;
+          periodSubs[budget.id] = watchPeriod(familyId, budget.id, periodId)
+              .listen((period) {
+                periodByBudgetId[budget.id] = period;
+                emit();
+              }, onError: controller.addError);
+        }
+      }
+
+      budgetsSub = watchBudgets(familyId).listen((budgets) {
+        currentBudgets = budgets;
+        budgetsReady = true;
+        syncPeriodSubs(budgets);
+        emit();
+      }, onError: controller.addError);
+
+      controller.onCancel = () async {
+        await budgetsSub?.cancel();
+        for (final sub in periodSubs.values) {
+          await sub.cancel();
+        }
+        periodSubs.clear();
+        periodByBudgetId.clear();
+      };
     });
   }
 
@@ -177,39 +149,4 @@ class BudgetsRepository {
   }) {
     return _col(familyId).doc(budgetId).delete();
   }
-}
-
-/// Emits whenever any source stream emits; values are the latest from each.
-Stream<List<T>> _combineLatest<T>(List<Stream<T>> streams) {
-  if (streams.isEmpty) return Stream.value(const []);
-
-  final latest = List<T?>.filled(streams.length, null);
-  final hasValue = List<bool>.filled(streams.length, false);
-
-  return Stream.multi((controller) {
-    final subs = <StreamSubscription<T>>[];
-
-    void emitIfReady() {
-      if (hasValue.every((h) => h)) {
-        controller.add(List<T>.generate(streams.length, (i) => latest[i] as T));
-      }
-    }
-
-    for (var i = 0; i < streams.length; i++) {
-      final index = i;
-      subs.add(
-        streams[i].listen((value) {
-          latest[index] = value;
-          hasValue[index] = true;
-          emitIfReady();
-        }, onError: controller.addError),
-      );
-    }
-
-    controller.onCancel = () async {
-      for (final s in subs) {
-        await s.cancel();
-      }
-    };
-  });
 }

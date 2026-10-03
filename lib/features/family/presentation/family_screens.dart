@@ -8,7 +8,7 @@ import '../../../core/theme/app_tokens.dart';
 import '../../../core/ui/app_page.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/auth_controller.dart';
-import '../data/family_repository.dart';
+import 'family_controller.dart';
 
 class AcceptInviteScreen extends StatefulWidget {
   const AcceptInviteScreen({super.key, required this.token});
@@ -111,7 +111,6 @@ class _FamilyManageScreenState extends State<FamilyManageScreen> {
       );
     }
 
-    final repo = familyCtrl.repository;
     final uid = auth.user?.uid;
 
     return Scaffold(
@@ -121,7 +120,7 @@ class _FamilyManageScreenState extends State<FamilyManageScreen> {
           padding: AppInsets.pageCompact,
           children: [
             StreamBuilder(
-              stream: repo.watchFamily(familyId),
+              stream: familyCtrl.watchFamily(familyId),
               builder: (context, snap) {
                 final family = snap.data;
                 if (family == null) {
@@ -139,7 +138,7 @@ class _FamilyManageScreenState extends State<FamilyManageScreen> {
               padding: AppInsets.sectionTight,
             ),
             StreamBuilder(
-              stream: repo.watchMembers(familyId),
+              stream: familyCtrl.watchMembers(familyId),
               builder: (context, snap) {
                 final members = snap.data ?? const <FamilyMember>[];
                 final me = members.cast<FamilyMember?>().firstWhere(
@@ -264,7 +263,7 @@ class _FamilyManageScreenState extends State<FamilyManageScreen> {
               ),
             ],
             StreamBuilder(
-              stream: repo.watchPendingInvites(familyId),
+              stream: familyCtrl.watchPendingInvites(familyId),
               builder: (context, snap) {
                 final invites = snap.data ?? const <FamilyInvite>[];
                 return Column(

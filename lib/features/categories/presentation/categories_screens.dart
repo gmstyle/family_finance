@@ -7,7 +7,8 @@ import '../../../l10n/app_localizations.dart';
 import '../../../shared/widgets/ledger_async_body.dart';
 import '../../auth/presentation/auth_controller.dart';
 import '../../ledger/ledger_labels.dart';
-import '../data/categories_repository.dart';
+import '../domain/category.dart';
+import 'categories_controller.dart';
 
 class CategoriesListScreen extends StatefulWidget {
   const CategoriesListScreen({super.key});
@@ -17,7 +18,20 @@ class CategoriesListScreen extends StatefulWidget {
 }
 
 class _CategoriesListScreenState extends State<CategoriesListScreen> {
-  bool _showArchived = false;
+  String? _boundFamilyId;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final familyId = context.watch<AuthController>().familyId;
+    if (familyId != _boundFamilyId) {
+      _boundFamilyId = familyId;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.read<CategoriesController>().bindFamily(familyId);
+      });
+    }
+  }
 
   Future<void> _createCategory() async {
     final result = await showDialog<_NewCategoryDraft>(
@@ -25,11 +39,8 @@ class _CategoriesListScreenState extends State<CategoriesListScreen> {
       builder: (context) => const _CreateCategoryDialog(),
     );
     if (result == null || !mounted) return;
-    final familyId = context.read<AuthController>().familyId;
-    if (familyId == null) return;
     try {
-      await context.read<CategoriesRepository>().createCustomCategory(
-        familyId: familyId,
+      await context.read<CategoriesController>().createCustomCategory(
         name: result.name,
         type: result.type,
       );
@@ -43,9 +54,8 @@ class _CategoriesListScreenState extends State<CategoriesListScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final auth = context.watch<AuthController>();
-    final familyId = auth.familyId;
-    final repo = context.read<CategoriesRepository>();
+    final familyId = context.select((AuthController c) => c.familyId);
+    final ctrl = context.watch<CategoriesController>();
 
     if (familyId == null) {
       return Scaffold(
@@ -54,15 +64,21 @@ class _CategoriesListScreenState extends State<CategoriesListScreen> {
       );
     }
 
+    final expense = ctrl.expenseCategories;
+    final income = ctrl.incomeCategories;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.categoriesTitle),
         actions: [
           IconButton(
             tooltip: l10n.categoriesShowArchived,
-            onPressed: () => setState(() => _showArchived = !_showArchived),
+            onPressed: () {
+              final next = !ctrl.includeArchived;
+              context.read<CategoriesController>().setIncludeArchived(next);
+            },
             icon: Icon(
-              _showArchived
+              ctrl.includeArchived
                   ? Icons.visibility_off_outlined
                   : Icons.visibility_outlined,
             ),
@@ -74,65 +90,36 @@ class _CategoriesListScreenState extends State<CategoriesListScreen> {
         child: const Icon(Icons.add),
       ),
       body: AppPage(
-        child: StreamBuilder<List<Category>>(
-          stream: repo.watchCategories(
-            familyId,
-            includeArchived: _showArchived,
-          ),
-          builder: (context, snap) {
-            final error = snap.hasError ? snap.error.toString() : null;
-            final categories = snap.data;
-            final expense =
-                categories
-                    ?.where((c) => c.type == CategoryType.expense)
-                    .toList() ??
-                const [];
-            final income =
-                categories
-                    ?.where((c) => c.type == CategoryType.income)
-                    .toList() ??
-                const [];
-
-            return LedgerAsyncBody(
-              isLoading:
-                  snap.connectionState == ConnectionState.waiting &&
-                  categories == null,
-              errorMessage: error,
-              isEmpty: categories != null && categories.isEmpty,
-              emptyMessage: l10n.categoriesEmpty,
-              child: ListView(
-                padding: AppInsets.pageCompact,
-                children: [
-                  AppSectionTitle(
-                    l10n.categoryTypeExpense,
-                    padding: AppInsets.sectionTight,
-                  ),
-                  for (final cat in expense)
-                    _CategoryTile(
-                      category: cat,
-                      onArchive: () => repo.archiveCategory(
-                        familyId: familyId,
-                        categoryId: cat.id,
-                        archived: !cat.archived,
-                      ),
-                    ),
-                  AppSectionTitle(
-                    l10n.categoryTypeIncome,
-                    padding: AppInsets.sectionTight,
-                  ),
-                  for (final cat in income)
-                    _CategoryTile(
-                      category: cat,
-                      onArchive: () => repo.archiveCategory(
-                        familyId: familyId,
-                        categoryId: cat.id,
-                        archived: !cat.archived,
-                      ),
-                    ),
-                ],
+        child: LedgerAsyncBody(
+          isLoading: ctrl.loading,
+          errorMessage: ctrl.errorMessage,
+          isEmpty: ctrl.isEmpty,
+          emptyMessage: l10n.categoriesEmpty,
+          child: ListView(
+            padding: AppInsets.pageCompact,
+            children: [
+              AppSectionTitle(
+                l10n.categoryTypeExpense,
+                padding: AppInsets.sectionTight,
               ),
-            );
-          },
+              for (final cat in expense)
+                _CategoryTile(
+                  category: cat,
+                  onArchive: () =>
+                      ctrl.archiveCategory(cat.id, archived: !cat.archived),
+                ),
+              AppSectionTitle(
+                l10n.categoryTypeIncome,
+                padding: AppInsets.sectionTight,
+              ),
+              for (final cat in income)
+                _CategoryTile(
+                  category: cat,
+                  onArchive: () =>
+                      ctrl.archiveCategory(cat.id, archived: !cat.archived),
+                ),
+            ],
+          ),
         ),
       ),
     );

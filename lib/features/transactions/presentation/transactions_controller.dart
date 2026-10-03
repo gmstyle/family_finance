@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 import '../data/transactions_repository.dart';
+import '../domain/transaction.dart';
 
 /// Paginated transaction list with filters and a live head window.
 ///
@@ -46,10 +47,20 @@ class TransactionsController extends ChangeNotifier {
   bool get loadingMore => _loadingMore;
   String? get errorMessage => _errorMessage;
   bool get isEmpty => !loading && _errorMessage == null && _liveItems.isEmpty;
+  String? get familyId => _familyId;
 
-  TransactionsRepository get repository => _repository;
-
-  Future<void> bindFamily(String familyId) async {
+  Future<void> bindFamily(String? familyId) async {
+    if (familyId == null || familyId.isEmpty) {
+      await _liveSub?.cancel();
+      _liveSub = null;
+      _familyId = null;
+      _liveItems.clear();
+      _olderItems.clear();
+      _hasReceivedLive = false;
+      _loading = false;
+      notifyListeners();
+      return;
+    }
     if (_familyId == familyId && _liveSub != null) return;
     _familyId = familyId;
     await refresh();
@@ -146,6 +157,99 @@ class TransactionsController extends ChangeNotifier {
       _loadingMore = false;
       notifyListeners();
     }
+  }
+
+  Future<LedgerTransaction?> getTransaction(String transactionId) {
+    final familyId = _requireFamilyId();
+    return _repository.getTransaction(familyId, transactionId);
+  }
+
+  Future<String> createManualTransaction({
+    required TransactionType type,
+    required String accountId,
+    required String categoryId,
+    required int amountMinor,
+    required String currency,
+    required String bookingDate,
+    String? merchant,
+    String? note,
+  }) {
+    final familyId = _requireFamilyId();
+    return _repository.createManualTransaction(
+      familyId: familyId,
+      type: type,
+      accountId: accountId,
+      categoryId: categoryId,
+      amountMinor: amountMinor,
+      currency: currency,
+      bookingDate: bookingDate,
+      merchant: merchant,
+      note: note,
+    );
+  }
+
+  Future<void> updateManualTransaction({
+    required String transactionId,
+    required TransactionType type,
+    required String accountId,
+    required String categoryId,
+    required int amountMinor,
+    required String bookingDate,
+    String? merchant,
+    String? note,
+  }) {
+    final familyId = _requireFamilyId();
+    return _repository.updateManualTransaction(
+      familyId: familyId,
+      transactionId: transactionId,
+      type: type,
+      accountId: accountId,
+      categoryId: categoryId,
+      amountMinor: amountMinor,
+      bookingDate: bookingDate,
+      merchant: merchant,
+      note: note,
+    );
+  }
+
+  Future<void> deleteTransaction(LedgerTransaction tx) async {
+    final familyId = _requireFamilyId();
+    if (tx.type == TransactionType.transfer && tx.transferId != null) {
+      await _repository.deleteTransfer(tx.transferId!);
+    } else {
+      await _repository.deleteManualTransaction(
+        familyId: familyId,
+        transactionId: tx.id,
+      );
+    }
+  }
+
+  Future<String> createTransfer({
+    required String sourceAccountId,
+    required String destinationAccountId,
+    required int amountMinor,
+    required String bookingDate,
+    String? note,
+  }) {
+    return _repository.createTransfer(
+      sourceAccountId: sourceAccountId,
+      destinationAccountId: destinationAccountId,
+      amountMinor: amountMinor,
+      bookingDate: bookingDate,
+      note: note,
+    );
+  }
+
+  Future<void> deleteTransfer(String transferId) {
+    return _repository.deleteTransfer(transferId);
+  }
+
+  String _requireFamilyId() {
+    final familyId = _familyId;
+    if (familyId == null) {
+      throw StateError('No family bound to TransactionsController');
+    }
+    return familyId;
   }
 
   void clearError() {

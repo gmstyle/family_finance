@@ -7,7 +7,7 @@ import '../../../core/theme/app_tokens.dart';
 import '../../../core/ui/app_page.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/auth_controller.dart';
-import '../data/family_repository.dart';
+import 'family_controller.dart';
 
 class CreateFamilyScreen extends StatefulWidget {
   const CreateFamilyScreen({super.key});
