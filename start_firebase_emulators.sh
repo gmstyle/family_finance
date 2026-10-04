@@ -18,6 +18,5 @@ fi
 echo "Physical Android (same Wi‑Fi; uses LAN IP — never 127.0.0.1):"
 echo "  ./scripts/run_physical_android_emulators.sh"
 echo
-Shell
 
 exec npx -y firebase-tools@latest emulators:start --project demo-family-finance
