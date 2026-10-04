@@ -518,6 +518,12 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get budgetPeriodPrevious => 'Mese precedente';
+
+  @override
+  String get budgetPeriodNext => 'Mese successivo';
+
+  @override
   String budgetSpentOfLimit(String spent, String limit) {
     return '$spent di $limit';
   }
@@ -624,6 +630,24 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get ingestionConfirmAction => 'Conferma transazione';
+
+  @override
+  String get ingestionPeriodMismatchTitle => 'Data fuori dal mese corrente';
+
+  @override
+  String ingestionPeriodMismatchBody(
+    String bookingDate,
+    String bookingPeriod,
+    String currentPeriod,
+  ) {
+    return 'Lo scontrino è del $bookingDate: conterà nel budget di $bookingPeriod, non in quello di $currentPeriod che stai guardando.';
+  }
+
+  @override
+  String get ingestionUseReceiptDate => 'Usa data scontrino';
+
+  @override
+  String get ingestionUseTodayDate => 'Usa data di oggi';
 
   @override
   String get ingestionDiscardAction => 'Scarta';

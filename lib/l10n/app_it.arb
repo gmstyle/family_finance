@@ -161,6 +161,8 @@
   "budgetCategoryImmutableHint": "La categoria non si può cambiare dopo la creazione.",
   "budgetLimit": "Limite mensile",
   "budgetPeriodLabel": "{period}",
+  "budgetPeriodPrevious": "Mese precedente",
+  "budgetPeriodNext": "Mese successivo",
   "budgetSpentOfLimit": "{spent} di {limit}",
   "budgetAlert80": "Raggiunto l'80% del budget",
   "budgetAlert100": "Limite di budget raggiunto",
@@ -193,6 +195,17 @@
   "ingestionSourceNotification": "Notifica",
   "ingestionPossibleDuplicateHint": "Potrebbe già esistere una transazione simile. Controlla prima di confermare.",
   "ingestionConfirmAction": "Conferma transazione",
+  "ingestionPeriodMismatchTitle": "Data fuori dal mese corrente",
+  "ingestionPeriodMismatchBody": "Lo scontrino è del {bookingDate}: conterà nel budget di {bookingPeriod}, non in quello di {currentPeriod} che stai guardando.",
+  "@ingestionPeriodMismatchBody": {
+    "placeholders": {
+      "bookingDate": {"type": "String"},
+      "bookingPeriod": {"type": "String"},
+      "currentPeriod": {"type": "String"}
+    }
+  },
+  "ingestionUseReceiptDate": "Usa data scontrino",
+  "ingestionUseTodayDate": "Usa data di oggi",
   "ingestionDiscardAction": "Scarta",
   "ingestionDiscardTitle": "Scartare la bozza?",
   "ingestionDiscardBody": "La bozza verrà scartata. Non verrà creata alcuna transazione.",

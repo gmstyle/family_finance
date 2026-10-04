@@ -9,6 +9,7 @@ import '../../../core/ui/app_page.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../accounts/domain/account.dart';
 import '../../auth/presentation/auth_controller.dart';
+import '../../budgets/domain/budget.dart';
 import '../../categories/domain/category.dart';
 import '../../categories/presentation/categories_controller.dart';
 import '../../ledger/ledger_labels.dart';
@@ -124,6 +125,52 @@ class _IngestionDetailScreenState extends State<IngestionDetailScreen> {
     final update = _validatedUpdate(l10n);
     if (update == null) return;
 
+    final bookingPeriod = periodIdFromBookingDate(update.bookingDate);
+    final currentPeriod = currentBudgetPeriodId();
+    var finalUpdate = update;
+
+    if (bookingPeriod != currentPeriod) {
+      final choice = await showDialog<String>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l10n.ingestionPeriodMismatchTitle),
+          content: Text(
+            l10n.ingestionPeriodMismatchBody(
+              update.bookingDate,
+              bookingPeriod,
+              currentPeriod,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'cancel'),
+              child: Text(l10n.actionCancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'receipt'),
+              child: Text(l10n.ingestionUseReceiptDate),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, 'today'),
+              child: Text(l10n.ingestionUseTodayDate),
+            ),
+          ],
+        ),
+      );
+      if (choice == null || choice == 'cancel' || !mounted) return;
+      if (choice == 'today') {
+        final today = formatBookingDate(DateTime.now());
+        setState(() => _bookingDate = today);
+        finalUpdate = IngestionDraftUpdate(
+          amountMinor: update.amountMinor,
+          bookingDate: today,
+          accountId: update.accountId,
+          categoryId: update.categoryId,
+          merchant: update.merchant,
+        );
+      }
+    }
+
     setState(() {
       _busy = true;
       _error = null;
@@ -131,7 +178,7 @@ class _IngestionDetailScreenState extends State<IngestionDetailScreen> {
     try {
       await context.read<IngestionController>().confirmDraft(
         dedupKey: widget.dedupKey,
-        update: update,
+        update: finalUpdate,
         currency: _currency,
         saveMerchantRule: _saveMerchantRule,
       );
@@ -343,6 +390,27 @@ class _IngestionDetailScreenState extends State<IngestionDetailScreen> {
                         if (v != null) setState(() => _bookingDate = v);
                       },
                     ),
+                    if (periodIdFromBookingDate(_bookingDate) !=
+                        currentBudgetPeriodId()) ...[
+                      const SizedBox(height: AppSpacing.sm),
+                      Material(
+                        color: theme.colorScheme.tertiaryContainer,
+                        borderRadius: AppRadius.mdAll,
+                        child: Padding(
+                          padding: const EdgeInsets.all(AppSpacing.md),
+                          child: Text(
+                            l10n.ingestionPeriodMismatchBody(
+                              _bookingDate,
+                              periodIdFromBookingDate(_bookingDate),
+                              currentBudgetPeriodId(),
+                            ),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onTertiaryContainer,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                     TextFormField(
                       controller: _merchant,
                       decoration: InputDecoration(

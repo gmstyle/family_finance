@@ -184,6 +184,8 @@
       "period": { "type": "String" }
     }
   },
+  "budgetPeriodPrevious": "Previous month",
+  "budgetPeriodNext": "Next month",
   "budgetSpentOfLimit": "{spent} of {limit}",
   "@budgetSpentOfLimit": {
     "placeholders": {
@@ -238,6 +240,17 @@
   "ingestionSourceNotification": "Notification",
   "ingestionPossibleDuplicateHint": "A similar transaction may already exist. Review carefully before confirming.",
   "ingestionConfirmAction": "Confirm transaction",
+  "ingestionPeriodMismatchTitle": "Date outside current month",
+  "ingestionPeriodMismatchBody": "The receipt is dated {bookingDate}: it will count toward the {bookingPeriod} budget, not {currentPeriod} that you are viewing.",
+  "@ingestionPeriodMismatchBody": {
+    "placeholders": {
+      "bookingDate": { "type": "String" },
+      "bookingPeriod": { "type": "String" },
+      "currentPeriod": { "type": "String" }
+    }
+  },
+  "ingestionUseReceiptDate": "Use receipt date",
+  "ingestionUseTodayDate": "Use today's date",
   "ingestionDiscardAction": "Discard",
   "ingestionDiscardTitle": "Discard draft?",
   "ingestionDiscardBody": "This draft will be discarded. No transaction will be created.",

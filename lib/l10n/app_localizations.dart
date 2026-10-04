@@ -1064,6 +1064,18 @@ abstract class AppLocalizations {
   /// **'{period}'**
   String budgetPeriodLabel(String period);
 
+  /// No description provided for @budgetPeriodPrevious.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous month'**
+  String get budgetPeriodPrevious;
+
+  /// No description provided for @budgetPeriodNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next month'**
+  String get budgetPeriodNext;
+
   /// No description provided for @budgetSpentOfLimit.
   ///
   /// In en, this message translates to:
@@ -1255,6 +1267,34 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirm transaction'**
   String get ingestionConfirmAction;
+
+  /// No description provided for @ingestionPeriodMismatchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Date outside current month'**
+  String get ingestionPeriodMismatchTitle;
+
+  /// No description provided for @ingestionPeriodMismatchBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The receipt is dated {bookingDate}: it will count toward the {bookingPeriod} budget, not {currentPeriod} that you are viewing.'**
+  String ingestionPeriodMismatchBody(
+    String bookingDate,
+    String bookingPeriod,
+    String currentPeriod,
+  );
+
+  /// No description provided for @ingestionUseReceiptDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Use receipt date'**
+  String get ingestionUseReceiptDate;
+
+  /// No description provided for @ingestionUseTodayDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Use today\'s date'**
+  String get ingestionUseTodayDate;
 
   /// No description provided for @ingestionDiscardAction.
   ///

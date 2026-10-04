@@ -55,14 +55,24 @@ class _BudgetsListScreenState extends State<BudgetsListScreen> {
       appBar: AppBar(
         title: Text(l10n.budgetsTitle),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: AppSpacing.sm),
-            child: Center(
-              child: Text(
-                l10n.budgetPeriodLabel(ctrl.periodId),
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
+          IconButton(
+            tooltip: l10n.budgetPeriodPrevious,
+            onPressed: () => ctrl.shiftPeriod(-1),
+            icon: const Icon(Icons.chevron_left),
+          ),
+          TextButton(
+            onPressed: ctrl.periodId == currentBudgetPeriodId()
+                ? null
+                : () => ctrl.resetPeriodToCurrent(),
+            child: Text(
+              l10n.budgetPeriodLabel(ctrl.periodId),
+              style: Theme.of(context).textTheme.labelLarge,
             ),
+          ),
+          IconButton(
+            tooltip: l10n.budgetPeriodNext,
+            onPressed: () => ctrl.shiftPeriod(1),
+            icon: const Icon(Icons.chevron_right),
           ),
         ],
       ),

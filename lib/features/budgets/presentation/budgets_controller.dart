@@ -65,6 +65,21 @@ class BudgetsController extends ChangeNotifier {
     await _resubscribe();
   }
 
+  /// Move the watched budget period by [deltaMonths] (e.g. `-1` = previous).
+  Future<void> shiftPeriod(int deltaMonths) async {
+    final next = shiftBudgetPeriodId(_periodId, deltaMonths);
+    if (next == _periodId) return;
+    _periodId = next;
+    await _resubscribe();
+  }
+
+  Future<void> resetPeriodToCurrent() async {
+    final current = currentBudgetPeriodId();
+    if (current == _periodId) return;
+    _periodId = current;
+    await _resubscribe();
+  }
+
   Future<void> _clear() async {
     for (final s in _subs) {
       await s.cancel();

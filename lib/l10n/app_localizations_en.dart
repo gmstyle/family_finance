@@ -514,6 +514,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get budgetPeriodPrevious => 'Previous month';
+
+  @override
+  String get budgetPeriodNext => 'Next month';
+
+  @override
   String budgetSpentOfLimit(String spent, String limit) {
     return '$spent of $limit';
   }
@@ -620,6 +626,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ingestionConfirmAction => 'Confirm transaction';
+
+  @override
+  String get ingestionPeriodMismatchTitle => 'Date outside current month';
+
+  @override
+  String ingestionPeriodMismatchBody(
+    String bookingDate,
+    String bookingPeriod,
+    String currentPeriod,
+  ) {
+    return 'The receipt is dated $bookingDate: it will count toward the $bookingPeriod budget, not $currentPeriod that you are viewing.';
+  }
+
+  @override
+  String get ingestionUseReceiptDate => 'Use receipt date';
+
+  @override
+  String get ingestionUseTodayDate => 'Use today\'s date';
 
   @override
   String get ingestionDiscardAction => 'Discard';

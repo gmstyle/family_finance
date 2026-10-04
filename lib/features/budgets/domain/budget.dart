@@ -75,3 +75,20 @@ String currentBudgetPeriodId([DateTime? now]) {
   final m = d.month.toString().padLeft(2, '0');
   return '$y-$m';
 }
+
+/// `yyyy-MM` from a `yyyy-MM-DD` booking date (or already a period id).
+String periodIdFromBookingDate(String bookingDate) {
+  if (bookingDate.length >= 7) return bookingDate.substring(0, 7);
+  return bookingDate;
+}
+
+/// Shift a `yyyy-MM` period by [deltaMonths] (negative = past).
+String shiftBudgetPeriodId(String periodId, int deltaMonths) {
+  final parts = periodId.split('-');
+  if (parts.length < 2) return periodId;
+  final year = int.tryParse(parts[0]);
+  final month = int.tryParse(parts[1]);
+  if (year == null || month == null) return periodId;
+  final shifted = DateTime(year, month + deltaMonths, 1);
+  return currentBudgetPeriodId(shifted);
+}
