@@ -6,7 +6,7 @@ This policy describes how Family Finance (“the app”) handles your data. We d
 
 ## Who we are
 
-Family Finance is a shared household ledger for confirmed transactions, budgets, and virtual goals. Contact for privacy requests: replace this placeholder with your support email before publishing a public URL.
+Family Finance is a shared household ledger for confirmed transactions, budgets, and virtual goals. Contact for privacy requests: contattagmstyle@gmail.com.
 
 ## Data we process
 
@@ -39,7 +39,7 @@ We do not sell personal data. Data is processed with Google Firebase (Auth, Fire
 
 ## Your rights
 
-Depending on your jurisdiction you may request access, correction, or deletion of personal data. Use in-app export/delete where available, or contact the email above once published.
+Depending on your jurisdiction you may request access, correction, or deletion of personal data. Use in-app export/delete where available, or contact contattagmstyle@gmail.com.
 
 ## Children
 
@@ -47,4 +47,4 @@ The app is not directed at children under 13 (or the equivalent minimum age in y
 
 ## Changes
 
-We may update this policy. The in-app copy and `docs/privacy-policy.md` will be revised together; host a public URL before Play Store publication.
+We may update this policy. The in-app copy, `docs/privacy-policy.md`, and the public Hosting pages under `hosting/public/` will be revised together.

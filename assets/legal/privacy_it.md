@@ -6,7 +6,7 @@ Questa informativa descrive come Family Finance (“l’app”) tratta i tuoi da
 
 ## Titolare
 
-Family Finance è un libro mastro familiare per movimenti confermati, budget e obiettivi virtuali. Contatto per richieste privacy: sostituisci questo placeholder con l’email di supporto prima di pubblicare un URL pubblico.
+Family Finance è un libro mastro familiare per movimenti confermati, budget e obiettivi virtuali. Contatto per richieste privacy: contattagmstyle@gmail.com.
 
 ## Dati trattati
 
@@ -39,7 +39,7 @@ Non vendiamo dati personali. L’infrastruttura usa Google Firebase (Auth, Fires
 
 ## Diritti
 
-In base alla tua giurisdizione puoi chiedere accesso, rettifica o cancellazione. Usa export/eliminazione in-app dove disponibili, oppure l’email di contatto una volta pubblicata.
+In base alla tua giurisdizione puoi chiedere accesso, rettifica o cancellazione. Usa export/eliminazione in-app dove disponibili, oppure contatta contattagmstyle@gmail.com.
 
 ## Minori
 
@@ -47,4 +47,4 @@ L’app non è destinata a minori di 13 anni (o all’età minima equivalente ne
 
 ## Modifiche
 
-Possiamo aggiornare questa informativa. La copia in-app e `docs/privacy-policy.md` saranno allineate; pubblica un URL pubblico prima della pubblicazione su Play Store.
+Possiamo aggiornare questa informativa. La copia in-app, `docs/privacy-policy.md` e le pagine pubbliche sotto `hosting/public/` saranno allineate.

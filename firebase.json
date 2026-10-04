@@ -19,6 +19,32 @@
       ]
     }
   ],
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "redirects": [
+      {
+        "source": "/privacy",
+        "destination": "/privacy.html",
+        "type": 301
+      },
+      {
+        "source": "/privacy-it",
+        "destination": "/privacy-it.html",
+        "type": 301
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
   "emulators": {
     "auth": {
       "host": "0.0.0.0",

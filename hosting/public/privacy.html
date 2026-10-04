@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy — Family Finance</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --text: #1a1f24;
+      --muted: #5a6570;
+      --link: #0b5fff;
+      --bg: #f7f8fa;
+      --surface: #ffffff;
+      --border: #e3e7ec;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+    }
+    main {
+      max-width: 44rem;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      min-height: 100vh;
+    }
+    h1 { font-size: 1.75rem; margin: 0 0 0.35rem; }
+    h2 { font-size: 1.15rem; margin: 1.75rem 0 0.6rem; }
+    p, li { color: var(--text); }
+    .meta { color: var(--muted); margin: 0 0 1.25rem; }
+    .lang { margin: 0 0 1.5rem; font-size: 0.95rem; }
+    a { color: var(--link); }
+    ul { padding-left: 1.25rem; }
+    li { margin: 0.35rem 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Privacy Policy — Family Finance</h1>
+    <p class="meta"><strong>Last updated:</strong> 4 October 2026</p>
+    <p class="lang"><a href="/privacy-it.html">Italiano</a></p>
+
+    <p>This policy describes how Family Finance (“the app”) handles your data. We designed the product so that shared ledger data belongs to your family, while account credentials stay with Firebase Authentication.</p>
+
+    <h2>Who we are</h2>
+    <p>Family Finance is a shared household ledger for confirmed transactions, budgets, and virtual goals. Contact for privacy requests: <a href="mailto:contattagmstyle@gmail.com">contattagmstyle@gmail.com</a>.</p>
+
+    <h2>Data we process</h2>
+    <ul>
+      <li><strong>Account:</strong> email, display name, authentication identifiers (Firebase Auth).</li>
+      <li><strong>Family ledger:</strong> accounts, categories, transactions, transfers, budgets and period spent, goals and contributions, monthly stats rollups.</li>
+      <li><strong>Ingestion drafts:</strong> amount, booking date, merchant, suggested account/category from receipt OCR or payment notifications — never the raw notification text or receipt photo.</li>
+      <li><strong>Device tokens:</strong> FCM tokens for budget threshold alerts (stored under your user profile devices).</li>
+      <li><strong>Preferences:</strong> UI language stored on-device (<code>shared_preferences</code>).</li>
+    </ul>
+
+    <h2>How we use data</h2>
+    <ul>
+      <li>Provide the shared ledger and membership features.</li>
+      <li>Project balances, budget periods, and stats via Cloud Functions (server-side only).</li>
+      <li>Send budget threshold notifications (80% / 100%) when you have registered devices.</li>
+      <li>Create review drafts from on-device OCR or Android notification capture — <strong>transactions are created only after you confirm</strong>.</li>
+    </ul>
+
+    <h2>On-device processing</h2>
+    <ul>
+      <li><strong>Receipt OCR (Android):</strong> text recognition runs on-device (ML Kit). Photos are not uploaded to our servers.</li>
+      <li><strong>Notification listener (Android):</strong> payment notifications from allowlisted packages are parsed on-device into draft fields. Raw notification bodies are not persisted.</li>
+    </ul>
+
+    <h2>Sharing</h2>
+    <p>We do not sell personal data. Data is processed with Google Firebase (Auth, Firestore, Functions, Messaging, Remote Config) as infrastructure. Family members you invite can read and write the shared ledger according to app rules.</p>
+
+    <h2>Retention and deletion</h2>
+    <ul>
+      <li>You can export a JSON copy of member-readable family data from Settings.</li>
+      <li>You can delete your account from Settings. If you are the only family member, deletion also permanently removes that family’s ledger after an explicit confirmation. If other members remain, you must transfer ownership / promote another admin first; shared data stays with the family.</li>
+    </ul>
+
+    <h2>Your rights</h2>
+    <p>Depending on your jurisdiction you may request access, correction, or deletion of personal data. Use in-app export/delete where available, or contact <a href="mailto:contattagmstyle@gmail.com">contattagmstyle@gmail.com</a>.</p>
+
+    <h2>Children</h2>
+    <p>The app is not directed at children under 13 (or the equivalent minimum age in your country).</p>
+
+    <h2>Changes</h2>
+    <p>We may update this policy. The in-app copy and the public Hosting pages will be revised together.</p>
+  </main>
+</body>
+</html>

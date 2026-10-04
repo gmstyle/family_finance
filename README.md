@@ -79,17 +79,65 @@ Emulator mode signs out on cold start (avoids stale “invalid refresh token”)
 
 ### Flutter against real Firebase
 
-Omit emulator defines (default):
+Omit emulator defines (default). Requires Email/Password (and Google if used)
+enabled in Firebase Console → Authentication, plus a deployed backend (below).
 
 ```bash
 flutter run -d chrome
 ```
 
-Android:
+Android (physical device or AVD):
 
 ```bash
 flutter run -d android
+# or: flutter run -d <deviceId>
 ```
+
+### Deploy production (`family-finance-gmstyle-app`)
+
+Blaze plan required (Cloud Functions 2nd gen). From repo root, logged into Firebase CLI:
+
+```bash
+# Backend only
+npx -y firebase-tools@latest deploy \
+  --project family-finance-gmstyle-app \
+  --only firestore,functions
+```
+
+- Firestore: rules + indexes  
+- Functions: callables + ledger triggers (`europe-west1`)
+
+### Deploy Flutter web + privacy (Firebase Hosting)
+
+Classic Hosting serves `build/web` (not the experimental `hosting.source` /
+webframeworks preview). Always overlay privacy HTML before deploy:
+
+```bash
+./scripts/deploy_web_hosting.sh
+# equivalent: flutter build web --release
+#             cp hosting/public/privacy*.html build/web/
+#             npx -y firebase-tools@latest deploy --project family-finance-gmstyle-app --only hosting
+```
+
+URLs:
+
+- App: https://family-finance-gmstyle-app.web.app/
+- Privacy EN: https://family-finance-gmstyle-app.web.app/privacy.html (`/privacy`)
+- Privacy IT: https://family-finance-gmstyle-app.web.app/privacy-it.html (`/privacy-it`)
+
+**Auth (web):** In Firebase Console → Authentication → Settings, ensure authorized
+domains include `family-finance-gmstyle-app.web.app` and
+`family-finance-gmstyle-app.firebaseapp.com`. The Google Cloud **Browser API key**
+HTTP referrers must include Hosting **and** local Flutter Chrome (omit port so any
+port matches), e.g. `http://localhost/*`, `http://127.0.0.1/*`,
+`https://family-finance-gmstyle-app.web.app/*`,
+`https://family-finance-gmstyle-app.firebaseapp.com/*`. Patterns like
+`localhost:*/*` do **not** work — login then returns
+`403 API_KEY_HTTP_REFERRER_BLOCKED`. For Google Sign-In on web, also add those
+origins as OAuth Authorized JavaScript origins. Smoke web with email/password
+first; Google web may need GIS/`renderButton`.
+
+Local emulators stay on `demo-family-finance` + `USE_EMULATORS=true` (see above).
 
 ## Tests
 

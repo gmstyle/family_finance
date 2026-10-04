@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Informativa sulla privacy — Family Finance</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --text: #1a1f24;
+      --muted: #5a6570;
+      --link: #0b5fff;
+      --bg: #f7f8fa;
+      --surface: #ffffff;
+      --border: #e3e7ec;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+    }
+    main {
+      max-width: 44rem;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 3rem;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      min-height: 100vh;
+    }
+    h1 { font-size: 1.75rem; margin: 0 0 0.35rem; }
+    h2 { font-size: 1.15rem; margin: 1.75rem 0 0.6rem; }
+    p, li { color: var(--text); }
+    .meta { color: var(--muted); margin: 0 0 1.25rem; }
+    .lang { margin: 0 0 1.5rem; font-size: 0.95rem; }
+    a { color: var(--link); }
+    ul { padding-left: 1.25rem; }
+    li { margin: 0.35rem 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Informativa sulla privacy — Family Finance</h1>
+    <p class="meta"><strong>Ultimo aggiornamento:</strong> 4 ottobre 2026</p>
+    <p class="lang"><a href="/privacy.html">English</a></p>
+
+    <p>Questa informativa descrive come Family Finance (“l’app”) tratta i tuoi dati. Il libro mastro condiviso appartiene alla famiglia; le credenziali di accesso restano su Firebase Authentication.</p>
+
+    <h2>Titolare</h2>
+    <p>Family Finance è un libro mastro familiare per movimenti confermati, budget e obiettivi virtuali. Contatto per richieste privacy: <a href="mailto:contattagmstyle@gmail.com">contattagmstyle@gmail.com</a>.</p>
+
+    <h2>Dati trattati</h2>
+    <ul>
+      <li><strong>Account:</strong> email, nome visualizzato, identificativi di autenticazione (Firebase Auth).</li>
+      <li><strong>Libro mastro famiglia:</strong> conti, categorie, transazioni, trasferimenti, budget e speso del periodo, obiettivi e versamenti, rollup mensili.</li>
+      <li><strong>Bozze di ingestione:</strong> importo, data contabile, esercente, conto/categoria suggeriti da OCR scontrino o notifiche di pagamento — mai il testo grezzo della notifica né la foto dello scontrino.</li>
+      <li><strong>Token dispositivo:</strong> token FCM per alert di soglia budget (sotto il profilo utente).</li>
+      <li><strong>Preferenze:</strong> lingua UI memorizzata sul dispositivo (<code>shared_preferences</code>).</li>
+    </ul>
+
+    <h2>Finalità</h2>
+    <ul>
+      <li>Fornire il libro mastro condiviso e la membership.</li>
+      <li>Calcolare saldi, periodi di budget e stats tramite Cloud Functions (solo server).</li>
+      <li>Inviare notifiche di soglia budget (80% / 100%) se hai dispositivi registrati.</li>
+      <li>Creare bozze di revisione da OCR on-device o cattura notifiche Android — <strong>le transazioni nascono solo dopo conferma esplicita</strong>.</li>
+    </ul>
+
+    <h2>Trattamento sul dispositivo</h2>
+    <ul>
+      <li><strong>OCR scontrini (Android):</strong> riconoscimento testo on-device (ML Kit). Le foto non vengono caricate sui nostri server.</li>
+      <li><strong>Listener notifiche (Android):</strong> le notifiche di pagamento dei package in allowlist vengono interpretate on-device in campi bozza. Il corpo grezzo non viene persistito.</li>
+    </ul>
+
+    <h2>Condivisione</h2>
+    <p>Non vendiamo dati personali. L’infrastruttura usa Google Firebase (Auth, Firestore, Functions, Messaging, Remote Config). I membri invitati leggono e scrivono il libro mastro secondo le regole dell’app.</p>
+
+    <h2>Conservazione e cancellazione</h2>
+    <ul>
+      <li>Puoi esportare un JSON dei dati famiglia leggibili da Impostazioni.</li>
+      <li>Puoi eliminare l’account da Impostazioni. Se sei l’unico membro, la cancellazione rimuove anche in modo definitivo il libro mastro della famiglia dopo conferma esplicita. Se restano altri membri, devi trasferire la proprietà / promuovere un altro admin; i dati condivisi restano alla famiglia.</li>
+    </ul>
+
+    <h2>Diritti</h2>
+    <p>In base alla tua giurisdizione puoi chiedere accesso, rettifica o cancellazione. Usa export/eliminazione in-app dove disponibili, oppure contatta <a href="mailto:contattagmstyle@gmail.com">contattagmstyle@gmail.com</a>.</p>
+
+    <h2>Minori</h2>
+    <p>L’app non è destinata a minori di 13 anni (o all’età minima equivalente nel tuo Paese).</p>
+
+    <h2>Modifiche</h2>
+    <p>Possiamo aggiornare questa informativa. La copia in-app e le pagine pubbliche su Hosting saranno allineate.</p>
+  </main>
+</body>
+</html>

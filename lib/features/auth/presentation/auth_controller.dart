@@ -207,9 +207,7 @@ class AuthController extends ChangeNotifier {
   bool get hasGoogleProvider => _repository.hasGoogleProvider;
 
   Future<void> reauthenticateWithPassword(String password) {
-    return _guard(
-      () => _repository.reauthenticateWithPassword(password),
-    );
+    return _guard(() => _repository.reauthenticateWithPassword(password));
   }
 
   Future<void> reauthenticateWithGoogle() {
@@ -228,12 +226,18 @@ class AuthController extends ChangeNotifier {
 
   Future<void> signOut() {
     return _guard(() async {
-      try {
-        await GoogleSignIn.instance.signOut();
-      } catch (_) {
-        // Google may not be initialized (email-only sessions).
-      }
+      // Capture before Firebase clears the user. GoogleSignIn.signOut hangs on
+      // web when GIS was never initialized (email/password sessions).
+      final disconnectGoogle = _repository.hasGoogleProvider;
       await _repository.signOut();
+      if (!disconnectGoogle) return;
+      try {
+        await GoogleSignIn.instance.signOut().timeout(
+          const Duration(seconds: 3),
+        );
+      } catch (_) {
+        // GIS may hang/fail on web if not initialized for this session.
+      }
     });
   }
 
