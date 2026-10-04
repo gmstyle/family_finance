@@ -145,7 +145,13 @@ Prefer tokens over magic numbers when adding Phase 3+ screens. Interactive mock:
 - **Phase 4** — budgets, goals, dashboard, FCM (done)
 - **Phase 5** — receipt OCR → Ingestion drafts (done)
 - **Phase 6** — Android notification ingest → Ingestion drafts (done): `NotificationListenerService` (Google Wallet allowlist via Remote Config), parse → draft only, aggregated local alerts, confirm/discard in review queue
-- **Phase 7** — pre-release (pending): account deletion, export, privacy / Play declaration
+- **Phase 7** — pre-release (done): account deletion (sole-member family wipe with warning), JSON export, in-app privacy policy, Play notification-listener declaration — see [`docs/privacy-policy.md`](docs/privacy-policy.md) and [`docs/play-notification-listener.md`](docs/play-notification-listener.md)
+
+### Privacy & data (Settings)
+
+1. **Privacy policy** — in-app at Settings → Privacy & data (en/it assets under `assets/legal/`). Host [`docs/privacy-policy.md`](docs/privacy-policy.md) at a public URL before Play publication.
+2. **Export** — JSON of member-readable family data via the system share sheet.
+3. **Delete account** — reauth required; if you are the only family member, an explicit warning appears and the family ledger is wiped server-side.
 
 ### Notification ingest (Android)
 

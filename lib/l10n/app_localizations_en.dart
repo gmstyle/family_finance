@@ -49,6 +49,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get actionCancel => 'Cancel';
 
   @override
+  String get actionContinue => 'Continue';
+
+  @override
   String get actionSave => 'Save';
 
   @override
@@ -416,6 +419,72 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsFamily => 'Manage family';
+
+  @override
+  String get settingsPrivacyData => 'Privacy & data';
+
+  @override
+  String get settingsPrivacyPolicy => 'Privacy policy';
+
+  @override
+  String get settingsPrivacyLoadError => 'Could not load the privacy policy.';
+
+  @override
+  String get settingsExportData => 'Export family data';
+
+  @override
+  String get settingsExportDataHint =>
+      'Download a JSON copy of the data you can read in this family.';
+
+  @override
+  String get settingsExportDone =>
+      'Export ready — choose an app to save or share it.';
+
+  @override
+  String get settingsDeleteAccount => 'Delete account';
+
+  @override
+  String get settingsDeleteAccountHint =>
+      'Permanently delete your account and sign-in credentials.';
+
+  @override
+  String get settingsDeleteAccountTitle => 'Delete your account?';
+
+  @override
+  String get settingsDeleteAccountBody =>
+      'This cannot be undone. You will be signed out and your Auth account will be removed.';
+
+  @override
+  String get settingsDeleteAccountSoleTitle =>
+      'Delete account and family data?';
+
+  @override
+  String get settingsDeleteAccountSoleBody =>
+      'You are the only member of this family. Deleting your account will permanently erase the entire family ledger (accounts, transactions, budgets, goals, drafts). This cannot be undone.';
+
+  @override
+  String get settingsDeleteAccountConfirmAction => 'Delete permanently';
+
+  @override
+  String get settingsDeleteReauthTitle => 'Confirm it is you';
+
+  @override
+  String get settingsDeleteReauthPassword => 'Enter your password to continue';
+
+  @override
+  String get settingsDeleteReauthGoogle => 'Continue with Google to confirm';
+
+  @override
+  String get settingsDeleteFailedPromote =>
+      'Promote another admin before deleting your account (or leave the family first).';
+
+  @override
+  String get settingsDeleteFailedTransfer =>
+      'Transfer ownership before deleting your account (or leave the family first).';
+
+  @override
+  String get settingsDeleteFailedGeneric =>
+      'Could not delete the account. Check family membership and try again.';
 
   @override
   String get categoryFood => 'Food';

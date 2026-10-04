@@ -25,6 +25,9 @@ import '../../features/receipt_ocr/data/ingestion_repository.dart';
 import '../../features/receipt_ocr/data/receipt_ocr_factory.dart';
 import '../../features/receipt_ocr/domain/receipt_ocr_service.dart';
 import '../../features/receipt_ocr/presentation/ingestion_controller.dart';
+import '../../features/settings/data/account_lifecycle_repository.dart';
+import '../../features/settings/data/data_export_repository.dart';
+import '../../features/settings/presentation/settings_controller.dart';
 import '../../features/transactions/data/transactions_repository.dart';
 import '../../features/transactions/presentation/transactions_controller.dart';
 import '../locale/locale_controller.dart';
@@ -56,6 +59,9 @@ List<SingleChildWidget> buildAppProviders({
   NotificationCaptureService? notificationCaptureService,
   IngestionRouteTracker? ingestionRouteTracker,
   NotificationIngestController? notificationIngestController,
+  AccountLifecycleRepository? accountLifecycleRepository,
+  DataExportRepository? dataExportRepository,
+  SettingsController? settingsController,
 }) {
   final accounts = accountsRepository ?? AccountsRepository();
   final categories = categoriesRepository ?? CategoriesRepository();
@@ -154,6 +160,15 @@ List<SingleChildWidget> buildAppProviders({
           AccountBindingsController(
             bindingsRepository: accountBindings,
             accountsRepository: accounts,
+          ),
+    ),
+    ChangeNotifierProvider<SettingsController>(
+      create: (_) =>
+          settingsController ??
+          SettingsController(
+            accountLifecycle:
+                accountLifecycleRepository ?? AccountLifecycleRepository(),
+            dataExport: dataExportRepository ?? DataExportRepository(),
           ),
     ),
   ];

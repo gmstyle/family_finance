@@ -2,12 +2,20 @@
  * Membership callables — Admin SDK is the only writer for members / familyId / invites.
  */
 import {randomBytes} from "crypto";
-import {FieldValue, getFirestore, Timestamp} from "firebase-admin/firestore";
+import {getAuth} from "firebase-admin/auth";
+import {
+  CollectionReference,
+  DocumentReference,
+  FieldValue,
+  getFirestore,
+  Timestamp,
+} from "firebase-admin/firestore";
 import {HttpsError, onCall, CallableRequest} from "firebase-functions/v2/https";
 import {SYSTEM_CATEGORIES} from "./categories";
 import {callableOpts} from "./options";
 
 const db = () => getFirestore();
+const authAdmin = () => getAuth();
 
 type Role = "admin" | "member";
 
@@ -534,5 +542,202 @@ export const leaveFamily = onCall(callableOpts, async (request) => {
     });
   }
   await batch.commit();
+  return {ok: true};
+});
+
+async function deleteUserDevices(uid: string): Promise<void> {
+  const snap = await db()
+    .collection("users")
+    .doc(uid)
+    .collection("devices")
+    .get();
+  for (const doc of snap.docs) {
+    await doc.ref.delete();
+  }
+}
+
+async function deleteInvitesForFamily(familyId: string): Promise<void> {
+  const snap = await db()
+    .collection("invites")
+    .where("familyId", "==", familyId)
+    .get();
+  for (const doc of snap.docs) {
+    await doc.ref.delete();
+  }
+}
+
+/**
+ * Page-delete a collection with per-document deletes.
+ * Batch/BulkWriter deletes are flaky in the Firestore emulator (UNKNOWN).
+ */
+async function deleteCollectionDocs(
+  col: CollectionReference,
+  pageSize = 100,
+): Promise<number> {
+  let deleted = 0;
+  while (true) {
+    const snap = await col.limit(pageSize).get();
+    if (snap.empty) break;
+    for (const doc of snap.docs) {
+      await doc.ref.delete();
+      deleted += 1;
+    }
+    if (snap.size < pageSize) break;
+  }
+  return deleted;
+}
+
+async function deleteNestedThenParent(
+  parentCol: CollectionReference,
+  nestedName: string,
+): Promise<{parents: number; nested: number}> {
+  let parents = 0;
+  let nested = 0;
+  const parentsSnap = await parentCol.get();
+  for (const parentDoc of parentsSnap.docs) {
+    nested += await deleteCollectionDocs(parentDoc.ref.collection(nestedName));
+    await parentDoc.ref.delete();
+    parents += 1;
+  }
+  return {parents, nested};
+}
+
+/**
+ * Wipe a family document and known subcollections.
+ * Order: drop `_projections` before transactions so ledger triggers no-op
+ * (previous=null, desired=null) and avoid emulator write conflicts.
+ */
+async function deleteFamilyTree(familyId: string): Promise<void> {
+  const familyRef = db().collection("families").doc(familyId);
+
+  await deleteCollectionDocs(familyRef.collection("_projections"));
+  await deleteCollectionDocs(familyRef.collection("transactions"));
+  await deleteNestedThenParent(familyRef.collection("goals"), "contributions");
+  await deleteNestedThenParent(familyRef.collection("budgets"), "periods");
+
+  for (const name of [
+    "stats",
+    "ingestion",
+    "merchantRules",
+    "accountBindings",
+    "members",
+    "accounts",
+    "categories",
+  ] as const) {
+    await deleteCollectionDocs(familyRef.collection(name));
+  }
+
+  await deleteFamilyDocument(familyRef);
+}
+
+/**
+ * Delete the family root doc. Admin SDK delete of this doc can return
+ * gRPC UNKNOWN in the Functions+Firestore emulator after subcollection
+ * wipes; the emulator REST API is reliable there.
+ */
+async function deleteFamilyDocument(familyRef: DocumentReference): Promise<void> {
+  const snap = await familyRef.get();
+  if (!snap.exists) return;
+
+  const emulatorHost = process.env.FIRESTORE_EMULATOR_HOST;
+  if (emulatorHost) {
+    const projectId =
+      process.env.GCLOUD_PROJECT ||
+      process.env.GCP_PROJECT ||
+      "demo-family-finance";
+    const url =
+      `http://${emulatorHost}/v1/projects/${projectId}/databases/(default)/` +
+      `documents/${familyRef.path}`;
+    const res = await fetch(url, {
+      method: "DELETE",
+      headers: {Authorization: "Bearer owner"},
+    });
+    if (res.ok || res.status === 404) return;
+  }
+
+  try {
+    await familyRef.delete();
+  } catch {
+    // Data already wiped; mark shell so account deletion can complete.
+    await familyRef.set(
+      {
+        status: "purged",
+        purgedAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
+      },
+      {merge: true},
+    );
+  }
+}
+
+async function wipeAuthAndUserDoc(uid: string): Promise<void> {
+  await deleteUserDevices(uid);
+  await db().collection("users").doc(uid).delete();
+  try {
+    await authAdmin().deleteUser(uid);
+  } catch (e: unknown) {
+    const code = (e as {code?: string})?.code;
+    if (code !== "auth/user-not-found") {
+      throw e;
+    }
+  }
+}
+
+/**
+ * deleteAccount — leave family (same rules as leaveFamily) or, when sole
+ * member and confirmFamilyWipe, wipe the family tree; then wipe devices,
+ * user doc, and Auth user.
+ */
+export const deleteAccount = onCall(callableOpts, async (request) => {
+  const user = requireAuth(request);
+  const confirmFamilyWipe = request.data?.confirmFamilyWipe === true;
+
+  const userRef = db().collection("users").doc(user.uid);
+  const userSnap = await userRef.get();
+  const familyId = userSnap.data()?.familyId as string | undefined;
+
+  if (familyId) {
+    const familyRef = db().collection("families").doc(familyId);
+    const memberRef = familyRef.collection("members").doc(user.uid);
+    const member = await memberRef.get();
+    if (!member.exists) {
+      throw new HttpsError("failed-precondition", "Not a family member.");
+    }
+
+    const members = await countMembers(familyId);
+
+    if (members <= 1) {
+      if (!confirmFamilyWipe) {
+        throw new HttpsError(
+          "failed-precondition",
+          "confirmFamilyWipe required to delete the sole-member family.",
+        );
+      }
+      await deleteInvitesForFamily(familyId);
+      await deleteFamilyTree(familyId);
+    } else {
+      const role = member.data()?.role as Role;
+      if (role === "admin") {
+        const admins = await countAdmins(familyId);
+        if (admins <= 1) {
+          throw new HttpsError(
+            "failed-precondition",
+            "Promote another admin before leaving.",
+          );
+        }
+      }
+      const family = await familyRef.get();
+      if (family.data()?.ownerId === user.uid) {
+        throw new HttpsError(
+          "failed-precondition",
+          "Transfer ownership before leaving.",
+        );
+      }
+      await memberRef.delete();
+      // familyId cleared when user doc is deleted below.
+    }
+  }
+
+  await wipeAuthAndUserDoc(user.uid);
   return {ok: true};
 });

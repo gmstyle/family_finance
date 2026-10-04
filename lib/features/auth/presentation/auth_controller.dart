@@ -203,6 +203,29 @@ class AuthController extends ChangeNotifier {
     });
   }
 
+  bool get hasPasswordProvider => _repository.hasPasswordProvider;
+  bool get hasGoogleProvider => _repository.hasGoogleProvider;
+
+  Future<void> reauthenticateWithPassword(String password) {
+    return _guard(
+      () => _repository.reauthenticateWithPassword(password),
+    );
+  }
+
+  Future<void> reauthenticateWithGoogle() {
+    return _guard(() async {
+      final googleSignIn = GoogleSignIn.instance;
+      await googleSignIn.initialize();
+      final account = await googleSignIn.authenticate();
+      final idToken = account.authentication.idToken;
+      if (idToken == null) {
+        throw StateError('Google Sign-In did not return an idToken.');
+      }
+      final credential = GoogleAuthProvider.credential(idToken: idToken);
+      await _repository.reauthenticateWithGoogleCredential(credential);
+    });
+  }
+
   Future<void> signOut() {
     return _guard(() async {
       try {

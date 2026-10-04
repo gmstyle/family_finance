@@ -49,6 +49,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get actionCancel => 'Annulla';
 
   @override
+  String get actionContinue => 'Continua';
+
+  @override
   String get actionSave => 'Salva';
 
   @override
@@ -420,6 +423,74 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsFamily => 'Gestisci famiglia';
+
+  @override
+  String get settingsPrivacyData => 'Privacy e dati';
+
+  @override
+  String get settingsPrivacyPolicy => 'Informativa sulla privacy';
+
+  @override
+  String get settingsPrivacyLoadError =>
+      'Impossibile caricare l\'informativa sulla privacy.';
+
+  @override
+  String get settingsExportData => 'Esporta dati famiglia';
+
+  @override
+  String get settingsExportDataHint =>
+      'Scarica una copia JSON dei dati che puoi leggere in questa famiglia.';
+
+  @override
+  String get settingsExportDone =>
+      'Export pronto — scegli un\'app per salvarlo o condividerlo.';
+
+  @override
+  String get settingsDeleteAccount => 'Elimina account';
+
+  @override
+  String get settingsDeleteAccountHint =>
+      'Elimina in modo permanente l\'account e le credenziali di accesso.';
+
+  @override
+  String get settingsDeleteAccountTitle => 'Eliminare l\'account?';
+
+  @override
+  String get settingsDeleteAccountBody =>
+      'L\'operazione non si può annullare. Verrai disconnesso e l\'account Auth sarà rimosso.';
+
+  @override
+  String get settingsDeleteAccountSoleTitle =>
+      'Eliminare account e dati famiglia?';
+
+  @override
+  String get settingsDeleteAccountSoleBody =>
+      'Sei l\'unico membro di questa famiglia. Eliminando l\'account cancellerai in modo permanente tutto il libro mastro (conti, movimenti, budget, obiettivi, bozze). Non si può annullare.';
+
+  @override
+  String get settingsDeleteAccountConfirmAction => 'Elimina definitivamente';
+
+  @override
+  String get settingsDeleteReauthTitle => 'Conferma la tua identità';
+
+  @override
+  String get settingsDeleteReauthPassword =>
+      'Inserisci la password per continuare';
+
+  @override
+  String get settingsDeleteReauthGoogle => 'Continua con Google per confermare';
+
+  @override
+  String get settingsDeleteFailedPromote =>
+      'Promuovi un altro admin prima di eliminare l\'account (oppure esci prima dalla famiglia).';
+
+  @override
+  String get settingsDeleteFailedTransfer =>
+      'Trasferisci la proprietà prima di eliminare l\'account (oppure esci prima dalla famiglia).';
+
+  @override
+  String get settingsDeleteFailedGeneric =>
+      'Impossibile eliminare l\'account. Controlla l\'appartenenza alla famiglia e riprova.';
 
   @override
   String get categoryFood => 'Cibo';

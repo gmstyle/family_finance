@@ -51,6 +51,43 @@ class AuthRepository {
 
   Future<void> signOut() => _auth.signOut();
 
+  /// True when the current user has an email/password provider.
+  bool get hasPasswordProvider {
+    final user = _auth.currentUser;
+    if (user == null) return false;
+    return user.providerData.any((p) => p.providerId == 'password');
+  }
+
+  /// True when the current user signed in with Google.
+  bool get hasGoogleProvider {
+    final user = _auth.currentUser;
+    if (user == null) return false;
+    return user.providerData.any((p) => p.providerId == 'google.com');
+  }
+
+  Future<void> reauthenticateWithPassword(String password) async {
+    final user = _auth.currentUser;
+    final email = user?.email;
+    if (user == null || email == null || email.isEmpty) {
+      throw StateError('No signed-in email user to reauthenticate.');
+    }
+    final credential = EmailAuthProvider.credential(
+      email: email,
+      password: password,
+    );
+    await user.reauthenticateWithCredential(credential);
+  }
+
+  Future<void> reauthenticateWithGoogleCredential(
+    AuthCredential credential,
+  ) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw StateError('No signed-in user to reauthenticate.');
+    }
+    await user.reauthenticateWithCredential(credential);
+  }
+
   bool isInvalidSession(FirebaseAuthException e) {
     final code = e.code.toLowerCase();
     final message = (e.message ?? '').toLowerCase();

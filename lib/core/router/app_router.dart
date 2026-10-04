@@ -20,6 +20,7 @@ import '../../features/notification_ingest/presentation/ingestion_route_tracker.
 import '../../features/receipt_ocr/presentation/ingestion_detail_screen.dart';
 import '../../features/receipt_ocr/presentation/ingestion_inbox_screen.dart';
 import '../../features/receipt_ocr/presentation/receipt_scan_screen.dart';
+import '../../features/settings/presentation/privacy_policy_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/transactions/presentation/transaction_editor_screen.dart';
 import '../../features/transactions/presentation/transactions_list_screen.dart';
@@ -52,6 +53,7 @@ abstract final class AppRoutes {
   static const receiptScan = '/receipt-scan';
   static const accountBindings = '/account-bindings';
   static const settings = '/settings';
+  static const settingsPrivacy = '/settings/privacy';
   static const family = '/family';
   static const signIn = '/sign-in';
   static const forgotPassword = '/forgot-password';
@@ -245,6 +247,11 @@ GoRouter createAppRouter({
         path: AppRoutes.accountBindings,
         name: 'accountBindings',
         builder: (context, state) => const AccountBindingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.settingsPrivacy,
+        name: 'settingsPrivacy',
+        builder: (context, state) => const PrivacyPolicyScreen(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {

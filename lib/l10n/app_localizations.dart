@@ -176,6 +176,12 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get actionCancel;
 
+  /// No description provided for @actionContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get actionContinue;
+
   /// No description provided for @actionSave.
   ///
   /// In en, this message translates to:
@@ -883,6 +889,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manage family'**
   String get settingsFamily;
+
+  /// No description provided for @settingsPrivacyData.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & data'**
+  String get settingsPrivacyData;
+
+  /// No description provided for @settingsPrivacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get settingsPrivacyPolicy;
+
+  /// No description provided for @settingsPrivacyLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load the privacy policy.'**
+  String get settingsPrivacyLoadError;
+
+  /// No description provided for @settingsExportData.
+  ///
+  /// In en, this message translates to:
+  /// **'Export family data'**
+  String get settingsExportData;
+
+  /// No description provided for @settingsExportDataHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Download a JSON copy of the data you can read in this family.'**
+  String get settingsExportDataHint;
+
+  /// No description provided for @settingsExportDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Export ready — choose an app to save or share it.'**
+  String get settingsExportDone;
+
+  /// No description provided for @settingsDeleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get settingsDeleteAccount;
+
+  /// No description provided for @settingsDeleteAccountHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently delete your account and sign-in credentials.'**
+  String get settingsDeleteAccountHint;
+
+  /// No description provided for @settingsDeleteAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete your account?'**
+  String get settingsDeleteAccountTitle;
+
+  /// No description provided for @settingsDeleteAccountBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This cannot be undone. You will be signed out and your Auth account will be removed.'**
+  String get settingsDeleteAccountBody;
+
+  /// No description provided for @settingsDeleteAccountSoleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account and family data?'**
+  String get settingsDeleteAccountSoleTitle;
+
+  /// No description provided for @settingsDeleteAccountSoleBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You are the only member of this family. Deleting your account will permanently erase the entire family ledger (accounts, transactions, budgets, goals, drafts). This cannot be undone.'**
+  String get settingsDeleteAccountSoleBody;
+
+  /// No description provided for @settingsDeleteAccountConfirmAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete permanently'**
+  String get settingsDeleteAccountConfirmAction;
+
+  /// No description provided for @settingsDeleteReauthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm it is you'**
+  String get settingsDeleteReauthTitle;
+
+  /// No description provided for @settingsDeleteReauthPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password to continue'**
+  String get settingsDeleteReauthPassword;
+
+  /// No description provided for @settingsDeleteReauthGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google to confirm'**
+  String get settingsDeleteReauthGoogle;
+
+  /// No description provided for @settingsDeleteFailedPromote.
+  ///
+  /// In en, this message translates to:
+  /// **'Promote another admin before deleting your account (or leave the family first).'**
+  String get settingsDeleteFailedPromote;
+
+  /// No description provided for @settingsDeleteFailedTransfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer ownership before deleting your account (or leave the family first).'**
+  String get settingsDeleteFailedTransfer;
+
+  /// No description provided for @settingsDeleteFailedGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not delete the account. Check family membership and try again.'**
+  String get settingsDeleteFailedGeneric;
 
   /// No description provided for @categoryFood.
   ///
