@@ -6,11 +6,9 @@ import 'package:share_plus/share_plus.dart';
 
 /// Builds a member-readable JSON export and shares / saves it.
 class DataExportRepository {
-  DataExportRepository({
-    FirebaseFirestore? firestore,
-    FirebaseAuth? auth,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance,
-       _auth = auth ?? FirebaseAuth.instance;
+  DataExportRepository({FirebaseFirestore? firestore, FirebaseAuth? auth})
+    : _firestore = firestore ?? FirebaseFirestore.instance,
+      _auth = auth ?? FirebaseAuth.instance;
 
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
@@ -47,11 +45,7 @@ class DataExportRepository {
     await SharePlus.instance.share(
       ShareParams(
         files: [
-          XFile.fromData(
-            bytes,
-            mimeType: 'application/json',
-            name: fileName,
-          ),
+          XFile.fromData(bytes, mimeType: 'application/json', name: fileName),
         ],
         subject: fileName,
         title: fileName,
@@ -78,7 +72,9 @@ class DataExportRepository {
 
     final members = await _readCollection(familyRef.collection('members'));
     final accounts = await _readCollection(familyRef.collection('accounts'));
-    final categories = await _readCollection(familyRef.collection('categories'));
+    final categories = await _readCollection(
+      familyRef.collection('categories'),
+    );
     final transactions = await _readCollection(
       familyRef.collection('transactions'),
     );
@@ -135,9 +131,9 @@ class DataExportRepository {
     final out = <Map<String, Object?>>[];
     QueryDocumentSnapshot<Map<String, dynamic>>? last;
     while (true) {
-      Query<Map<String, dynamic>> q = col.orderBy(FieldPath.documentId).limit(
-        _pageSize,
-      );
+      Query<Map<String, dynamic>> q = col
+          .orderBy(FieldPath.documentId)
+          .limit(_pageSize);
       if (last != null) {
         q = q.startAfterDocument(last);
       }

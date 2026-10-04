@@ -66,9 +66,8 @@ class _SettingsScreenState extends State<SettingsScreen>
     try {
       await settings.exportAndShare(familyId: auth.familyId);
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l10n.settingsExportDone)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.settingsExportDone)));
     } catch (_) {
       if (!mounted) return;
       final msg = settings.errorMessage ?? l10n.settingsDeleteFailedGeneric;
@@ -114,7 +113,11 @@ class _SettingsScreenState extends State<SettingsScreen>
       } catch (_) {
         if (!mounted) return false;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(auth.errorMessage ?? l10n.settingsDeleteFailedGeneric)),
+          SnackBar(
+            content: Text(
+              auth.errorMessage ?? l10n.settingsDeleteFailedGeneric,
+            ),
+          ),
         );
         return false;
       }
@@ -145,16 +148,20 @@ class _SettingsScreenState extends State<SettingsScreen>
       } catch (_) {
         if (!mounted) return false;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(auth.errorMessage ?? l10n.settingsDeleteFailedGeneric)),
+          SnackBar(
+            content: Text(
+              auth.errorMessage ?? l10n.settingsDeleteFailedGeneric,
+            ),
+          ),
         );
         return false;
       }
     }
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.settingsDeleteFailedGeneric)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.settingsDeleteFailedGeneric)));
     }
     return false;
   }
@@ -219,9 +226,7 @@ class _SettingsScreenState extends State<SettingsScreen>
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(_mapDeleteError(l10n, settings.errorMessage)),
-        ),
+        SnackBar(content: Text(_mapDeleteError(l10n, settings.errorMessage))),
       );
     }
   }
