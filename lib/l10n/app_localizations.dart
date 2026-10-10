@@ -812,10 +812,22 @@ abstract class AppLocalizations {
   /// **'Invite link copied to clipboard'**
   String get familyInviteCopied;
 
+  /// No description provided for @familyInviteEmailSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite email sent. Link also copied to clipboard.'**
+  String get familyInviteEmailSent;
+
+  /// No description provided for @familyInviteCreatedCopyLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite created. Link copied (email not sent — configure SMTP on createInvite).'**
+  String get familyInviteCreatedCopyLink;
+
   /// No description provided for @familyInviteLinkHint.
   ///
   /// In en, this message translates to:
-  /// **'Share this link (emulator: copy manually)'**
+  /// **'Universal invite link (web and Android)'**
   String get familyInviteLinkHint;
 
   /// No description provided for @familyMakeAdmin.
@@ -877,6 +889,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Accept invite'**
   String get inviteAcceptAction;
+
+  /// No description provided for @inviteAcceptUseInvitedEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in or register with the same email address that received the invite.'**
+  String get inviteAcceptUseInvitedEmail;
+
+  /// No description provided for @inviteAcceptSignedInAs.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as {email}'**
+  String inviteAcceptSignedInAs(String email);
 
   /// No description provided for @settingsAccount.
   ///

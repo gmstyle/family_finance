@@ -19,7 +19,7 @@ WEB_OUT="$ROOT/build/web"
 echo "==> flutter build web --release (no emulator defines)"
 flutter build web --release
 
-echo "==> overlay privacy pages from hosting/public/ into build/web/"
+echo "==> overlay privacy + App Links from hosting/public/ into build/web/"
 for f in privacy.html privacy-it.html; do
   if [[ ! -f "$PRIVACY_SRC/$f" ]]; then
     echo "Missing privacy source: $PRIVACY_SRC/$f" >&2
@@ -27,6 +27,8 @@ for f in privacy.html privacy-it.html; do
   fi
   cp -f "$PRIVACY_SRC/$f" "$WEB_OUT/$f"
 done
+mkdir -p "$WEB_OUT/.well-known"
+cp -f "$PRIVACY_SRC/.well-known/assetlinks.json" "$WEB_OUT/.well-known/assetlinks.json"
 
 echo "==> firebase deploy --only hosting --project $PROJECT"
 npx -y firebase-tools@latest deploy \

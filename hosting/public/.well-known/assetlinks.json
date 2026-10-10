@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.gmstyle.family_finance",
+      "sha256_cert_fingerprints": [
+        "C5:2F:DC:B9:C8:D1:DA:EA:21:25:72:1E:8C:0B:80:06:23:E5:2D:B1:0A:67:4B:CA:56:4F:E7:51:A3:79:2A:F7"
+      ]
+    }
+  }
+]

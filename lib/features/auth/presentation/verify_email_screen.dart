@@ -51,7 +51,17 @@ class VerifyEmailScreen extends StatelessWidget {
                   : () async {
                       await auth.reloadUser();
                       if (auth.isEmailVerified && context.mounted) {
-                        context.go(AppRoutes.home);
+                        final next = GoRouterState.of(
+                          context,
+                        ).uri.queryParameters['next'];
+                        if (next != null && next.isNotEmpty) {
+                          auth.rememberPendingInvite(next);
+                          context.go(next);
+                        } else if (auth.pendingInvitePath != null) {
+                          context.go(auth.pendingInvitePath!);
+                        } else {
+                          context.go(AppRoutes.home);
+                        }
                       }
                     },
               child: Text(l10n.authIVerified),

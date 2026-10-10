@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -70,6 +71,37 @@ abstract final class AppRoutes {
   static String ingestionDetailPath(String id) => '/ingestion/$id';
 }
 
+/// Invite deep link preserved across sign-in / verify (`?next=/invite/...`).
+String _initialLocation() {
+  if (kIsWeb) {
+    final path = Uri.base.path;
+    if (path.isNotEmpty && path != '/') {
+      final query = Uri.base.hasQuery ? '?${Uri.base.query}' : '';
+      return '$path$query';
+    }
+  }
+  return AppRoutes.home;
+}
+
+String? pendingInvitePath(GoRouterState state, AuthController auth) {
+  final next = state.uri.queryParameters['next'];
+  if (next != null &&
+      next.startsWith('/invite/') &&
+      next.length > '/invite/'.length) {
+    return next;
+  }
+  if (state.matchedLocation.startsWith('/invite/')) {
+    return state.matchedLocation;
+  }
+  final stored = auth.pendingInvitePath;
+  if (stored != null &&
+      stored.startsWith('/invite/') &&
+      stored.length > '/invite/'.length) {
+    return stored;
+  }
+  return null;
+}
+
 GoRouter createAppRouter({
   required LocaleController localeController,
   required AuthController authController,
@@ -78,7 +110,7 @@ GoRouter createAppRouter({
   final refresh = ListenableMerge([localeController, authController]);
 
   return GoRouter(
-    initialLocation: AppRoutes.home,
+    initialLocation: _initialLocation(),
     refreshListenable: refresh,
     redirect: (context, state) {
       ingestionRouteTracker?.updateFromLocation(state.matchedLocation);
@@ -95,8 +127,10 @@ GoRouter createAppRouter({
       final isVerify = loc == AppRoutes.verifyEmail;
       final isOnboarding = loc == AppRoutes.onboardingFamily;
 
+      final pendingInvite = pendingInvitePath(state, authController);
+
       // Wait until we know auth + user doc state (except public auth routes).
-      if (loggedIn && !profileReady && !isAuthRoute) {
+      if (loggedIn && !profileReady && !isAuthRoute && pendingInvite == null) {
         return null;
       }
 
@@ -107,12 +141,29 @@ GoRouter createAppRouter({
 
       if (!verified) {
         if (isVerify || loc.startsWith('/invite/')) return null;
+        if (pendingInvite != null) {
+          return '${AppRoutes.verifyEmail}?next=${Uri.encodeComponent(pendingInvite)}';
+        }
         return AppRoutes.verifyEmail;
       }
 
       if (!hasFamily) {
-        if (isOnboarding || loc.startsWith('/invite/')) return null;
-        if (isAuthRoute) return AppRoutes.onboardingFamily;
+        if (loc.startsWith('/invite/')) return null;
+        if (pendingInvite != null) {
+          // Stay on verify/sign-in while finishing auth; accept runs globally.
+          if (isVerify ||
+              loc == AppRoutes.signIn ||
+              loc == AppRoutes.forgotPassword) {
+            return null;
+          }
+          return pendingInvite;
+        }
+        if (isOnboarding) return null;
+        if (loc == AppRoutes.signIn ||
+            loc == AppRoutes.forgotPassword ||
+            loc == AppRoutes.verifyEmail) {
+          return AppRoutes.onboardingFamily;
+        }
         return AppRoutes.onboardingFamily;
       }
 

@@ -17,9 +17,11 @@
   },
   "dependencies": {
     "firebase-admin": "^12.7.0",
-    "firebase-functions": "^6.3.0"
+    "firebase-functions": "^6.3.0",
+    "nodemailer": "^10.0.16"
   },
   "devDependencies": {
+    "@types/nodemailer": "^8.0.2",
     "typescript": "^5.7.3"
   },
   "private": true

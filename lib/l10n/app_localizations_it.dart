@@ -383,8 +383,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get familyInviteCopied => 'Link invito copiato negli appunti';
 
   @override
-  String get familyInviteLinkHint =>
-      'Condividi questo link (in emulatore: copia a mano)';
+  String get familyInviteEmailSent =>
+      'Email di invito inviata. Link copiato negli appunti.';
+
+  @override
+  String get familyInviteCreatedCopyLink =>
+      'Invito creato. Link copiato (email non inviata — configura SMTP su createInvite).';
+
+  @override
+  String get familyInviteLinkHint => 'Link invito universale (web e Android)';
 
   @override
   String get familyMakeAdmin => 'Rendi admin';
@@ -417,6 +424,15 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get inviteAcceptAction => 'Accetta invito';
+
+  @override
+  String get inviteAcceptUseInvitedEmail =>
+      'Accedi o registrati con la stessa email a cui è stato inviato l’invito.';
+
+  @override
+  String inviteAcceptSignedInAs(String email) {
+    return 'Accesso come $email';
+  }
 
   @override
   String get settingsAccount => 'Account';

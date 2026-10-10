@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/invite/invite_links.dart';
+import '../../../core/invite/pending_invite_store.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_tokens.dart';
 import '../../../core/ui/app_page.dart';
@@ -22,20 +24,41 @@ class AcceptInviteScreen extends StatefulWidget {
 class _AcceptInviteScreenState extends State<AcceptInviteScreen> {
   String? _localError;
   bool _done = false;
+  String get _invitePath => AppRoutes.invitePath(widget.token);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<AuthController>().rememberPendingInvite(_invitePath);
+    });
+  }
 
   Future<void> _accept() async {
     setState(() => _localError = null);
     final auth = context.read<AuthController>();
+    auth.rememberPendingInvite(_invitePath);
+    await auth.reloadUser();
+    if (!mounted) return;
     if (!auth.isSignedIn) {
-      context.go('${AppRoutes.signIn}?next=/invite/${widget.token}');
+      context.go(
+        '${AppRoutes.signIn}?next=${Uri.encodeComponent(_invitePath)}',
+      );
       return;
     }
     if (!auth.isEmailVerified) {
-      context.go(AppRoutes.verifyEmail);
+      context.go(
+        '${AppRoutes.verifyEmail}?next=${Uri.encodeComponent(_invitePath)}',
+      );
       return;
     }
     try {
-      await context.read<FamilyController>().acceptInvite(widget.token);
+      final familyId = await context.read<FamilyController>().acceptInvite(
+        widget.token,
+      );
+      auth.applyFamilyId(familyId);
+      await PendingInviteStore.clear();
       setState(() => _done = true);
       if (mounted) context.go(AppRoutes.home);
     } catch (e) {
@@ -46,6 +69,7 @@ class _AcceptInviteScreenState extends State<AcceptInviteScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final auth = context.watch<AuthController>();
     final family = context.watch<FamilyController>();
     final theme = Theme.of(context);
 
@@ -58,8 +82,19 @@ class _AcceptInviteScreenState extends State<AcceptInviteScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(l10n.inviteAcceptBody, textAlign: TextAlign.center),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              l10n.inviteAcceptUseInvitedEmail,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium,
+            ),
             const SizedBox(height: AppSpacing.md),
-            SelectableText(widget.token, style: theme.textTheme.bodySmall),
+            if (auth.isSignedIn && auth.user?.email != null)
+              Text(
+                l10n.inviteAcceptSignedInAs(auth.user!.email!),
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodySmall,
+              ),
             const SizedBox(height: AppSpacing.lg),
             if (_localError != null || family.errorMessage != null)
               Text(
@@ -216,16 +251,16 @@ class _FamilyManageScreenState extends State<FamilyManageScreen> {
                             );
                             _inviteEmail.clear();
                             if (!context.mounted) return;
-                            final link = Uri.base
-                                .replace(
-                                  path: '/invite/${invite.token}',
-                                  query: '',
-                                )
-                                .toString();
+                            final link =
+                                invite.inviteLink ??
+                                inviteUrlForToken(invite.token);
                             await Clipboard.setData(ClipboardData(text: link));
                             if (!context.mounted) return;
+                            final msg = invite.emailQueued
+                                ? l10n.familyInviteEmailSent
+                                : l10n.familyInviteCreatedCopyLink;
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(l10n.familyInviteCopied)),
+                              SnackBar(content: Text(msg)),
                             );
                           } catch (_) {}
                         },
@@ -238,24 +273,17 @@ class _FamilyManageScreenState extends State<FamilyManageScreen> {
                 child: ListTile(
                   title: Text(l10n.familyInviteLinkHint),
                   subtitle: SelectableText(
-                    Uri.base
-                        .replace(
-                          path:
-                              '/invite/${familyCtrl.lastCreatedInvite!.token}',
-                          query: '',
-                        )
-                        .toString(),
+                    familyCtrl.lastCreatedInvite!.inviteLink ??
+                        inviteUrlForToken(
+                          familyCtrl.lastCreatedInvite!.token,
+                        ),
                   ),
                   trailing: IconButton(
                     icon: const Icon(Icons.copy),
                     onPressed: () async {
-                      final link = Uri.base
-                          .replace(
-                            path:
-                                '/invite/${familyCtrl.lastCreatedInvite!.token}',
-                            query: '',
-                          )
-                          .toString();
+                      final inv = familyCtrl.lastCreatedInvite!;
+                      final link =
+                          inv.inviteLink ?? inviteUrlForToken(inv.token);
                       await Clipboard.setData(ClipboardData(text: link));
                     },
                   ),

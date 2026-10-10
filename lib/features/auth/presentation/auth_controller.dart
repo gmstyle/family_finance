@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../../core/invite/pending_invite_store.dart';
 import '../data/auth_repository.dart';
 
 /// Auth + lightweight user profile (familyId from Firestore).
@@ -20,10 +21,13 @@ class AuthController extends ChangeNotifier {
 
   User? _user;
   String? _familyId;
+  String? _familyIdConfirmedByCallable;
+  String? _pendingInvitePath;
   bool _profileReady = false;
   String? _errorMessage;
   bool _busy = false;
   bool _clearingInvalidSession = false;
+  bool _familyIdReconcileAttempted = false;
 
   static const String _invalidSessionMessage =
       'Your session expired or is invalid. Please sign in again.';
@@ -33,15 +37,34 @@ class AuthController extends ChangeNotifier {
   bool get isEmailVerified => _user?.emailVerified ?? false;
   String? get familyId => _familyId;
   bool get hasFamily => _familyId != null && _familyId!.isNotEmpty;
+  String? get pendingInvitePath => _pendingInvitePath;
+  String? get pendingInviteToken {
+    final path = _pendingInvitePath;
+    if (path == null || !path.startsWith('/invite/')) return null;
+    final token = path.substring('/invite/'.length);
+    return token.isEmpty ? null : token;
+  }
+
   bool get profileReady => _profileReady;
   bool get busy => _busy;
   String? get errorMessage => _errorMessage;
 
   Future<void> _onAuthChanged(User? user) async {
+    // Token refresh / emailVerified update — keep Firestore family subscription.
+    if (user != null &&
+        user.uid == _user?.uid &&
+        (_familyIdSub != null || _profileReady)) {
+      _user = user;
+      notifyListeners();
+      return;
+    }
+
     await _familyIdSub?.cancel();
     _familyIdSub = null;
     _user = user;
     _familyId = null;
+    _familyIdConfirmedByCallable = null;
+    _familyIdReconcileAttempted = false;
     _profileReady = false;
     // Preserve the message set by [_forceSignOutForInvalidSession] across the
     // authStateChanges(null) that follows signOut.
@@ -51,7 +74,9 @@ class AuthController extends ChangeNotifier {
     notifyListeners();
 
     if (user == null) {
+      _pendingInvitePath = null;
       _profileReady = true;
+      unawaited(PendingInviteStore.clear());
       notifyListeners();
       return;
     }
@@ -75,7 +100,22 @@ class AuthController extends ChangeNotifier {
         .watchFamilyId(user.uid)
         .listen(
           (familyId) {
-            _familyId = familyId;
+            if (familyId != null && familyId.isNotEmpty) {
+              _familyId = familyId;
+              _familyIdConfirmedByCallable = null;
+              unawaited(PendingInviteStore.clear());
+              _pendingInvitePath = null;
+            } else if (_familyIdConfirmedByCallable != null) {
+              _familyId = _familyIdConfirmedByCallable;
+            } else {
+              _familyId = familyId;
+              final missingFamily =
+                  familyId == null || familyId.isEmpty;
+              if (missingFamily && !_familyIdReconcileAttempted) {
+                _familyIdReconcileAttempted = true;
+                unawaited(_reconcileFamilyIdFromServer());
+              }
+            }
             _profileReady = true;
             notifyListeners();
           },
@@ -187,6 +227,60 @@ class AuthController extends ChangeNotifier {
     await _user?.reload();
     _user = _repository.currentUser;
     notifyListeners();
+  }
+
+  /// Deep link to accept an invite — survives redirects without `?next=`.
+  void rememberPendingInvite(String path) {
+    if (!path.startsWith('/invite/') || path.length <= '/invite/'.length) {
+      return;
+    }
+    _pendingInvitePath = path;
+    final token = pendingInviteToken;
+    if (token != null) {
+      unawaited(PendingInviteStore.saveToken(token));
+    }
+    notifyListeners();
+  }
+
+  void restorePendingInviteFromToken(String? token) {
+    if (token == null || token.trim().isEmpty) return;
+    rememberPendingInvite('/invite/${token.trim()}');
+  }
+
+  void clearPendingInvite() {
+    if (_pendingInvitePath == null) return;
+    _pendingInvitePath = null;
+    notifyListeners();
+  }
+
+  /// Callable just joined/created a family; Firestore listener may lag.
+  void applyFamilyId(String familyId) {
+    if (familyId.isEmpty) return;
+    _familyId = familyId;
+    _familyIdConfirmedByCallable = familyId;
+    _pendingInvitePath = null;
+    unawaited(PendingInviteStore.clear());
+    _profileReady = true;
+    notifyListeners();
+  }
+
+  /// After a successful accept on the server, refresh profile from Firestore.
+  Future<bool> syncFamilyIdFromServer() async {
+    final uid = _user?.uid;
+    if (uid == null) return false;
+    final id = await _repository.fetchFamilyIdOnce(uid);
+    if (id == null || id.isEmpty) return false;
+    if (_user?.uid != uid) return false;
+    applyFamilyId(id);
+    return true;
+  }
+
+  Future<void> _reconcileFamilyIdFromServer() async {
+    try {
+      await syncFamilyIdFromServer();
+    } catch (_) {
+      // Realtime listener remains source of truth; ignore transient read errors.
+    }
   }
 
   Future<void> signInWithGoogle() {

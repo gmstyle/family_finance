@@ -6,12 +6,14 @@ import {getAuth} from "firebase-admin/auth";
 import {
   CollectionReference,
   DocumentReference,
+  DocumentSnapshot,
   FieldValue,
   getFirestore,
   Timestamp,
 } from "firebase-admin/firestore";
 import {HttpsError, onCall, CallableRequest} from "firebase-functions/v2/https";
 import {SYSTEM_CATEGORIES} from "./categories";
+import {buildInviteUrl, sendInviteEmail, smtpPassword} from "./inviteMail";
 import {callableOpts} from "./options";
 
 const db = () => getFirestore();
@@ -44,6 +46,37 @@ function requireAuth(request: CallableRequest): {
 function inviteExpiresAt(days = 7): Timestamp {
   const ms = Date.now() + days * 24 * 60 * 60 * 1000;
   return Timestamp.fromMillis(ms);
+}
+
+async function syncUserFamilyDoc(
+  userRef: DocumentReference,
+  userSnap: DocumentSnapshot,
+  familyId: string,
+  user: {uid: string; email: string; displayName: string},
+): Promise<void> {
+  const now = FieldValue.serverTimestamp();
+  const current = userSnap.exists
+    ? (userSnap.data()?.familyId as string | undefined)
+    : undefined;
+  if (current === familyId) {
+    return;
+  }
+  if (userSnap.exists) {
+    await userRef.update({
+      familyId,
+      email: user.email,
+      displayName: user.displayName,
+      updatedAt: now,
+    });
+  } else {
+    await userRef.set({
+      email: user.email,
+      displayName: user.displayName,
+      familyId,
+      createdAt: now,
+      updatedAt: now,
+    });
+  }
 }
 
 async function countAdmins(familyId: string): Promise<number> {
@@ -155,8 +188,10 @@ export const createFamily = onCall(callableOpts, async (request) => {
   return {familyId: familyRef.id};
 });
 
-/** createInvite — admin only; returns token for in-app / emulator copy link. */
-export const createInvite = onCall(callableOpts, async (request) => {
+/** createInvite — admin only; sends invite email (SMTP) + returns universal HTTPS link. */
+export const createInvite = onCall(
+  {...callableOpts, secrets: [smtpPassword]},
+  async (request) => {
   const user = requireAuth(request);
   const invitedEmail = String(request.data?.invitedEmail ?? "")
     .trim()
@@ -172,7 +207,11 @@ export const createInvite = onCall(callableOpts, async (request) => {
   }
   await assertAdmin(familyId, user.uid);
 
+  const familySnap = await db().collection("families").doc(familyId).get();
+  const familyName = (familySnap.data()?.name as string | undefined) ?? "Family";
+
   const token = randomBytes(24).toString("hex");
+  const inviteLink = buildInviteUrl(token);
   const inviteRef = db().collection("invites").doc();
   const now = FieldValue.serverTimestamp();
   const expiresAt = inviteExpiresAt(7);
@@ -182,18 +221,34 @@ export const createInvite = onCall(callableOpts, async (request) => {
     invitedEmail,
     invitedByUserId: user.uid,
     token,
+    inviteLink,
     status: "pending",
     expiresAt,
     createdAt: now,
   });
 
+  let emailQueued = false;
+  try {
+    emailQueued = await sendInviteEmail({
+      to: invitedEmail,
+      inviteLink,
+      familyName,
+      inviterDisplayName: user.displayName,
+    });
+  } catch (err) {
+    console.error("sendInviteEmail failed", err);
+  }
+
   return {
     inviteId: inviteRef.id,
     token,
     invitedEmail,
+    inviteLink,
+    emailQueued,
     expiresAt: expiresAt.toDate().toISOString(),
   };
-});
+  },
+);
 
 /** revokeInvite — admin; marks invite revoked. */
 export const revokeInvite = onCall(callableOpts, async (request) => {
@@ -251,13 +306,6 @@ export const acceptInvite = onCall(callableOpts, async (request) => {
   const inviteDoc = invites.docs[0];
   const invite = inviteDoc.data();
 
-  if (invite.status !== "pending") {
-    throw new HttpsError("failed-precondition", "Invite is not pending.");
-  }
-  const expiresAt = invite.expiresAt as Timestamp;
-  if (expiresAt.toMillis() < Date.now()) {
-    throw new HttpsError("failed-precondition", "Invite has expired.");
-  }
   if ((invite.invitedEmail as string).toLowerCase() !== user.email) {
     throw new HttpsError(
       "permission-denied",
@@ -268,6 +316,39 @@ export const acceptInvite = onCall(callableOpts, async (request) => {
   const targetFamilyId = invite.familyId as string;
   const userRef = db().collection("users").doc(user.uid);
   const userSnap = await userRef.get();
+  const targetMemberRef = db()
+    .collection("families")
+    .doc(targetFamilyId)
+    .collection("members")
+    .doc(user.uid);
+  const targetMemberSnap = await targetMemberRef.get();
+
+  // Idempotent: already joined (e.g. client retried after invite was accepted).
+  if (targetMemberSnap.exists) {
+    await syncUserFamilyDoc(userRef, userSnap, targetFamilyId, user);
+    return {familyId: targetFamilyId};
+  }
+
+  const acceptedBy = invite.acceptedByUserId as string | undefined;
+  if (invite.status === "accepted" && acceptedBy === user.uid) {
+    const now = FieldValue.serverTimestamp();
+    await targetMemberRef.set({
+      role: "member",
+      displayName: user.displayName,
+      joinedAt: now,
+    });
+    await syncUserFamilyDoc(userRef, userSnap, targetFamilyId, user);
+    return {familyId: targetFamilyId};
+  }
+
+  if (invite.status !== "pending") {
+    throw new HttpsError("failed-precondition", "Invite is not pending.");
+  }
+  const expiresAt = invite.expiresAt as Timestamp;
+  if (expiresAt.toMillis() < Date.now()) {
+    throw new HttpsError("failed-precondition", "Invite has expired.");
+  }
+
   const previousFamilyId = userSnap.exists
     ? (userSnap.data()?.familyId as string | undefined)
     : undefined;

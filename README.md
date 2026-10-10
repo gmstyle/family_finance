@@ -216,7 +216,8 @@ Remote Config keys (optional): `notification_package_allowlist` (JSON string arr
 1. In Firebase Console enable **Email/Password** (and Google if you use it).
 2. Configure **OAuth consent screen** + Web/Android OAuth clients for Google Sign-In.
 3. Emulator: email verification links appear in Auth emulator UI; invite links are copied from Family → Invites (no Trigger Email required locally).
-4. Callables run in region `europe-west1` — start Functions emulator with the rest of the suite.
+4. **Production invites:** `createInvite` sends email via **SMTP** (self-managed Cloud Function, no Firebase Extension) + universal link `https://family-finance-gmstyle-app.web.app/invite/<token>`. Configure `SMTP_PASSWORD` / `SMTP_USER` — see [`docs/invite-email-setup.md`](docs/invite-email-setup.md).
+5. Callables run in region `europe-west1` — start Functions emulator with the rest of the suite.
 
 ```bash
 npx -y firebase-tools@latest emulators:start --project demo-family-finance

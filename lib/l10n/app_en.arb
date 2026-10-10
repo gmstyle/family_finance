@@ -132,7 +132,9 @@
   "familyInvites": "Invites",
   "familyInviteEmail": "Invite by email",
   "familyInviteCopied": "Invite link copied to clipboard",
-  "familyInviteLinkHint": "Share this link (emulator: copy manually)",
+  "familyInviteEmailSent": "Invite email sent. Link also copied to clipboard.",
+  "familyInviteCreatedCopyLink": "Invite created. Link copied (email not sent — configure SMTP on createInvite).",
+  "familyInviteLinkHint": "Universal invite link (web and Android)",
   "familyMakeAdmin": "Make admin",
   "familyMakeMember": "Make member",
   "familyTransferOwnership": "Transfer ownership",
@@ -143,6 +145,13 @@
   "inviteAcceptTitle": "Family invite",
   "inviteAcceptBody": "Accept this invite to join the shared family ledger.",
   "inviteAcceptAction": "Accept invite",
+  "inviteAcceptUseInvitedEmail": "Sign in or register with the same email address that received the invite.",
+  "inviteAcceptSignedInAs": "Signed in as {email}",
+  "@inviteAcceptSignedInAs": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
   "settingsAccount": "Account",
   "settingsFamily": "Manage family",
   "settingsPrivacyData": "Privacy & data",

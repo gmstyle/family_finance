@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 
 import '../../../core/firebase/firebase_bootstrap.dart';
 import '../../../core/firebase/functions_client.dart';
+import '../../../core/invite/invite_links.dart';
 import '../domain/family.dart';
 
 export 'package:cloud_functions/cloud_functions.dart'
@@ -75,12 +76,16 @@ class FamilyRepository {
     final data = await _call<Map<Object?, Object?>>('createInvite', {
       'invitedEmail': invitedEmail,
     });
+    final token = data['token']! as String;
+    final inviteLinkRaw = data['inviteLink'] as String?;
     return FamilyInvite(
       id: data['inviteId']! as String,
       invitedEmail: data['invitedEmail']! as String,
-      token: data['token']! as String,
+      token: token,
       status: 'pending',
       expiresAt: DateTime.tryParse(data['expiresAt'] as String? ?? ''),
+      inviteLink: inviteLinkRaw ?? inviteUrlForToken(token),
+      emailQueued: data['emailQueued'] == true,
     );
   }
 
@@ -88,10 +93,27 @@ class FamilyRepository {
       _call<Map<Object?, Object?>>('revokeInvite', {'inviteId': inviteId});
 
   Future<String> acceptInvite(String token) async {
-    final data = await _call<Map<Object?, Object?>>('acceptInvite', {
-      'token': token,
-    });
-    return data['familyId']! as String;
+    try {
+      final data = await _call<Map<Object?, Object?>>('acceptInvite', {
+        'token': token,
+      });
+      return data['familyId']! as String;
+    } on FirebaseFunctionsException catch (e) {
+      final msg = (e.message ?? '').toLowerCase();
+      if (e.code == 'failed-precondition' && msg.contains('not pending')) {
+        final uid = FirebaseAuth.instance.currentUser?.uid;
+        if (uid != null) {
+          final snap = await _firestore.collection('users').doc(uid).get(
+            const GetOptions(source: Source.server),
+          );
+          final id = snap.data()?['familyId'] as String?;
+          if (id != null && id.isNotEmpty) {
+            return id;
+          }
+        }
+      }
+      rethrow;
+    }
   }
 
   Future<void> leaveFamily() => _call<Map<Object?, Object?>>('leaveFamily');

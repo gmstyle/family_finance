@@ -21,6 +21,18 @@ class _CreateFamilyScreenState extends State<CreateFamilyScreen> {
   final _formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final token = context.read<AuthController>().pendingInviteToken;
+      if (token != null && token.isNotEmpty) {
+        context.go(AppRoutes.invitePath(token));
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _name.dispose();
     super.dispose();
@@ -76,7 +88,10 @@ class _CreateFamilyScreenState extends State<CreateFamilyScreen> {
                   : () async {
                       if (!_formKey.currentState!.validate()) return;
                       try {
-                        await family.createFamily(name: _name.text.trim());
+                        final familyId = await family.createFamily(
+                          name: _name.text.trim(),
+                        );
+                        auth.applyFamilyId(familyId);
                         if (context.mounted) context.go(AppRoutes.home);
                       } catch (_) {}
                     },
@@ -88,6 +103,15 @@ class _CreateFamilyScreenState extends State<CreateFamilyScreen> {
               textAlign: TextAlign.center,
               style: theme.textTheme.bodySmall,
             ),
+            if (auth.pendingInviteToken != null) ...[
+              const SizedBox(height: AppSpacing.md),
+              OutlinedButton(
+                onPressed: () {
+                  context.go(AppRoutes.invitePath(auth.pendingInviteToken!));
+                },
+                child: Text(l10n.inviteAcceptAction),
+              ),
+            ],
           ],
         ),
       ),

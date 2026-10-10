@@ -1,10 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'core/di/app_providers.dart';
 import 'core/firebase/firebase_bootstrap.dart';
+import 'core/invite/invite_bootstrap.dart';
+import 'core/invite/pending_invite_accept_listener.dart';
+import 'core/invite/pending_invite_store.dart';
 import 'core/locale/locale_controller.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
@@ -22,10 +27,17 @@ import 'l10n/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    usePathUrlStrategy();
+  }
   await FirebaseBootstrap.initialize();
   final localeController = await LocaleController.create();
   final authRepository = AuthRepository();
   final authController = AuthController(repository: authRepository);
+  authController.restorePendingInviteFromToken(
+    await PendingInviteStore.readToken(),
+  );
+  bootstrapInviteFromBrowserUrl(authController);
   final fcm = FcmRegistration(auth: FirebaseAuth.instance)..start();
 
   final routeTracker = IngestionRouteTracker();
@@ -145,7 +157,9 @@ class _FamilyFinanceAppState extends State<FamilyFinanceApp> {
                 ingest.bodyForCount = (_) => l10n.notificationDraftAlertBody;
                 ingest.onOpenInbox = () => _router.go(AppRoutes.ingestion);
               }
-              return child ?? const SizedBox.shrink();
+              return PendingInviteAcceptListener(
+                child: child ?? const SizedBox.shrink(),
+              );
             },
           );
         },

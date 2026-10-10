@@ -119,7 +119,9 @@
   "familyInvites": "Inviti",
   "familyInviteEmail": "Invita via email",
   "familyInviteCopied": "Link invito copiato negli appunti",
-  "familyInviteLinkHint": "Condividi questo link (in emulatore: copia a mano)",
+  "familyInviteEmailSent": "Email di invito inviata. Link copiato negli appunti.",
+  "familyInviteCreatedCopyLink": "Invito creato. Link copiato (email non inviata — configura SMTP su createInvite).",
+  "familyInviteLinkHint": "Link invito universale (web e Android)",
   "familyMakeAdmin": "Rendi admin",
   "familyMakeMember": "Rendi membro",
   "familyTransferOwnership": "Trasferisci ownership",
@@ -130,6 +132,13 @@
   "inviteAcceptTitle": "Invito famiglia",
   "inviteAcceptBody": "Accetta l'invito per entrare nel libro mastro condiviso.",
   "inviteAcceptAction": "Accetta invito",
+  "inviteAcceptUseInvitedEmail": "Accedi o registrati con la stessa email a cui è stato inviato l’invito.",
+  "inviteAcceptSignedInAs": "Accesso come {email}",
+  "@inviteAcceptSignedInAs": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
   "settingsAccount": "Account",
   "settingsFamily": "Gestisci famiglia",
   "settingsPrivacyData": "Privacy e dati",

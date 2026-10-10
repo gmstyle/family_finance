@@ -19,6 +19,8 @@ class FamilyInvite {
     required this.token,
     required this.status,
     this.expiresAt,
+    this.inviteLink,
+    this.emailQueued = false,
   });
 
   final String id;
@@ -26,6 +28,8 @@ class FamilyInvite {
   final String token;
   final String status;
   final DateTime? expiresAt;
+  final String? inviteLink;
+  final bool emailQueued;
 }
 
 class FamilyInfo {

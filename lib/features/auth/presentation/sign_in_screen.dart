@@ -46,6 +46,14 @@ class _SignInScreenState extends State<SignInScreen> {
           password: _password.text,
         );
       }
+      if (!mounted) return;
+      final next = GoRouterState.of(context).uri.queryParameters['next'];
+      if (next != null && next.isNotEmpty) {
+        auth.rememberPendingInvite(next);
+        if (auth.isEmailVerified) {
+          context.go(next);
+        }
+      }
     } catch (_) {
       // Error surfaced via auth.errorMessage
     }

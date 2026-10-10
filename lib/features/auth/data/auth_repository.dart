@@ -24,6 +24,15 @@ class AuthRepository {
         .map((snap) => snap.data()?['familyId'] as String?);
   }
 
+  Future<String?> fetchFamilyIdOnce(String uid) async {
+    final snap = await _firestore.collection('users').doc(uid).get(
+      const GetOptions(source: Source.server),
+    );
+    final id = snap.data()?['familyId'] as String?;
+    if (id == null || id.isEmpty) return null;
+    return id;
+  }
+
   /// Returns false if the session was cleared due to a bad/expired token.
   Future<bool> ensureFreshToken(User user) async {
     try {
