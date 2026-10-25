@@ -109,8 +109,7 @@ class AuthController extends ChangeNotifier {
               _familyId = _familyIdConfirmedByCallable;
             } else {
               _familyId = familyId;
-              final missingFamily =
-                  familyId == null || familyId.isEmpty;
+              final missingFamily = familyId == null || familyId.isEmpty;
               if (missingFamily && !_familyIdReconcileAttempted) {
                 _familyIdReconcileAttempted = true;
                 unawaited(_reconcileFamilyIdFromServer());

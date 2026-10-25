@@ -25,9 +25,10 @@ class AuthRepository {
   }
 
   Future<String?> fetchFamilyIdOnce(String uid) async {
-    final snap = await _firestore.collection('users').doc(uid).get(
-      const GetOptions(source: Source.server),
-    );
+    final snap = await _firestore
+        .collection('users')
+        .doc(uid)
+        .get(const GetOptions(source: Source.server));
     final id = snap.data()?['familyId'] as String?;
     if (id == null || id.isEmpty) return null;
     return id;

@@ -103,9 +103,10 @@ class FamilyRepository {
       if (e.code == 'failed-precondition' && msg.contains('not pending')) {
         final uid = FirebaseAuth.instance.currentUser?.uid;
         if (uid != null) {
-          final snap = await _firestore.collection('users').doc(uid).get(
-            const GetOptions(source: Source.server),
-          );
+          final snap = await _firestore
+              .collection('users')
+              .doc(uid)
+              .get(const GetOptions(source: Source.server));
           final id = snap.data()?['familyId'] as String?;
           if (id != null && id.isNotEmpty) {
             return id;
