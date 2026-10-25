@@ -115,7 +115,7 @@ After every completed implementation (feature, fix, refactor, UI):
 2. `flutter analyze` — fix issues you introduced; call out pre-existing noise.
 3. Do not claim done until both succeed (or remaining issues are documented).
 
-Also enforced by `.cursor/rules/dart-format-analyze.mdc`.
+(Optional local Cursor rule under `.cursor/rules/` — that directory is gitignored.)
 
 ## Out of scope defaults
 

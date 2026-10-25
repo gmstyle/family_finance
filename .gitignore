@@ -51,6 +51,9 @@ app.*.map.json
 docs/family-finance-mvp.plan.md
 docs/family-finance-ui-mock.canvas.tsx
 
+# Cursor IDE (local rules, plans, settings — not versioned)
+.cursor/
+
 # Firebase emulators / CLI
 .firebase/
 firebase-debug.log
