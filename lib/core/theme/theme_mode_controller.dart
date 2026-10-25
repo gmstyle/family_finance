@@ -3,35 +3,33 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Persists and exposes [ThemeMode] (system / light / dark).
 class ThemeModeController extends ChangeNotifier {
-  ThemeModeController(this._prefs);
+  ThemeModeController._(this._prefs, this._themeMode);
 
-  static const _prefsKey = 'ui_theme_mode';
+  static const prefsKey = 'ui_theme_mode';
 
   final SharedPreferences _prefs;
-
-  late ThemeMode _themeMode = _resolveInitial();
+  ThemeMode _themeMode;
 
   ThemeMode get themeMode => _themeMode;
 
   static Future<ThemeModeController> create() async {
     final prefs = await SharedPreferences.getInstance();
-    return ThemeModeController(prefs);
+    // Pull latest disk/localStorage values (important on web after a prior write).
+    await prefs.reload();
+    final stored = prefs.getString(prefsKey);
+    final mode = _decode(stored) ?? ThemeMode.system;
+    return ThemeModeController._(prefs, mode);
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
     if (mode == _themeMode) return;
     _themeMode = mode;
-    await _prefs.setString(_prefsKey, _encode(mode));
     notifyListeners();
-  }
-
-  ThemeMode _resolveInitial() {
-    final stored = _prefs.getString(_prefsKey);
-    if (stored != null) {
-      final parsed = _decode(stored);
-      if (parsed != null) return parsed;
+    final ok = await _prefs.setString(prefsKey, _encode(mode));
+    if (!ok) {
+      // Retry once — some web backends report false on the first write.
+      await _prefs.setString(prefsKey, _encode(mode));
     }
-    return ThemeMode.system;
   }
 
   static String _encode(ThemeMode mode) => switch (mode) {
@@ -40,7 +38,7 @@ class ThemeModeController extends ChangeNotifier {
     ThemeMode.system => 'system',
   };
 
-  static ThemeMode? _decode(String value) => switch (value) {
+  static ThemeMode? _decode(String? value) => switch (value) {
     'light' => ThemeMode.light,
     'dark' => ThemeMode.dark,
     'system' => ThemeMode.system,

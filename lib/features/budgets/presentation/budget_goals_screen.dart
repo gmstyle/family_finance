@@ -718,37 +718,124 @@ class _CapacityHero extends StatelessWidget {
       ],
     );
 
+    final capacityColumn = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Wrap(
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.xs,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.sm,
+                vertical: AppSpacing.xxs,
+              ),
+              decoration: BoxDecoration(
+                color: scheme.primaryFixed,
+                borderRadius: AppRadius.fullAll,
+              ),
+              child: Text(
+                l10n.budgetPercentUsed(percent),
+                style: textTheme.labelSmall?.copyWith(
+                  color: scheme.onPrimaryFixed,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.6,
+                ),
+              ),
+            ),
+            Text(
+              l10n.budgetDaysRemaining(daysLeft),
+              style: textTheme.bodySmall?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            ),
+            if (nearLimit > 0)
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xxs,
+                ),
+                decoration: BoxDecoration(
+                  color: scheme.errorContainer.withValues(alpha: 0.4),
+                  borderRadius: AppRadius.fullAll,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.notification_important_outlined,
+                      size: 16,
+                      color: scheme.secondary,
+                    ),
+                    const SizedBox(width: AppSpacing.xxs),
+                    Text(
+                      l10n.budgetNearLimitCount(nearLimit),
+                      style: textTheme.labelSmall?.copyWith(
+                        color: scheme.secondary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.md),
+        Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(
+                text: spentText,
+                style: AppTextStyles.tabularAmountLg(context),
+              ),
+              TextSpan(
+                text: ' ${l10n.budgetOfLimitSuffix(limitText)}',
+                style: textTheme.titleMedium?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        meter,
+        const SizedBox(height: AppSpacing.xs),
+        Row(
+          children: [
+            Text(
+              l10n.budgetPercentUtilized(percent),
+              style: textTheme.labelSmall?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            ),
+            const Spacer(),
+            Text(
+              l10n.budgetMarginRemaining(
+                remainingText,
+                (100 - percent).clamp(0, 100),
+              ),
+              style: textTheme.labelSmall?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+
     if (!wide) {
       return KinshipCard(
         padding: const EdgeInsets.all(AppSpacing.lg),
         elevated: true,
-        child: Stack(
-          clipBehavior: Clip.none,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Positioned(
-              right: -32,
-              top: -32,
-              child: IgnorePointer(
-                child: Container(
-                  width: 144,
-                  height: 144,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: scheme.primaryFixed.withValues(alpha: 0.3),
-                  ),
-                ),
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                headerRow,
-                const SizedBox(height: AppSpacing.md),
-                meter,
-                const SizedBox(height: AppSpacing.sm),
-                footer,
-              ],
-            ),
+            headerRow,
+            const SizedBox(height: AppSpacing.md),
+            meter,
+            const SizedBox(height: AppSpacing.sm),
+            footer,
           ],
         ),
       );
@@ -757,167 +844,40 @@ class _CapacityHero extends StatelessWidget {
     return KinshipCard(
       padding: const EdgeInsets.all(AppSpacing.xl),
       elevated: true,
-      child: Stack(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Positioned(
-            right: -64,
-            top: -64,
-            child: IgnorePointer(
-              child: Container(
-                width: 320,
-                height: 320,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: scheme.primaryFixed.withValues(alpha: 0.25),
+          Expanded(flex: 7, child: capacityColumn),
+          const SizedBox(width: AppSpacing.lg),
+          Expanded(
+            flex: 5,
+            child: Row(
+              children: [
+                Expanded(
+                  child: _HeroStatTile(
+                    label: l10n.budgetResidueMonth,
+                    value: remainingText,
+                    caption: l10n.budgetResidueAvailable,
+                    icon: Icons.savings_outlined,
+                    iconBg: scheme.primaryFixed,
+                    iconColor: scheme.primary,
+                    valueColor: scheme.primary,
+                  ),
                 ),
-              ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(
+                  child: _HeroStatTile(
+                    label: l10n.budgetDailyAllowance,
+                    value: l10n.budgetDailyPerDay(dailyText),
+                    caption: l10n.budgetDailyTarget,
+                    icon: Icons.speed_outlined,
+                    iconBg: scheme.tertiaryFixed,
+                    iconColor: scheme.tertiary,
+                    valueColor: scheme.tertiary,
+                  ),
+                ),
+              ],
             ),
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 7,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Wrap(
-                      spacing: AppSpacing.sm,
-                      runSpacing: AppSpacing.xs,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.sm,
-                            vertical: AppSpacing.xxs,
-                          ),
-                          decoration: BoxDecoration(
-                            color: scheme.primaryFixed,
-                            borderRadius: AppRadius.fullAll,
-                          ),
-                          child: Text(
-                            l10n.budgetPercentUsed(percent),
-                            style: textTheme.labelSmall?.copyWith(
-                              color: scheme.onPrimaryFixed,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.6,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          l10n.budgetDaysRemaining(daysLeft),
-                          style: textTheme.bodySmall?.copyWith(
-                            color: scheme.onSurfaceVariant,
-                          ),
-                        ),
-                        if (nearLimit > 0)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.sm,
-                              vertical: AppSpacing.xxs,
-                            ),
-                            decoration: BoxDecoration(
-                              color: scheme.errorContainer.withValues(
-                                alpha: 0.4,
-                              ),
-                              borderRadius: AppRadius.fullAll,
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.notification_important_outlined,
-                                  size: 16,
-                                  color: scheme.secondary,
-                                ),
-                                const SizedBox(width: AppSpacing.xxs),
-                                Text(
-                                  l10n.budgetNearLimitCount(nearLimit),
-                                  style: textTheme.labelSmall?.copyWith(
-                                    color: scheme.secondary,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: spentText,
-                            style: AppTextStyles.tabularAmountLg(context),
-                          ),
-                          TextSpan(
-                            text: ' ${l10n.budgetOfLimitSuffix(limitText)}',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: scheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    meter,
-                    const SizedBox(height: AppSpacing.xs),
-                    Row(
-                      children: [
-                        Text(
-                          l10n.budgetPercentUtilized(percent),
-                          style: textTheme.labelSmall?.copyWith(
-                            color: scheme.onSurfaceVariant,
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          l10n.budgetMarginRemaining(
-                            remainingText,
-                            (100 - percent).clamp(0, 100),
-                          ),
-                          style: textTheme.labelSmall?.copyWith(
-                            color: scheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: AppSpacing.lg),
-              Expanded(
-                flex: 5,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _HeroStatTile(
-                        label: l10n.budgetResidueMonth,
-                        value: remainingText,
-                        caption: l10n.budgetResidueAvailable,
-                        icon: Icons.savings_outlined,
-                        iconBg: scheme.primaryFixed,
-                        iconColor: scheme.primary,
-                        valueColor: scheme.primary,
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.md),
-                    Expanded(
-                      child: _HeroStatTile(
-                        label: l10n.budgetDailyAllowance,
-                        value: l10n.budgetDailyPerDay(dailyText),
-                        caption: l10n.budgetDailyTarget,
-                        icon: Icons.speed_outlined,
-                        iconBg: scheme.tertiaryFixed,
-                        iconColor: scheme.tertiary,
-                        valueColor: scheme.tertiary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
           ),
         ],
       ),
