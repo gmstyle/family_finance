@@ -13,10 +13,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get appTitle => 'Family Finance';
 
   @override
-  String get navHome => 'Home';
+  String get navHome => 'Dashboard';
 
   @override
-  String get navTransactions => 'Movimenti';
+  String get navTransactions => 'Transazioni';
 
   @override
   String get navAccounts => 'Conti';
@@ -31,7 +31,184 @@ class AppLocalizationsIt extends AppLocalizations {
   String get navGoals => 'Obiettivi';
 
   @override
+  String get navReview => 'Revisione';
+
+  @override
+  String get navBudgetGoals => 'Budget & Obiettivi';
+
+  @override
   String get navSettings => 'Impostazioni';
+
+  @override
+  String get shellBrandTagline => 'Kinship Stewardship';
+
+  @override
+  String get shellActiveFamily => 'Nucleo attivo';
+
+  @override
+  String get shellSettingsMembers => 'Impostazioni / Membri';
+
+  @override
+  String get shellSearchHint => 'Cerca transazioni, note o categorie...';
+
+  @override
+  String get shellExport => 'Esporta';
+
+  @override
+  String get shellNotifications => 'Notifiche';
+
+  @override
+  String get shellAddExpense => 'Aggiungi spesa';
+
+  @override
+  String get shellAddTransaction => 'Registra spesa';
+
+  @override
+  String get shellScanReceipt => 'Scansiona ricevuta';
+
+  @override
+  String get budgetGoalsTabBudgets => 'Budget mensili';
+
+  @override
+  String get budgetGoalsTabGoals => 'Obiettivi comuni';
+
+  @override
+  String get budgetGoalsEyebrow => 'Panoramica condivisa';
+
+  @override
+  String get budgetGoalsHeadline => 'Budget & Risparmio';
+
+  @override
+  String get budgetGoalsEyebrowWeb => 'Pianificazione domestica condivisa';
+
+  @override
+  String get budgetGoalsHeadlineWeb => 'Budget e obiettivi del nucleo';
+
+  @override
+  String get budgetTotalHouseholdSpend => 'Spesa totale della casa';
+
+  @override
+  String budgetAvailableLabel(String amount) {
+    return 'Disponibili: $amount';
+  }
+
+  @override
+  String budgetDaysRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count giorni rimasti',
+      one: '$count giorno rimasto',
+      zero: 'Nessun giorno rimasto',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String budgetPercentUsed(int percent) {
+    return '$percent%';
+  }
+
+  @override
+  String budgetSpentPercent(int percent) {
+    return '$percent% speso';
+  }
+
+  @override
+  String budgetRemainingLabel(String amount) {
+    return 'Rimasti: $amount';
+  }
+
+  @override
+  String budgetOfLimitSuffix(String limit) {
+    return 'su $limit';
+  }
+
+  @override
+  String get budgetCategoriesSection => 'Categorie di spesa';
+
+  @override
+  String get budgetCategoriesSectionWeb => 'Monitoraggio categorie di spesa';
+
+  @override
+  String get budgetEditLimits => 'Modifica limiti';
+
+  @override
+  String get budgetCreateBudgetOrGoal => 'Crea nuovo budget o obiettivo';
+
+  @override
+  String get budgetCreateBudgetChoice => 'Nuovo budget';
+
+  @override
+  String get budgetCreateGoalChoice => 'Nuovo obiettivo';
+
+  @override
+  String budgetNearLimitCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count vicini al limite',
+      one: '$count vicino al limite',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get budgetResidueMonth => 'Residuo mese';
+
+  @override
+  String get budgetResidueAvailable => 'Disponibili';
+
+  @override
+  String get budgetDailyAllowance => 'Spesa consentita';
+
+  @override
+  String get budgetDailyTarget => 'Target giornaliero';
+
+  @override
+  String budgetDailyPerDay(String amount) {
+    return '$amount / g';
+  }
+
+  @override
+  String budgetPercentUtilized(int percent) {
+    return '$percent% utilizzato';
+  }
+
+  @override
+  String budgetMarginRemaining(String amount, int percent) {
+    return 'Margine residuo: $amount ($percent%)';
+  }
+
+  @override
+  String get budgetNewCategoryTitle => 'Nuova categoria';
+
+  @override
+  String get budgetNewCategoryBody => 'Aggiungi una soglia di spesa';
+
+  @override
+  String get budgetCreateNow => 'Crea ora';
+
+  @override
+  String get goalsSavingBanner =>
+      'State risparmiando insieme verso i vostri obiettivi di famiglia.';
+
+  @override
+  String get goalsNextPromptTitle => 'Prossimo obiettivo?';
+
+  @override
+  String get goalsNextPromptBody => 'Aggiungi un nuovo traguardo condiviso';
+
+  @override
+  String get goalsExplore => 'Esplora';
+
+  @override
+  String get goalAddFunds => 'Aggiungi fondi';
+
+  @override
+  String goalProgressPercent(int percent) {
+    return '$percent%';
+  }
 
   @override
   String get settingsTitle => 'Impostazioni';
@@ -44,6 +221,18 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get languageItalian => 'Italiano';
+
+  @override
+  String get settingsTheme => 'Tema';
+
+  @override
+  String get themeSystem => 'Sistema';
+
+  @override
+  String get themeLight => 'Chiaro';
+
+  @override
+  String get themeDark => 'Scuro';
 
   @override
   String get actionCancel => 'Annulla';
@@ -213,6 +402,80 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get filterAll => 'Tutti';
+
+  @override
+  String get ledgerBookTitle => 'Libro Mastro Famiglia';
+
+  @override
+  String ledgerExpensesMonth(String month) {
+    return 'Spese $month';
+  }
+
+  @override
+  String get ledgerIncomeTotal => 'Entrate totali';
+
+  @override
+  String get ledgerMonthlyOutflows => 'Uscite mensili';
+
+  @override
+  String get ledgerMonthlyInflows => 'Entrate mensili';
+
+  @override
+  String get ledgerNetSavings => 'Risparmio netto';
+
+  @override
+  String get ledgerDataIntegrity => 'Integrità dati';
+
+  @override
+  String get ledgerRegistered => 'Registrate';
+
+  @override
+  String get ledgerSearchPlaceholder => 'Cerca esercente, nota, importo...';
+
+  @override
+  String get ledgerAllMembers => 'Tutti i membri';
+
+  @override
+  String ledgerMemberOnly(String name) {
+    return 'Solo $name';
+  }
+
+  @override
+  String get ledgerThisMonth => 'Questo mese';
+
+  @override
+  String get ledgerAllAccounts => 'Tutti i conti';
+
+  @override
+  String get ledgerUnifiedFinance => 'Gestione finanziaria unificata';
+
+  @override
+  String ledgerFiscalYear(String year) {
+    return 'Anno fiscale $year';
+  }
+
+  @override
+  String ledgerInReview(int count) {
+    return '$count in revisione';
+  }
+
+  @override
+  String ledgerDayToday(String date) {
+    return 'Oggi, $date';
+  }
+
+  @override
+  String ledgerDayYesterday(String date) {
+    return 'Ieri, $date';
+  }
+
+  @override
+  String get ledgerSortNewest => 'Ordinato per: data più recente';
+
+  @override
+  String ledgerShownOf(int shown, int total) {
+    return 'Mostrate $shown di $total';
+  }
 
   @override
   String get transactionCreateTitle => 'Nuovo movimento';
@@ -574,6 +837,168 @@ class AppLocalizationsIt extends AppLocalizations {
   String get dashboardQuickLinks => 'Collegamenti rapidi';
 
   @override
+  String dashboardGreetingHi(String name) {
+    return 'Ciao $name!';
+  }
+
+  @override
+  String dashboardGreetingWelcome(String name) {
+    return 'Bentornato, $name';
+  }
+
+  @override
+  String dashboardCurrentMonth(String month) {
+    return 'Mese corrente • $month';
+  }
+
+  @override
+  String get dashboardTotalBalance => 'Saldo Totale Famiglia';
+
+  @override
+  String dashboardNetSavings(String amount, String percent) {
+    return 'Risparmio netto: $amount ($percent%)';
+  }
+
+  @override
+  String get dashboardIncomeMonth => 'Entrate Mese';
+
+  @override
+  String get dashboardExpenseMonth => 'Spese Mese';
+
+  @override
+  String dashboardReviewCount(int count) {
+    return '$count Da Revisionare';
+  }
+
+  @override
+  String get dashboardReviewActionBadge => 'Azione';
+
+  @override
+  String get dashboardReviewNow => 'Revisiona ora';
+
+  @override
+  String get dashboardReviewSubtitle =>
+      'Bozze da wallet e scansione scontrino in attesa di conferma.';
+
+  @override
+  String get dashboardAccountsSection => 'Conti e Carte Famiglia';
+
+  @override
+  String get dashboardManage => 'Gestisci';
+
+  @override
+  String dashboardBudgetOfMonth(String month) {
+    return 'Budget di $month';
+  }
+
+  @override
+  String dashboardSeeAllCount(int count) {
+    return 'Vedi tutti ($count)';
+  }
+
+  @override
+  String get dashboardRecentTransactions => 'Ultime Transazioni';
+
+  @override
+  String get dashboardSeeAll => 'Tutte';
+
+  @override
+  String dashboardActiveMembers(int count) {
+    return '$count attivi';
+  }
+
+  @override
+  String get dashboardPatrimony => 'Patrimonio Nucleo';
+
+  @override
+  String dashboardIncomeForMonth(String month) {
+    return 'Entrate $month';
+  }
+
+  @override
+  String get dashboardMonthlyOutflows => 'Uscite Mensili';
+
+  @override
+  String get dashboardSmartReview => 'Smart Review';
+
+  @override
+  String dashboardReviewValidate(int count) {
+    return '$count Transazioni da Validare';
+  }
+
+  @override
+  String get dashboardReviewCta => 'Revisiona Subito';
+
+  @override
+  String get dashboardCashflowTitle => 'Andamento Cashflow';
+
+  @override
+  String get dashboardCashflowPlaceholder =>
+      'Grafico cashflow settimanale in arrivo — i totali del mese sono nei KPI sopra.';
+
+  @override
+  String get dashboardBudgetMonitor => 'Monitoraggio Budget di Categoria';
+
+  @override
+  String get dashboardQuickQueue => 'Coda Rapida';
+
+  @override
+  String get dashboardQuickQueueEmpty => 'Nessuna bozza da revisionare.';
+
+  @override
+  String get dashboardQuickQueueHint =>
+      'Transazioni intercettate automaticamente dai gateway di pagamento.';
+
+  @override
+  String get dashboardLinkedAccounts => 'Conti Collegati';
+
+  @override
+  String get dashboardLinkAccount => 'Collega nuovo conto';
+
+  @override
+  String get dashboardSavingsGoals => 'Obiettivi di Risparmio';
+
+  @override
+  String get dashboardViewAllTransactions =>
+      'Vedi tutto il registro transazioni';
+
+  @override
+  String get dashboardBudgetPreset => 'Budget prefissato';
+
+  @override
+  String dashboardSpentPercent(String percent) {
+    return '$percent% speso';
+  }
+
+  @override
+  String dashboardUsedPercent(String percent) {
+    return '$percent% utilizzato';
+  }
+
+  @override
+  String dashboardRemaining(String amount) {
+    return 'Rimangono $amount';
+  }
+
+  @override
+  String get dashboardAttentionThreshold => 'Soglia d\'attenzione';
+
+  @override
+  String get dashboardNoAccounts => 'Nessun conto ancora.';
+
+  @override
+  String get dashboardNoRecentTx => 'Nessuna transazione recente.';
+
+  @override
+  String get dashboardNoGoals => 'Nessun obiettivo di risparmio.';
+
+  @override
+  String get dashboardAvailableBalance => 'Saldo disponibile';
+
+  @override
+  String get dashboardPrimaryAccount => 'Principale';
+
+  @override
   String get budgetsTitle => 'Budget';
 
   @override
@@ -756,6 +1181,70 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get ingestionOpenQueue => 'Apri coda di revisione';
+
+  @override
+  String ingestionPendingCount(int count) {
+    return '$count in attesa';
+  }
+
+  @override
+  String ingestionFilterAll(int count) {
+    return 'Tutte ($count)';
+  }
+
+  @override
+  String ingestionFilterNotification(int count) {
+    return 'Notifiche ($count)';
+  }
+
+  @override
+  String ingestionFilterOcr(int count) {
+    return 'Scontrino OCR ($count)';
+  }
+
+  @override
+  String ingestionFilterDuplicates(int count) {
+    return 'Possibili duplicati ($count)';
+  }
+
+  @override
+  String get ingestionConfirmLedger => 'Conferma nel mastro';
+
+  @override
+  String get ingestionEmptyDoneTitle => 'Tutto in ordine!';
+
+  @override
+  String get ingestionEmptyDoneBody =>
+      'Non ci sono altre bozze in attesa. Il libro mastro di famiglia è aggiornato.';
+
+  @override
+  String get ingestionEmptyGoDashboard => 'Torna alla Dashboard';
+
+  @override
+  String get ingestionSettingsCapture =>
+      'Impostazioni acquisizione notifiche & OCR';
+
+  @override
+  String get ingestionUnreconciledTitle => 'Elementi non riconciliati';
+
+  @override
+  String get ingestionSortedByDate => 'Ordinati per data';
+
+  @override
+  String get ingestionSelectDraftHint =>
+      'Seleziona una bozza per verificare e confermare';
+
+  @override
+  String get ingestionReviewVerifyTitle => 'Verifica & associazione spesa';
+
+  @override
+  String get ingestionInReview => 'In revisione';
+
+  @override
+  String get ingestionToConfirm => 'Da confermare';
+
+  @override
+  String get ingestionWebEyebrow => 'Staging & riconciliazione AI';
 
   @override
   String get receiptScanTitle => 'Scansiona scontrino';

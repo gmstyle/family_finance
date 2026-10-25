@@ -31,10 +31,12 @@ import '../../features/settings/presentation/settings_controller.dart';
 import '../../features/transactions/data/transactions_repository.dart';
 import '../../features/transactions/presentation/transactions_controller.dart';
 import '../locale/locale_controller.dart';
+import '../theme/theme_mode_controller.dart';
 
 /// Root dependency injection.
 List<SingleChildWidget> buildAppProviders({
   required LocaleController localeController,
+  required ThemeModeController themeModeController,
   required AuthController authController,
   AuthRepository? authRepository,
   FamilyController? familyController,
@@ -95,6 +97,9 @@ List<SingleChildWidget> buildAppProviders({
 
   return [
     ChangeNotifierProvider<LocaleController>.value(value: localeController),
+    ChangeNotifierProvider<ThemeModeController>.value(
+      value: themeModeController,
+    ),
     Provider<AuthRepository>.value(value: authRepo),
     ChangeNotifierProvider<AuthController>.value(value: authController),
     ChangeNotifierProvider<FamilyController>.value(value: family),

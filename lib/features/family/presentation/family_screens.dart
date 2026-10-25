@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 import '../../../core/invite/invite_links.dart';
 import '../../../core/invite/pending_invite_store.dart';
 import '../../../core/router/app_router.dart';
+import '../../../core/theme/app_breakpoints.dart';
 import '../../../core/theme/app_tokens.dart';
 import '../../../core/ui/app_page.dart';
+import '../../../core/ui/kinship_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/auth_controller.dart';
 import 'family_controller.dart';
@@ -71,43 +73,71 @@ class _AcceptInviteScreenState extends State<AcceptInviteScreen> {
     final l10n = AppLocalizations.of(context)!;
     final auth = context.watch<AuthController>();
     final family = context.watch<FamilyController>();
+    final scheme = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
+    final wide = AppBreakpoints.isWide(context);
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.inviteAcceptTitle)),
-      body: AppPage(
-        form: true,
-        padding: AppInsets.page,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(l10n.inviteAcceptBody, textAlign: TextAlign.center),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              l10n.inviteAcceptUseInvitedEmail,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium,
-            ),
-            const SizedBox(height: AppSpacing.md),
-            if (auth.isSignedIn && auth.user?.email != null)
+    return KinshipAuthScaffold(
+      brandPanel: KinshipAuthBrandPanel(
+        title: l10n.appTitle,
+        subtitle: l10n.inviteAcceptBody,
+        logo: Icon(
+          Icons.account_balance_wallet_outlined,
+          size: 40,
+          color: scheme.onPrimary,
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: KinshipAuthPanel(
+          showCard: !wide,
+          brandName: l10n.appTitle,
+          logo: Icon(
+            Icons.mail_outline,
+            size: 32,
+            color: scheme.primaryContainer,
+          ),
+          headline: l10n.inviteAcceptTitle,
+          body: l10n.inviteAcceptBody,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
               Text(
-                l10n.inviteAcceptSignedInAs(auth.user!.email!),
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodySmall,
+                l10n.inviteAcceptUseInvitedEmail,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
               ),
-            const SizedBox(height: AppSpacing.lg),
-            if (_localError != null || family.errorMessage != null)
-              Text(
-                _localError ?? family.errorMessage!,
-                style: TextStyle(color: theme.colorScheme.error),
-                textAlign: TextAlign.center,
+              if (auth.isSignedIn && auth.user?.email != null) ...[
+                const SizedBox(height: AppSpacing.sm),
+                Text(
+                  l10n.inviteAcceptSignedInAs(auth.user!.email!),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+              if (_localError != null || family.errorMessage != null) ...[
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  _localError ?? family.errorMessage!,
+                  style: TextStyle(color: scheme.error),
+                ),
+              ],
+              const SizedBox(height: AppSpacing.lg),
+              KinshipPrimaryPillButton(
+                onPressed: family.busy || _done ? null : _accept,
+                child: family.busy
+                    ? const SizedBox(
+                        height: AppSizes.buttonProgress,
+                        width: AppSizes.buttonProgress,
+                        child: CircularProgressIndicator(
+                          strokeWidth: AppSizes.progressStroke,
+                        ),
+                      )
+                    : Text(l10n.inviteAcceptAction),
               ),
-            const SizedBox(height: AppSpacing.md),
-            FilledButton(
-              onPressed: family.busy || _done ? null : _accept,
-              child: Text(l10n.inviteAcceptAction),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -259,9 +289,8 @@ class _FamilyManageScreenState extends State<FamilyManageScreen> {
                             final msg = invite.emailQueued
                                 ? l10n.familyInviteEmailSent
                                 : l10n.familyInviteCreatedCopyLink;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(msg)),
-                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(content: Text(msg)));
                           } catch (_) {}
                         },
                 ),
@@ -274,9 +303,7 @@ class _FamilyManageScreenState extends State<FamilyManageScreen> {
                   title: Text(l10n.familyInviteLinkHint),
                   subtitle: SelectableText(
                     familyCtrl.lastCreatedInvite!.inviteLink ??
-                        inviteUrlForToken(
-                          familyCtrl.lastCreatedInvite!.token,
-                        ),
+                        inviteUrlForToken(familyCtrl.lastCreatedInvite!.token),
                   ),
                   trailing: IconButton(
                     icon: const Icon(Icons.copy),

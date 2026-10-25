@@ -13,6 +13,7 @@ import 'core/invite/pending_invite_store.dart';
 import 'core/locale/locale_controller.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/theme_mode_controller.dart';
 import 'features/auth/data/auth_repository.dart';
 import 'features/auth/presentation/auth_controller.dart';
 import 'features/devices/data/devices_repository.dart';
@@ -32,6 +33,7 @@ Future<void> main() async {
   }
   await FirebaseBootstrap.initialize();
   final localeController = await LocaleController.create();
+  final themeModeController = await ThemeModeController.create();
   final authRepository = AuthRepository();
   final authController = AuthController(repository: authRepository);
   authController.restorePendingInviteFromToken(
@@ -58,6 +60,7 @@ Future<void> main() async {
   runApp(
     FamilyFinanceApp(
       localeController: localeController,
+      themeModeController: themeModeController,
       authController: authController,
       authRepository: authRepository,
       fcmRegistration: fcm,
@@ -75,6 +78,7 @@ class FamilyFinanceApp extends StatefulWidget {
   const FamilyFinanceApp({
     super.key,
     required this.localeController,
+    required this.themeModeController,
     required this.authController,
     this.fcmRegistration,
     this.ingestionRouteTracker,
@@ -87,6 +91,7 @@ class FamilyFinanceApp extends StatefulWidget {
   });
 
   final LocaleController localeController;
+  final ThemeModeController themeModeController;
   final AuthController authController;
   final AuthRepository? authRepository;
   final FcmRegistration? fcmRegistration;
@@ -123,6 +128,7 @@ class _FamilyFinanceAppState extends State<FamilyFinanceApp> {
     return MultiProvider(
       providers: buildAppProviders(
         localeController: widget.localeController,
+        themeModeController: widget.themeModeController,
         authController: widget.authController,
         authRepository: widget.authRepository,
         ingestionRepository: widget.ingestionRepository,
@@ -133,13 +139,17 @@ class _FamilyFinanceAppState extends State<FamilyFinanceApp> {
         notificationCaptureService: widget.notificationCaptureService,
       ),
       child: ListenableBuilder(
-        listenable: widget.localeController,
+        listenable: Listenable.merge([
+          widget.localeController,
+          widget.themeModeController,
+        ]),
         builder: (context, _) {
           return MaterialApp.router(
             onGenerateTitle: (context) =>
                 AppLocalizations.of(context)?.appTitle ?? 'Family Finance',
             theme: AppTheme.light(),
             darkTheme: AppTheme.dark(),
+            themeMode: widget.themeModeController.themeMode,
             locale: widget.localeController.locale,
             supportedLocales: LocaleController.supportedLocales,
             localizationsDelegates: const [

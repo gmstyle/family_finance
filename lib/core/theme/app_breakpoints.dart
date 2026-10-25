@@ -24,8 +24,8 @@ abstract final class AppBreakpoints {
   /// Default max width for forms / auth / onboarding columns.
   static const double maxFormWidth = 420;
 
-  /// Comfortable reading width for general page content on large screens.
-  static const double maxContentWidth = 720;
+  /// Max content column for desktop Stitch layouts (DESIGN ~1200; shell mock ~1540).
+  static const double maxContentWidth = 1280;
 
   static AppBreakpoint of(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;

@@ -5,13 +5,14 @@ import 'package:provider/provider.dart';
 import '../../../core/locale/locale_controller.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_tokens.dart';
+import '../../../core/theme/theme_mode_controller.dart';
 import '../../../core/ui/app_page.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/auth_controller.dart';
 import '../../notification_ingest/presentation/notification_ingest_controller.dart';
 import 'settings_controller.dart';
 
-/// Settings: language, account, privacy/data, family entry points.
+/// Settings: theme, language, account, privacy/data, family entry points.
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -235,17 +236,47 @@ class _SettingsScreenState extends State<SettingsScreen>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final localeController = context.watch<LocaleController>();
+    final themeModeController = context.watch<ThemeModeController>();
     final auth = context.watch<AuthController>();
     final settings = context.watch<SettingsController>();
     final ingest = context.read<NotificationIngestController>();
     final current = localeController.locale.languageCode;
+    final themeMode = themeModeController.themeMode;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: AppPage(
         child: ListView(
           children: [
-            AppSectionTitle(l10n.settingsLanguage),
+            AppSectionTitle(l10n.settingsTheme),
+            RadioGroup<ThemeMode>(
+              groupValue: themeMode,
+              onChanged: (value) {
+                if (value == null) return;
+                themeModeController.setThemeMode(value);
+              },
+              child: Column(
+                children: [
+                  RadioListTile<ThemeMode>(
+                    title: Text(l10n.themeSystem),
+                    value: ThemeMode.system,
+                  ),
+                  RadioListTile<ThemeMode>(
+                    title: Text(l10n.themeLight),
+                    value: ThemeMode.light,
+                  ),
+                  RadioListTile<ThemeMode>(
+                    title: Text(l10n.themeDark),
+                    value: ThemeMode.dark,
+                  ),
+                ],
+              ),
+            ),
+            const Divider(),
+            AppSectionTitle(
+              l10n.settingsLanguage,
+              padding: AppInsets.sectionTight,
+            ),
             RadioGroup<String>(
               groupValue: current,
               onChanged: (value) {
@@ -292,7 +323,8 @@ class _SettingsScreenState extends State<SettingsScreen>
             ListTile(
               leading: const Icon(Icons.inbox_outlined),
               title: Text(l10n.ingestionTitle),
-              onTap: () => context.push(AppRoutes.ingestion),
+              // go: /ingestion is a shell branch; push would duplicate ShellRouteMatch pageKey.
+              onTap: () => context.go(AppRoutes.ingestion),
             ),
             ListTile(
               leading: const Icon(Icons.document_scanner_outlined),

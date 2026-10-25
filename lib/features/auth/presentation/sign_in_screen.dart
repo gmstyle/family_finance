@@ -3,8 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/router/app_router.dart';
+import '../../../core/theme/app_breakpoints.dart';
 import '../../../core/theme/app_tokens.dart';
-import '../../../core/ui/app_page.dart';
+import '../../../core/ui/kinship_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import 'auth_controller.dart';
 
@@ -69,100 +70,139 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final auth = context.watch<AuthController>();
-    final theme = Theme.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final wide = AppBreakpoints.isWide(context);
 
-    return Scaffold(
-      body: AppPage(
-        form: true,
-        safeArea: true,
-        child: ListView(
-          padding: AppInsets.page,
-          children: [
-            Text(l10n.appTitle, style: theme.textTheme.headlineMedium),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              _registerMode ? l10n.authCreateAccount : l10n.authSignIn,
-              style: theme.textTheme.titleLarge,
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            if (auth.errorMessage != null) ...[
-              Card(
-                color: theme.colorScheme.errorContainer,
-                child: Padding(
-                  padding: AppInsets.card,
-                  child: Text(auth.errorMessage!),
+    return KinshipAuthScaffold(
+      brandPanel: KinshipAuthBrandPanel(
+        title: l10n.appTitle,
+        logo: Icon(
+          Icons.account_balance_wallet_outlined,
+          size: 40,
+          color: scheme.onPrimary,
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: KinshipAuthPanel(
+          showCard: !wide,
+          brandName: l10n.appTitle,
+          logo: Icon(
+            Icons.account_balance_wallet_outlined,
+            size: 32,
+            color: scheme.primaryContainer,
+          ),
+          headline: _registerMode ? l10n.authCreateAccount : l10n.authSignIn,
+          footer: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextButton(
+                onPressed: () => setState(() {
+                  _registerMode = !_registerMode;
+                  auth.clearError();
+                }),
+                child: Text(
+                  _registerMode ? l10n.authHaveAccount : l10n.authNeedAccount,
                 ),
               ),
-              const SizedBox(height: AppSpacing.sm),
+              TextButton(
+                onPressed: () => context.push(AppRoutes.forgotPassword),
+                child: Text(l10n.authForgotPassword),
+              ),
             ],
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  if (_registerMode)
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (auth.errorMessage != null) ...[
+                _AuthErrorBanner(message: auth.errorMessage!),
+                const SizedBox(height: AppSpacing.sm),
+              ],
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    if (_registerMode)
+                      TextFormField(
+                        controller: _displayName,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          labelText: l10n.authDisplayName,
+                        ),
+                      ),
+                    if (_registerMode) const SizedBox(height: AppSpacing.sm),
                     TextFormField(
-                      controller: _displayName,
-                      decoration: InputDecoration(
-                        labelText: l10n.authDisplayName,
-                      ),
+                      controller: _email,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      autofillHints: const [AutofillHints.email],
+                      decoration: InputDecoration(labelText: l10n.authEmail),
+                      validator: (v) => (v == null || !v.contains('@'))
+                          ? l10n.authEmailInvalid
+                          : null,
                     ),
-                  if (_registerMode) const SizedBox(height: AppSpacing.sm),
-                  TextFormField(
-                    controller: _email,
-                    keyboardType: TextInputType.emailAddress,
-                    autofillHints: const [AutofillHints.email],
-                    decoration: InputDecoration(labelText: l10n.authEmail),
-                    validator: (v) => (v == null || !v.contains('@'))
-                        ? l10n.authEmailInvalid
-                        : null,
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  TextFormField(
-                    controller: _password,
-                    obscureText: true,
-                    autofillHints: const [AutofillHints.password],
-                    decoration: InputDecoration(labelText: l10n.authPassword),
-                    validator: (v) => (v == null || v.length < 6)
-                        ? l10n.authPasswordTooShort
-                        : null,
-                  ),
-                ],
+                    const SizedBox(height: AppSpacing.sm),
+                    TextFormField(
+                      controller: _password,
+                      obscureText: true,
+                      textInputAction: TextInputAction.done,
+                      onFieldSubmitted: (_) {
+                        if (!auth.busy) _submit();
+                      },
+                      autofillHints: const [AutofillHints.password],
+                      decoration: InputDecoration(labelText: l10n.authPassword),
+                      validator: (v) => (v == null || v.length < 6)
+                          ? l10n.authPasswordTooShort
+                          : null,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            FilledButton(
-              onPressed: auth.busy ? null : _submit,
-              child: auth.busy
-                  ? const SizedBox(
-                      height: AppSizes.buttonProgress,
-                      width: AppSizes.buttonProgress,
-                      child: CircularProgressIndicator(
-                        strokeWidth: AppSizes.progressStroke,
-                      ),
-                    )
-                  : Text(_registerMode ? l10n.authRegister : l10n.authSignIn),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            OutlinedButton.icon(
-              onPressed: auth.busy ? null : _google,
-              icon: const Icon(Icons.g_mobiledata),
-              label: Text(l10n.authContinueGoogle),
-            ),
-            TextButton(
-              onPressed: () => setState(() {
-                _registerMode = !_registerMode;
-                auth.clearError();
-              }),
-              child: Text(
-                _registerMode ? l10n.authHaveAccount : l10n.authNeedAccount,
+              const SizedBox(height: AppSpacing.lg),
+              KinshipPrimaryPillButton(
+                onPressed: auth.busy ? null : _submit,
+                child: auth.busy
+                    ? const SizedBox(
+                        height: AppSizes.buttonProgress,
+                        width: AppSizes.buttonProgress,
+                        child: CircularProgressIndicator(
+                          strokeWidth: AppSizes.progressStroke,
+                        ),
+                      )
+                    : Text(_registerMode ? l10n.authRegister : l10n.authSignIn),
               ),
-            ),
-            TextButton(
-              onPressed: () => context.push(AppRoutes.forgotPassword),
-              child: Text(l10n.authForgotPassword),
-            ),
-          ],
+              const SizedBox(height: AppSpacing.sm),
+              KinshipSecondaryPillButton(
+                onPressed: auth.busy ? null : _google,
+                icon: const Icon(Icons.g_mobiledata),
+                child: Text(l10n.authContinueGoogle),
+              ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class _AuthErrorBanner extends StatelessWidget {
+  const _AuthErrorBanner({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: scheme.errorContainer,
+        borderRadius: AppRadius.mdAll,
+      ),
+      child: Text(
+        message,
+        style: Theme.of(context).textTheme.bodyMedium
+            ?.copyWith(color: scheme.onErrorContainer),
       ),
     );
   }

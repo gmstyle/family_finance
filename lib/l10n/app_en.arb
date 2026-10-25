@@ -4,17 +4,124 @@
   "@appTitle": {
     "description": "Application title shown in the window and app bar"
   },
-  "navHome": "Home",
+  "navHome": "Dashboard",
   "navTransactions": "Transactions",
   "navAccounts": "Accounts",
   "navCategories": "Categories",
   "navBudgets": "Budgets",
   "navGoals": "Goals",
+  "navReview": "Review",
+  "navBudgetGoals": "Budget & Goals",
   "navSettings": "Settings",
+  "shellBrandTagline": "Kinship Stewardship",
+  "shellActiveFamily": "Active family",
+  "shellSettingsMembers": "Settings / Members",
+  "shellSearchHint": "Search transactions, notes, or categories…",
+  "shellExport": "Export",
+  "shellNotifications": "Notifications",
+  "shellAddExpense": "Add expense",
+  "shellAddTransaction": "Log expense",
+  "shellScanReceipt": "Scan receipt",
+  "budgetGoalsTabBudgets": "Monthly budgets",
+  "budgetGoalsTabGoals": "Shared goals",
+  "budgetGoalsEyebrow": "Shared overview",
+  "budgetGoalsHeadline": "Budget & Savings",
+  "budgetGoalsEyebrowWeb": "Shared household planning",
+  "budgetGoalsHeadlineWeb": "Family budget & goals",
+  "budgetTotalHouseholdSpend": "Total household spend",
+  "budgetAvailableLabel": "Available: {amount}",
+  "@budgetAvailableLabel": {
+    "placeholders": {
+      "amount": {"type": "String"}
+    }
+  },
+  "budgetDaysRemaining": "{count, plural, =0{No days left} one{{count} day left} other{{count} days left}}",
+  "@budgetDaysRemaining": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "budgetPercentUsed": "{percent}%",
+  "@budgetPercentUsed": {
+    "placeholders": {
+      "percent": {"type": "int"}
+    }
+  },
+  "budgetSpentPercent": "{percent}% spent",
+  "@budgetSpentPercent": {
+    "placeholders": {
+      "percent": {"type": "int"}
+    }
+  },
+  "budgetRemainingLabel": "Left: {amount}",
+  "@budgetRemainingLabel": {
+    "placeholders": {
+      "amount": {"type": "String"}
+    }
+  },
+  "budgetOfLimitSuffix": "of {limit}",
+  "@budgetOfLimitSuffix": {
+    "placeholders": {
+      "limit": {"type": "String"}
+    }
+  },
+  "budgetCategoriesSection": "Spending categories",
+  "budgetCategoriesSectionWeb": "Spending category monitoring",
+  "budgetEditLimits": "Edit limits",
+  "budgetCreateBudgetOrGoal": "Create new budget or goal",
+  "budgetCreateBudgetChoice": "New budget",
+  "budgetCreateGoalChoice": "New goal",
+  "budgetNearLimitCount": "{count, plural, one{{count} near limit} other{{count} near limit}}",
+  "@budgetNearLimitCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "budgetResidueMonth": "Month remaining",
+  "budgetResidueAvailable": "Available",
+  "budgetDailyAllowance": "Allowed spend",
+  "budgetDailyTarget": "Daily target",
+  "budgetDailyPerDay": "{amount} / day",
+  "@budgetDailyPerDay": {
+    "placeholders": {
+      "amount": {"type": "String"}
+    }
+  },
+  "budgetPercentUtilized": "{percent}% used",
+  "@budgetPercentUtilized": {
+    "placeholders": {
+      "percent": {"type": "int"}
+    }
+  },
+  "budgetMarginRemaining": "Remaining margin: {amount} ({percent}%)",
+  "@budgetMarginRemaining": {
+    "placeholders": {
+      "amount": {"type": "String"},
+      "percent": {"type": "int"}
+    }
+  },
+  "budgetNewCategoryTitle": "New category",
+  "budgetNewCategoryBody": "Add a spending limit",
+  "budgetCreateNow": "Create now",
+  "goalsSavingBanner": "You're saving together toward your family goals.",
+  "goalsNextPromptTitle": "Next goal?",
+  "goalsNextPromptBody": "Add a new shared milestone",
+  "goalsExplore": "Explore",
+  "goalAddFunds": "Add funds",
+  "goalProgressPercent": "{percent}%",
+  "@goalProgressPercent": {
+    "placeholders": {
+      "percent": {"type": "int"}
+    }
+  },
   "settingsTitle": "Settings",
   "settingsLanguage": "Language",
   "languageEnglish": "English",
   "languageItalian": "Italian",
+  "settingsTheme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
   "actionCancel": "Cancel",
   "actionContinue": "Continue",
   "actionSave": "Save",
@@ -74,6 +181,62 @@
   "filterDateFrom": "From date",
   "filterDateTo": "To date",
   "filterAll": "All",
+  "ledgerBookTitle": "Family Ledger",
+  "ledgerExpensesMonth": "{month} expenses",
+  "@ledgerExpensesMonth": {
+    "placeholders": {
+      "month": { "type": "String" }
+    }
+  },
+  "ledgerIncomeTotal": "Total income",
+  "ledgerMonthlyOutflows": "Monthly outflows",
+  "ledgerMonthlyInflows": "Monthly income",
+  "ledgerNetSavings": "Net savings",
+  "ledgerDataIntegrity": "Data integrity",
+  "ledgerRegistered": "Logged",
+  "ledgerSearchPlaceholder": "Search merchant, note, amount…",
+  "ledgerAllMembers": "All members",
+  "ledgerMemberOnly": "Only {name}",
+  "@ledgerMemberOnly": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "ledgerThisMonth": "This month",
+  "ledgerAllAccounts": "All accounts",
+  "ledgerUnifiedFinance": "Unified financial management",
+  "ledgerFiscalYear": "Fiscal year {year}",
+  "@ledgerFiscalYear": {
+    "placeholders": {
+      "year": { "type": "String" }
+    }
+  },
+  "ledgerInReview": "{count} in review",
+  "@ledgerInReview": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ledgerDayToday": "Today, {date}",
+  "@ledgerDayToday": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "ledgerDayYesterday": "Yesterday, {date}",
+  "@ledgerDayYesterday": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "ledgerSortNewest": "Sorted by: newest first",
+  "ledgerShownOf": "Showing {shown} of {total}",
+  "@ledgerShownOf": {
+    "placeholders": {
+      "shown": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
   "transactionCreateTitle": "New transaction",
   "transactionEditTitle": "Edit transaction",
   "transactionType": "Type",
@@ -199,6 +362,116 @@
   "dashboardNoExpenses": "No expenses this period yet.",
   "dashboardNoIncome": "No income this period yet.",
   "dashboardQuickLinks": "Quick links",
+  "dashboardGreetingHi": "Hi {name}!",
+  "@dashboardGreetingHi": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "dashboardGreetingWelcome": "Welcome back, {name}",
+  "@dashboardGreetingWelcome": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "dashboardCurrentMonth": "Current month • {month}",
+  "@dashboardCurrentMonth": {
+    "placeholders": {
+      "month": { "type": "String" }
+    }
+  },
+  "dashboardTotalBalance": "Family total balance",
+  "dashboardNetSavings": "Net savings: {amount} ({percent}%)",
+  "@dashboardNetSavings": {
+    "placeholders": {
+      "amount": { "type": "String" },
+      "percent": { "type": "String" }
+    }
+  },
+  "dashboardIncomeMonth": "Month income",
+  "dashboardExpenseMonth": "Month expenses",
+  "dashboardReviewCount": "{count} to review",
+  "@dashboardReviewCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "dashboardReviewActionBadge": "Action",
+  "dashboardReviewNow": "Review now",
+  "dashboardReviewSubtitle": "Drafts from wallets and receipt scans awaiting confirmation.",
+  "dashboardAccountsSection": "Family accounts & cards",
+  "dashboardManage": "Manage",
+  "dashboardBudgetOfMonth": "{month} budget",
+  "@dashboardBudgetOfMonth": {
+    "placeholders": {
+      "month": { "type": "String" }
+    }
+  },
+  "dashboardSeeAllCount": "See all ({count})",
+  "@dashboardSeeAllCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "dashboardRecentTransactions": "Recent transactions",
+  "dashboardSeeAll": "All",
+  "dashboardActiveMembers": "{count} active",
+  "@dashboardActiveMembers": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "dashboardPatrimony": "Household wealth",
+  "dashboardIncomeForMonth": "{month} income",
+  "@dashboardIncomeForMonth": {
+    "placeholders": {
+      "month": { "type": "String" }
+    }
+  },
+  "dashboardMonthlyOutflows": "Monthly outflows",
+  "dashboardSmartReview": "Smart review",
+  "dashboardReviewValidate": "{count} transactions to validate",
+  "@dashboardReviewValidate": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "dashboardReviewCta": "Review now",
+  "dashboardCashflowTitle": "Cashflow trend",
+  "dashboardCashflowPlaceholder": "Weekly cashflow chart coming soon — month totals are in the KPIs above.",
+  "dashboardBudgetMonitor": "Category budget monitor",
+  "dashboardQuickQueue": "Quick queue",
+  "dashboardQuickQueueEmpty": "No drafts to review.",
+  "dashboardQuickQueueHint": "Transactions captured automatically from payment gateways.",
+  "dashboardLinkedAccounts": "Linked accounts",
+  "dashboardLinkAccount": "Link a new account",
+  "dashboardSavingsGoals": "Savings goals",
+  "dashboardViewAllTransactions": "View full transaction ledger",
+  "dashboardBudgetPreset": "Budget target",
+  "dashboardSpentPercent": "{percent}% spent",
+  "@dashboardSpentPercent": {
+    "placeholders": {
+      "percent": { "type": "String" }
+    }
+  },
+  "dashboardUsedPercent": "{percent}% used",
+  "@dashboardUsedPercent": {
+    "placeholders": {
+      "percent": { "type": "String" }
+    }
+  },
+  "dashboardRemaining": "{amount} left",
+  "@dashboardRemaining": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "dashboardAttentionThreshold": "Attention threshold",
+  "dashboardNoAccounts": "No accounts yet.",
+  "dashboardNoRecentTx": "No recent transactions.",
+  "dashboardNoGoals": "No savings goals yet.",
+  "dashboardAvailableBalance": "Available balance",
+  "dashboardPrimaryAccount": "Primary",
   "budgetsTitle": "Budgets",
   "budgetsEmpty": "No budgets yet. Set a monthly limit for an expense category.",
   "budgetCreateTitle": "New budget",
@@ -286,6 +559,48 @@
   "ingestionSaveMerchantRule": "Remember category and account for this merchant",
   "ingestionSaveMerchantRuleHint": "Used as suggestions the next time this merchant appears.",
   "ingestionOpenQueue": "Open review queue",
+  "ingestionPendingCount": "{count} pending",
+  "@ingestionPendingCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ingestionFilterAll": "All ({count})",
+  "@ingestionFilterAll": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ingestionFilterNotification": "Notifications ({count})",
+  "@ingestionFilterNotification": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ingestionFilterOcr": "Receipt OCR ({count})",
+  "@ingestionFilterOcr": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ingestionFilterDuplicates": "Possible duplicates ({count})",
+  "@ingestionFilterDuplicates": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ingestionConfirmLedger": "Confirm to ledger",
+  "ingestionEmptyDoneTitle": "All clear!",
+  "ingestionEmptyDoneBody": "No drafts waiting. The family ledger is up to date.",
+  "ingestionEmptyGoDashboard": "Back to Dashboard",
+  "ingestionSettingsCapture": "Notification & OCR capture settings",
+  "ingestionUnreconciledTitle": "Unreconciled items",
+  "ingestionSortedByDate": "Sorted by date",
+  "ingestionSelectDraftHint": "Select a draft to verify and confirm",
+  "ingestionReviewVerifyTitle": "Verify & assign expense",
+  "ingestionInReview": "In review",
+  "ingestionToConfirm": "To confirm",
+  "ingestionWebEyebrow": "Staging & AI reconciliation",
   "receiptScanTitle": "Scan receipt",
   "receiptScanAction": "Scan receipt",
   "receiptScanBody": "Take a photo or choose an image. The app extracts amount, date, and merchant into a draft you must confirm — nothing is posted silently.",

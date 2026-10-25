@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/accounts/presentation/accounts_screens.dart';
@@ -8,14 +7,13 @@ import '../../features/auth/presentation/forgot_password_screen.dart';
 import '../../features/auth/presentation/sign_in_screen.dart';
 import '../../features/auth/presentation/verify_email_screen.dart';
 import '../../features/budgets/presentation/budget_editor_screen.dart';
-import '../../features/budgets/presentation/budgets_list_screen.dart';
+import '../../features/budgets/presentation/budget_goals_screen.dart';
 import '../../features/categories/presentation/categories_screens.dart';
 import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/family/presentation/create_family_screen.dart';
 import '../../features/family/presentation/family_screens.dart';
 import '../../features/goals/presentation/goal_contribute_screen.dart';
 import '../../features/goals/presentation/goal_editor_screen.dart';
-import '../../features/goals/presentation/goals_list_screen.dart';
 import '../../features/notification_ingest/presentation/account_bindings_screen.dart';
 import '../../features/notification_ingest/presentation/ingestion_route_tracker.dart';
 import '../../features/receipt_ocr/presentation/ingestion_detail_screen.dart';
@@ -26,9 +24,8 @@ import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/transactions/presentation/transaction_editor_screen.dart';
 import '../../features/transactions/presentation/transactions_list_screen.dart';
 import '../../features/transactions/presentation/transfer_screen.dart';
-import '../../l10n/app_localizations.dart';
 import '../locale/locale_controller.dart';
-import '../theme/app_breakpoints.dart';
+import '../ui/kinship_scaffold.dart';
 import 'listenable_merge.dart';
 
 /// Application routes.
@@ -277,9 +274,9 @@ GoRouter createAppRouter({
         },
       ),
       GoRoute(
-        path: AppRoutes.ingestion,
-        name: 'ingestion',
-        builder: (context, state) => const IngestionInboxScreen(),
+        path: AppRoutes.goals,
+        name: 'goals',
+        redirect: (context, state) => '${AppRoutes.budgets}?tab=goals',
       ),
       GoRoute(
         path: AppRoutes.ingestionDetail,
@@ -304,9 +301,14 @@ GoRouter createAppRouter({
         name: 'settingsPrivacy',
         builder: (context, state) => const PrivacyPolicyScreen(),
       ),
+      GoRoute(
+        path: AppRoutes.settings,
+        name: 'settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
-          return AppShell(navigationShell: navigationShell);
+          return KinshipScaffold(navigationShell: navigationShell);
         },
         branches: [
           StatefulShellBranch(
@@ -330,27 +332,21 @@ GoRouter createAppRouter({
           StatefulShellBranch(
             routes: [
               GoRoute(
+                path: AppRoutes.ingestion,
+                name: 'ingestion',
+                builder: (context, state) => const IngestionInboxScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
                 path: AppRoutes.budgets,
                 name: 'budgets',
-                builder: (context, state) => const BudgetsListScreen(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: AppRoutes.goals,
-                name: 'goals',
-                builder: (context, state) => const GoalsListScreen(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: AppRoutes.settings,
-                name: 'settings',
-                builder: (context, state) => const SettingsScreen(),
+                builder: (context, state) {
+                  final tab = state.uri.queryParameters['tab'];
+                  return BudgetGoalsScreen(initialShowGoals: tab == 'goals');
+                },
               ),
             ],
           ),
@@ -369,97 +365,4 @@ GoRouter createAppRouter({
       ),
     ],
   );
-}
-
-/// Responsive shell: bottom nav on mobile/tablet, rail on wide (≥840).
-class AppShell extends StatelessWidget {
-  const AppShell({super.key, required this.navigationShell});
-
-  final StatefulNavigationShell navigationShell;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final useRail = AppBreakpoints.useNavigationRail(context);
-
-    final destinations = [
-      NavigationDestination(
-        icon: const Icon(Icons.dashboard_outlined),
-        selectedIcon: const Icon(Icons.dashboard),
-        label: l10n.navHome,
-      ),
-      NavigationDestination(
-        icon: const Icon(Icons.receipt_long_outlined),
-        selectedIcon: const Icon(Icons.receipt_long),
-        label: l10n.navTransactions,
-      ),
-      NavigationDestination(
-        icon: const Icon(Icons.pie_chart_outline),
-        selectedIcon: const Icon(Icons.pie_chart),
-        label: l10n.navBudgets,
-      ),
-      NavigationDestination(
-        icon: const Icon(Icons.flag_outlined),
-        selectedIcon: const Icon(Icons.flag),
-        label: l10n.navGoals,
-      ),
-      NavigationDestination(
-        icon: const Icon(Icons.settings_outlined),
-        selectedIcon: const Icon(Icons.settings),
-        label: l10n.navSettings,
-      ),
-    ];
-
-    if (useRail) {
-      return Scaffold(
-        body: Row(
-          children: [
-            NavigationRail(
-              selectedIndex: navigationShell.currentIndex,
-              onDestinationSelected: navigationShell.goBranch,
-              labelType: NavigationRailLabelType.all,
-              destinations: [
-                NavigationRailDestination(
-                  icon: const Icon(Icons.dashboard_outlined),
-                  selectedIcon: const Icon(Icons.dashboard),
-                  label: Text(l10n.navHome),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.receipt_long_outlined),
-                  selectedIcon: const Icon(Icons.receipt_long),
-                  label: Text(l10n.navTransactions),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.pie_chart_outline),
-                  selectedIcon: const Icon(Icons.pie_chart),
-                  label: Text(l10n.navBudgets),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.flag_outlined),
-                  selectedIcon: const Icon(Icons.flag),
-                  label: Text(l10n.navGoals),
-                ),
-                NavigationRailDestination(
-                  icon: const Icon(Icons.settings_outlined),
-                  selectedIcon: const Icon(Icons.settings),
-                  label: Text(l10n.navSettings),
-                ),
-              ],
-            ),
-            const VerticalDivider(width: 1),
-            Expanded(child: navigationShell),
-          ],
-        ),
-      );
-    }
-
-    return Scaffold(
-      body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: navigationShell.goBranch,
-        destinations: destinations,
-      ),
-    );
-  }
 }

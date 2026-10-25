@@ -13,7 +13,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Family Finance';
 
   @override
-  String get navHome => 'Home';
+  String get navHome => 'Dashboard';
 
   @override
   String get navTransactions => 'Transactions';
@@ -31,7 +31,184 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navGoals => 'Goals';
 
   @override
+  String get navReview => 'Review';
+
+  @override
+  String get navBudgetGoals => 'Budget & Goals';
+
+  @override
   String get navSettings => 'Settings';
+
+  @override
+  String get shellBrandTagline => 'Kinship Stewardship';
+
+  @override
+  String get shellActiveFamily => 'Active family';
+
+  @override
+  String get shellSettingsMembers => 'Settings / Members';
+
+  @override
+  String get shellSearchHint => 'Search transactions, notes, or categories…';
+
+  @override
+  String get shellExport => 'Export';
+
+  @override
+  String get shellNotifications => 'Notifications';
+
+  @override
+  String get shellAddExpense => 'Add expense';
+
+  @override
+  String get shellAddTransaction => 'Log expense';
+
+  @override
+  String get shellScanReceipt => 'Scan receipt';
+
+  @override
+  String get budgetGoalsTabBudgets => 'Monthly budgets';
+
+  @override
+  String get budgetGoalsTabGoals => 'Shared goals';
+
+  @override
+  String get budgetGoalsEyebrow => 'Shared overview';
+
+  @override
+  String get budgetGoalsHeadline => 'Budget & Savings';
+
+  @override
+  String get budgetGoalsEyebrowWeb => 'Shared household planning';
+
+  @override
+  String get budgetGoalsHeadlineWeb => 'Family budget & goals';
+
+  @override
+  String get budgetTotalHouseholdSpend => 'Total household spend';
+
+  @override
+  String budgetAvailableLabel(String amount) {
+    return 'Available: $amount';
+  }
+
+  @override
+  String budgetDaysRemaining(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days left',
+      one: '$count day left',
+      zero: 'No days left',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String budgetPercentUsed(int percent) {
+    return '$percent%';
+  }
+
+  @override
+  String budgetSpentPercent(int percent) {
+    return '$percent% spent';
+  }
+
+  @override
+  String budgetRemainingLabel(String amount) {
+    return 'Left: $amount';
+  }
+
+  @override
+  String budgetOfLimitSuffix(String limit) {
+    return 'of $limit';
+  }
+
+  @override
+  String get budgetCategoriesSection => 'Spending categories';
+
+  @override
+  String get budgetCategoriesSectionWeb => 'Spending category monitoring';
+
+  @override
+  String get budgetEditLimits => 'Edit limits';
+
+  @override
+  String get budgetCreateBudgetOrGoal => 'Create new budget or goal';
+
+  @override
+  String get budgetCreateBudgetChoice => 'New budget';
+
+  @override
+  String get budgetCreateGoalChoice => 'New goal';
+
+  @override
+  String budgetNearLimitCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count near limit',
+      one: '$count near limit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get budgetResidueMonth => 'Month remaining';
+
+  @override
+  String get budgetResidueAvailable => 'Available';
+
+  @override
+  String get budgetDailyAllowance => 'Allowed spend';
+
+  @override
+  String get budgetDailyTarget => 'Daily target';
+
+  @override
+  String budgetDailyPerDay(String amount) {
+    return '$amount / day';
+  }
+
+  @override
+  String budgetPercentUtilized(int percent) {
+    return '$percent% used';
+  }
+
+  @override
+  String budgetMarginRemaining(String amount, int percent) {
+    return 'Remaining margin: $amount ($percent%)';
+  }
+
+  @override
+  String get budgetNewCategoryTitle => 'New category';
+
+  @override
+  String get budgetNewCategoryBody => 'Add a spending limit';
+
+  @override
+  String get budgetCreateNow => 'Create now';
+
+  @override
+  String get goalsSavingBanner =>
+      'You\'re saving together toward your family goals.';
+
+  @override
+  String get goalsNextPromptTitle => 'Next goal?';
+
+  @override
+  String get goalsNextPromptBody => 'Add a new shared milestone';
+
+  @override
+  String get goalsExplore => 'Explore';
+
+  @override
+  String get goalAddFunds => 'Add funds';
+
+  @override
+  String goalProgressPercent(int percent) {
+    return '$percent%';
+  }
 
   @override
   String get settingsTitle => 'Settings';
@@ -44,6 +221,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageItalian => 'Italian';
+
+  @override
+  String get settingsTheme => 'Theme';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
 
   @override
   String get actionCancel => 'Cancel';
@@ -212,6 +401,80 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filterAll => 'All';
+
+  @override
+  String get ledgerBookTitle => 'Family Ledger';
+
+  @override
+  String ledgerExpensesMonth(String month) {
+    return '$month expenses';
+  }
+
+  @override
+  String get ledgerIncomeTotal => 'Total income';
+
+  @override
+  String get ledgerMonthlyOutflows => 'Monthly outflows';
+
+  @override
+  String get ledgerMonthlyInflows => 'Monthly income';
+
+  @override
+  String get ledgerNetSavings => 'Net savings';
+
+  @override
+  String get ledgerDataIntegrity => 'Data integrity';
+
+  @override
+  String get ledgerRegistered => 'Logged';
+
+  @override
+  String get ledgerSearchPlaceholder => 'Search merchant, note, amount…';
+
+  @override
+  String get ledgerAllMembers => 'All members';
+
+  @override
+  String ledgerMemberOnly(String name) {
+    return 'Only $name';
+  }
+
+  @override
+  String get ledgerThisMonth => 'This month';
+
+  @override
+  String get ledgerAllAccounts => 'All accounts';
+
+  @override
+  String get ledgerUnifiedFinance => 'Unified financial management';
+
+  @override
+  String ledgerFiscalYear(String year) {
+    return 'Fiscal year $year';
+  }
+
+  @override
+  String ledgerInReview(int count) {
+    return '$count in review';
+  }
+
+  @override
+  String ledgerDayToday(String date) {
+    return 'Today, $date';
+  }
+
+  @override
+  String ledgerDayYesterday(String date) {
+    return 'Yesterday, $date';
+  }
+
+  @override
+  String get ledgerSortNewest => 'Sorted by: newest first';
+
+  @override
+  String ledgerShownOf(int shown, int total) {
+    return 'Showing $shown of $total';
+  }
 
   @override
   String get transactionCreateTitle => 'New transaction';
@@ -568,6 +831,167 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashboardQuickLinks => 'Quick links';
 
   @override
+  String dashboardGreetingHi(String name) {
+    return 'Hi $name!';
+  }
+
+  @override
+  String dashboardGreetingWelcome(String name) {
+    return 'Welcome back, $name';
+  }
+
+  @override
+  String dashboardCurrentMonth(String month) {
+    return 'Current month • $month';
+  }
+
+  @override
+  String get dashboardTotalBalance => 'Family total balance';
+
+  @override
+  String dashboardNetSavings(String amount, String percent) {
+    return 'Net savings: $amount ($percent%)';
+  }
+
+  @override
+  String get dashboardIncomeMonth => 'Month income';
+
+  @override
+  String get dashboardExpenseMonth => 'Month expenses';
+
+  @override
+  String dashboardReviewCount(int count) {
+    return '$count to review';
+  }
+
+  @override
+  String get dashboardReviewActionBadge => 'Action';
+
+  @override
+  String get dashboardReviewNow => 'Review now';
+
+  @override
+  String get dashboardReviewSubtitle =>
+      'Drafts from wallets and receipt scans awaiting confirmation.';
+
+  @override
+  String get dashboardAccountsSection => 'Family accounts & cards';
+
+  @override
+  String get dashboardManage => 'Manage';
+
+  @override
+  String dashboardBudgetOfMonth(String month) {
+    return '$month budget';
+  }
+
+  @override
+  String dashboardSeeAllCount(int count) {
+    return 'See all ($count)';
+  }
+
+  @override
+  String get dashboardRecentTransactions => 'Recent transactions';
+
+  @override
+  String get dashboardSeeAll => 'All';
+
+  @override
+  String dashboardActiveMembers(int count) {
+    return '$count active';
+  }
+
+  @override
+  String get dashboardPatrimony => 'Household wealth';
+
+  @override
+  String dashboardIncomeForMonth(String month) {
+    return '$month income';
+  }
+
+  @override
+  String get dashboardMonthlyOutflows => 'Monthly outflows';
+
+  @override
+  String get dashboardSmartReview => 'Smart review';
+
+  @override
+  String dashboardReviewValidate(int count) {
+    return '$count transactions to validate';
+  }
+
+  @override
+  String get dashboardReviewCta => 'Review now';
+
+  @override
+  String get dashboardCashflowTitle => 'Cashflow trend';
+
+  @override
+  String get dashboardCashflowPlaceholder =>
+      'Weekly cashflow chart coming soon — month totals are in the KPIs above.';
+
+  @override
+  String get dashboardBudgetMonitor => 'Category budget monitor';
+
+  @override
+  String get dashboardQuickQueue => 'Quick queue';
+
+  @override
+  String get dashboardQuickQueueEmpty => 'No drafts to review.';
+
+  @override
+  String get dashboardQuickQueueHint =>
+      'Transactions captured automatically from payment gateways.';
+
+  @override
+  String get dashboardLinkedAccounts => 'Linked accounts';
+
+  @override
+  String get dashboardLinkAccount => 'Link a new account';
+
+  @override
+  String get dashboardSavingsGoals => 'Savings goals';
+
+  @override
+  String get dashboardViewAllTransactions => 'View full transaction ledger';
+
+  @override
+  String get dashboardBudgetPreset => 'Budget target';
+
+  @override
+  String dashboardSpentPercent(String percent) {
+    return '$percent% spent';
+  }
+
+  @override
+  String dashboardUsedPercent(String percent) {
+    return '$percent% used';
+  }
+
+  @override
+  String dashboardRemaining(String amount) {
+    return '$amount left';
+  }
+
+  @override
+  String get dashboardAttentionThreshold => 'Attention threshold';
+
+  @override
+  String get dashboardNoAccounts => 'No accounts yet.';
+
+  @override
+  String get dashboardNoRecentTx => 'No recent transactions.';
+
+  @override
+  String get dashboardNoGoals => 'No savings goals yet.';
+
+  @override
+  String get dashboardAvailableBalance => 'Available balance';
+
+  @override
+  String get dashboardPrimaryAccount => 'Primary';
+
+  @override
   String get budgetsTitle => 'Budgets';
 
   @override
@@ -750,6 +1174,68 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ingestionOpenQueue => 'Open review queue';
+
+  @override
+  String ingestionPendingCount(int count) {
+    return '$count pending';
+  }
+
+  @override
+  String ingestionFilterAll(int count) {
+    return 'All ($count)';
+  }
+
+  @override
+  String ingestionFilterNotification(int count) {
+    return 'Notifications ($count)';
+  }
+
+  @override
+  String ingestionFilterOcr(int count) {
+    return 'Receipt OCR ($count)';
+  }
+
+  @override
+  String ingestionFilterDuplicates(int count) {
+    return 'Possible duplicates ($count)';
+  }
+
+  @override
+  String get ingestionConfirmLedger => 'Confirm to ledger';
+
+  @override
+  String get ingestionEmptyDoneTitle => 'All clear!';
+
+  @override
+  String get ingestionEmptyDoneBody =>
+      'No drafts waiting. The family ledger is up to date.';
+
+  @override
+  String get ingestionEmptyGoDashboard => 'Back to Dashboard';
+
+  @override
+  String get ingestionSettingsCapture => 'Notification & OCR capture settings';
+
+  @override
+  String get ingestionUnreconciledTitle => 'Unreconciled items';
+
+  @override
+  String get ingestionSortedByDate => 'Sorted by date';
+
+  @override
+  String get ingestionSelectDraftHint => 'Select a draft to verify and confirm';
+
+  @override
+  String get ingestionReviewVerifyTitle => 'Verify & assign expense';
+
+  @override
+  String get ingestionInReview => 'In review';
+
+  @override
+  String get ingestionToConfirm => 'To confirm';
+
+  @override
+  String get ingestionWebEyebrow => 'Staging & AI reconciliation';
 
   @override
   String get receiptScanTitle => 'Scan receipt';

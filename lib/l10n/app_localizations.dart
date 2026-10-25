@@ -107,7 +107,7 @@ abstract class AppLocalizations {
   /// No description provided for @navHome.
   ///
   /// In en, this message translates to:
-  /// **'Home'**
+  /// **'Dashboard'**
   String get navHome;
 
   /// No description provided for @navTransactions.
@@ -140,11 +140,293 @@ abstract class AppLocalizations {
   /// **'Goals'**
   String get navGoals;
 
+  /// No description provided for @navReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get navReview;
+
+  /// No description provided for @navBudgetGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget & Goals'**
+  String get navBudgetGoals;
+
   /// No description provided for @navSettings.
   ///
   /// In en, this message translates to:
   /// **'Settings'**
   String get navSettings;
+
+  /// No description provided for @shellBrandTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Kinship Stewardship'**
+  String get shellBrandTagline;
+
+  /// No description provided for @shellActiveFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Active family'**
+  String get shellActiveFamily;
+
+  /// No description provided for @shellSettingsMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings / Members'**
+  String get shellSettingsMembers;
+
+  /// No description provided for @shellSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search transactions, notes, or categories…'**
+  String get shellSearchHint;
+
+  /// No description provided for @shellExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get shellExport;
+
+  /// No description provided for @shellNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get shellNotifications;
+
+  /// No description provided for @shellAddExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Add expense'**
+  String get shellAddExpense;
+
+  /// No description provided for @shellAddTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Log expense'**
+  String get shellAddTransaction;
+
+  /// No description provided for @shellScanReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan receipt'**
+  String get shellScanReceipt;
+
+  /// No description provided for @budgetGoalsTabBudgets.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly budgets'**
+  String get budgetGoalsTabBudgets;
+
+  /// No description provided for @budgetGoalsTabGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared goals'**
+  String get budgetGoalsTabGoals;
+
+  /// No description provided for @budgetGoalsEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared overview'**
+  String get budgetGoalsEyebrow;
+
+  /// No description provided for @budgetGoalsHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget & Savings'**
+  String get budgetGoalsHeadline;
+
+  /// No description provided for @budgetGoalsEyebrowWeb.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared household planning'**
+  String get budgetGoalsEyebrowWeb;
+
+  /// No description provided for @budgetGoalsHeadlineWeb.
+  ///
+  /// In en, this message translates to:
+  /// **'Family budget & goals'**
+  String get budgetGoalsHeadlineWeb;
+
+  /// No description provided for @budgetTotalHouseholdSpend.
+  ///
+  /// In en, this message translates to:
+  /// **'Total household spend'**
+  String get budgetTotalHouseholdSpend;
+
+  /// No description provided for @budgetAvailableLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Available: {amount}'**
+  String budgetAvailableLabel(String amount);
+
+  /// No description provided for @budgetDaysRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No days left} one{{count} day left} other{{count} days left}}'**
+  String budgetDaysRemaining(int count);
+
+  /// No description provided for @budgetPercentUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}%'**
+  String budgetPercentUsed(int percent);
+
+  /// No description provided for @budgetSpentPercent.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% spent'**
+  String budgetSpentPercent(int percent);
+
+  /// No description provided for @budgetRemainingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Left: {amount}'**
+  String budgetRemainingLabel(String amount);
+
+  /// No description provided for @budgetOfLimitSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **'of {limit}'**
+  String budgetOfLimitSuffix(String limit);
+
+  /// No description provided for @budgetCategoriesSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Spending categories'**
+  String get budgetCategoriesSection;
+
+  /// No description provided for @budgetCategoriesSectionWeb.
+  ///
+  /// In en, this message translates to:
+  /// **'Spending category monitoring'**
+  String get budgetCategoriesSectionWeb;
+
+  /// No description provided for @budgetEditLimits.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit limits'**
+  String get budgetEditLimits;
+
+  /// No description provided for @budgetCreateBudgetOrGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Create new budget or goal'**
+  String get budgetCreateBudgetOrGoal;
+
+  /// No description provided for @budgetCreateBudgetChoice.
+  ///
+  /// In en, this message translates to:
+  /// **'New budget'**
+  String get budgetCreateBudgetChoice;
+
+  /// No description provided for @budgetCreateGoalChoice.
+  ///
+  /// In en, this message translates to:
+  /// **'New goal'**
+  String get budgetCreateGoalChoice;
+
+  /// No description provided for @budgetNearLimitCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} near limit} other{{count} near limit}}'**
+  String budgetNearLimitCount(int count);
+
+  /// No description provided for @budgetResidueMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month remaining'**
+  String get budgetResidueMonth;
+
+  /// No description provided for @budgetResidueAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get budgetResidueAvailable;
+
+  /// No description provided for @budgetDailyAllowance.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed spend'**
+  String get budgetDailyAllowance;
+
+  /// No description provided for @budgetDailyTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily target'**
+  String get budgetDailyTarget;
+
+  /// No description provided for @budgetDailyPerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} / day'**
+  String budgetDailyPerDay(String amount);
+
+  /// No description provided for @budgetPercentUtilized.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% used'**
+  String budgetPercentUtilized(int percent);
+
+  /// No description provided for @budgetMarginRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining margin: {amount} ({percent}%)'**
+  String budgetMarginRemaining(String amount, int percent);
+
+  /// No description provided for @budgetNewCategoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New category'**
+  String get budgetNewCategoryTitle;
+
+  /// No description provided for @budgetNewCategoryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a spending limit'**
+  String get budgetNewCategoryBody;
+
+  /// No description provided for @budgetCreateNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Create now'**
+  String get budgetCreateNow;
+
+  /// No description provided for @goalsSavingBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re saving together toward your family goals.'**
+  String get goalsSavingBanner;
+
+  /// No description provided for @goalsNextPromptTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Next goal?'**
+  String get goalsNextPromptTitle;
+
+  /// No description provided for @goalsNextPromptBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a new shared milestone'**
+  String get goalsNextPromptBody;
+
+  /// No description provided for @goalsExplore.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get goalsExplore;
+
+  /// No description provided for @goalAddFunds.
+  ///
+  /// In en, this message translates to:
+  /// **'Add funds'**
+  String get goalAddFunds;
+
+  /// No description provided for @goalProgressPercent.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}%'**
+  String goalProgressPercent(int percent);
 
   /// No description provided for @settingsTitle.
   ///
@@ -169,6 +451,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Italian'**
   String get languageItalian;
+
+  /// No description provided for @settingsTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get settingsTheme;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
 
   /// No description provided for @actionCancel.
   ///
@@ -493,6 +799,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All'**
   String get filterAll;
+
+  /// No description provided for @ledgerBookTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Family Ledger'**
+  String get ledgerBookTitle;
+
+  /// No description provided for @ledgerExpensesMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'{month} expenses'**
+  String ledgerExpensesMonth(String month);
+
+  /// No description provided for @ledgerIncomeTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total income'**
+  String get ledgerIncomeTotal;
+
+  /// No description provided for @ledgerMonthlyOutflows.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly outflows'**
+  String get ledgerMonthlyOutflows;
+
+  /// No description provided for @ledgerMonthlyInflows.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly income'**
+  String get ledgerMonthlyInflows;
+
+  /// No description provided for @ledgerNetSavings.
+  ///
+  /// In en, this message translates to:
+  /// **'Net savings'**
+  String get ledgerNetSavings;
+
+  /// No description provided for @ledgerDataIntegrity.
+  ///
+  /// In en, this message translates to:
+  /// **'Data integrity'**
+  String get ledgerDataIntegrity;
+
+  /// No description provided for @ledgerRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Logged'**
+  String get ledgerRegistered;
+
+  /// No description provided for @ledgerSearchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search merchant, note, amount…'**
+  String get ledgerSearchPlaceholder;
+
+  /// No description provided for @ledgerAllMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'All members'**
+  String get ledgerAllMembers;
+
+  /// No description provided for @ledgerMemberOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Only {name}'**
+  String ledgerMemberOnly(String name);
+
+  /// No description provided for @ledgerThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This month'**
+  String get ledgerThisMonth;
+
+  /// No description provided for @ledgerAllAccounts.
+  ///
+  /// In en, this message translates to:
+  /// **'All accounts'**
+  String get ledgerAllAccounts;
+
+  /// No description provided for @ledgerUnifiedFinance.
+  ///
+  /// In en, this message translates to:
+  /// **'Unified financial management'**
+  String get ledgerUnifiedFinance;
+
+  /// No description provided for @ledgerFiscalYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Fiscal year {year}'**
+  String ledgerFiscalYear(String year);
+
+  /// No description provided for @ledgerInReview.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} in review'**
+  String ledgerInReview(int count);
+
+  /// No description provided for @ledgerDayToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today, {date}'**
+  String ledgerDayToday(String date);
+
+  /// No description provided for @ledgerDayYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday, {date}'**
+  String ledgerDayYesterday(String date);
+
+  /// No description provided for @ledgerSortNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Sorted by: newest first'**
+  String get ledgerSortNewest;
+
+  /// No description provided for @ledgerShownOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing {shown} of {total}'**
+  String ledgerShownOf(int shown, int total);
 
   /// No description provided for @transactionCreateTitle.
   ///
@@ -1154,6 +1580,270 @@ abstract class AppLocalizations {
   /// **'Quick links'**
   String get dashboardQuickLinks;
 
+  /// No description provided for @dashboardGreetingHi.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi {name}!'**
+  String dashboardGreetingHi(String name);
+
+  /// No description provided for @dashboardGreetingWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back, {name}'**
+  String dashboardGreetingWelcome(String name);
+
+  /// No description provided for @dashboardCurrentMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Current month • {month}'**
+  String dashboardCurrentMonth(String month);
+
+  /// No description provided for @dashboardTotalBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Family total balance'**
+  String get dashboardTotalBalance;
+
+  /// No description provided for @dashboardNetSavings.
+  ///
+  /// In en, this message translates to:
+  /// **'Net savings: {amount} ({percent}%)'**
+  String dashboardNetSavings(String amount, String percent);
+
+  /// No description provided for @dashboardIncomeMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month income'**
+  String get dashboardIncomeMonth;
+
+  /// No description provided for @dashboardExpenseMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month expenses'**
+  String get dashboardExpenseMonth;
+
+  /// No description provided for @dashboardReviewCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} to review'**
+  String dashboardReviewCount(int count);
+
+  /// No description provided for @dashboardReviewActionBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Action'**
+  String get dashboardReviewActionBadge;
+
+  /// No description provided for @dashboardReviewNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Review now'**
+  String get dashboardReviewNow;
+
+  /// No description provided for @dashboardReviewSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Drafts from wallets and receipt scans awaiting confirmation.'**
+  String get dashboardReviewSubtitle;
+
+  /// No description provided for @dashboardAccountsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Family accounts & cards'**
+  String get dashboardAccountsSection;
+
+  /// No description provided for @dashboardManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage'**
+  String get dashboardManage;
+
+  /// No description provided for @dashboardBudgetOfMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'{month} budget'**
+  String dashboardBudgetOfMonth(String month);
+
+  /// No description provided for @dashboardSeeAllCount.
+  ///
+  /// In en, this message translates to:
+  /// **'See all ({count})'**
+  String dashboardSeeAllCount(int count);
+
+  /// No description provided for @dashboardRecentTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent transactions'**
+  String get dashboardRecentTransactions;
+
+  /// No description provided for @dashboardSeeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get dashboardSeeAll;
+
+  /// No description provided for @dashboardActiveMembers.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} active'**
+  String dashboardActiveMembers(int count);
+
+  /// No description provided for @dashboardPatrimony.
+  ///
+  /// In en, this message translates to:
+  /// **'Household wealth'**
+  String get dashboardPatrimony;
+
+  /// No description provided for @dashboardIncomeForMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'{month} income'**
+  String dashboardIncomeForMonth(String month);
+
+  /// No description provided for @dashboardMonthlyOutflows.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly outflows'**
+  String get dashboardMonthlyOutflows;
+
+  /// No description provided for @dashboardSmartReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart review'**
+  String get dashboardSmartReview;
+
+  /// No description provided for @dashboardReviewValidate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} transactions to validate'**
+  String dashboardReviewValidate(int count);
+
+  /// No description provided for @dashboardReviewCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Review now'**
+  String get dashboardReviewCta;
+
+  /// No description provided for @dashboardCashflowTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashflow trend'**
+  String get dashboardCashflowTitle;
+
+  /// No description provided for @dashboardCashflowPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly cashflow chart coming soon — month totals are in the KPIs above.'**
+  String get dashboardCashflowPlaceholder;
+
+  /// No description provided for @dashboardBudgetMonitor.
+  ///
+  /// In en, this message translates to:
+  /// **'Category budget monitor'**
+  String get dashboardBudgetMonitor;
+
+  /// No description provided for @dashboardQuickQueue.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick queue'**
+  String get dashboardQuickQueue;
+
+  /// No description provided for @dashboardQuickQueueEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No drafts to review.'**
+  String get dashboardQuickQueueEmpty;
+
+  /// No description provided for @dashboardQuickQueueHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions captured automatically from payment gateways.'**
+  String get dashboardQuickQueueHint;
+
+  /// No description provided for @dashboardLinkedAccounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked accounts'**
+  String get dashboardLinkedAccounts;
+
+  /// No description provided for @dashboardLinkAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Link a new account'**
+  String get dashboardLinkAccount;
+
+  /// No description provided for @dashboardSavingsGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings goals'**
+  String get dashboardSavingsGoals;
+
+  /// No description provided for @dashboardViewAllTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'View full transaction ledger'**
+  String get dashboardViewAllTransactions;
+
+  /// No description provided for @dashboardBudgetPreset.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget target'**
+  String get dashboardBudgetPreset;
+
+  /// No description provided for @dashboardSpentPercent.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% spent'**
+  String dashboardSpentPercent(String percent);
+
+  /// No description provided for @dashboardUsedPercent.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% used'**
+  String dashboardUsedPercent(String percent);
+
+  /// No description provided for @dashboardRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} left'**
+  String dashboardRemaining(String amount);
+
+  /// No description provided for @dashboardAttentionThreshold.
+  ///
+  /// In en, this message translates to:
+  /// **'Attention threshold'**
+  String get dashboardAttentionThreshold;
+
+  /// No description provided for @dashboardNoAccounts.
+  ///
+  /// In en, this message translates to:
+  /// **'No accounts yet.'**
+  String get dashboardNoAccounts;
+
+  /// No description provided for @dashboardNoRecentTx.
+  ///
+  /// In en, this message translates to:
+  /// **'No recent transactions.'**
+  String get dashboardNoRecentTx;
+
+  /// No description provided for @dashboardNoGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'No savings goals yet.'**
+  String get dashboardNoGoals;
+
+  /// No description provided for @dashboardAvailableBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Available balance'**
+  String get dashboardAvailableBalance;
+
+  /// No description provided for @dashboardPrimaryAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary'**
+  String get dashboardPrimaryAccount;
+
   /// No description provided for @budgetsTitle.
   ///
   /// In en, this message translates to:
@@ -1475,6 +2165,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open review queue'**
   String get ingestionOpenQueue;
+
+  /// No description provided for @ingestionPendingCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} pending'**
+  String ingestionPendingCount(int count);
+
+  /// No description provided for @ingestionFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All ({count})'**
+  String ingestionFilterAll(int count);
+
+  /// No description provided for @ingestionFilterNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications ({count})'**
+  String ingestionFilterNotification(int count);
+
+  /// No description provided for @ingestionFilterOcr.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt OCR ({count})'**
+  String ingestionFilterOcr(int count);
+
+  /// No description provided for @ingestionFilterDuplicates.
+  ///
+  /// In en, this message translates to:
+  /// **'Possible duplicates ({count})'**
+  String ingestionFilterDuplicates(int count);
+
+  /// No description provided for @ingestionConfirmLedger.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm to ledger'**
+  String get ingestionConfirmLedger;
+
+  /// No description provided for @ingestionEmptyDoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'All clear!'**
+  String get ingestionEmptyDoneTitle;
+
+  /// No description provided for @ingestionEmptyDoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'No drafts waiting. The family ledger is up to date.'**
+  String get ingestionEmptyDoneBody;
+
+  /// No description provided for @ingestionEmptyGoDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Dashboard'**
+  String get ingestionEmptyGoDashboard;
+
+  /// No description provided for @ingestionSettingsCapture.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification & OCR capture settings'**
+  String get ingestionSettingsCapture;
+
+  /// No description provided for @ingestionUnreconciledTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unreconciled items'**
+  String get ingestionUnreconciledTitle;
+
+  /// No description provided for @ingestionSortedByDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Sorted by date'**
+  String get ingestionSortedByDate;
+
+  /// No description provided for @ingestionSelectDraftHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a draft to verify and confirm'**
+  String get ingestionSelectDraftHint;
+
+  /// No description provided for @ingestionReviewVerifyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify & assign expense'**
+  String get ingestionReviewVerifyTitle;
+
+  /// No description provided for @ingestionInReview.
+  ///
+  /// In en, this message translates to:
+  /// **'In review'**
+  String get ingestionInReview;
+
+  /// No description provided for @ingestionToConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'To confirm'**
+  String get ingestionToConfirm;
+
+  /// No description provided for @ingestionWebEyebrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Staging & AI reconciliation'**
+  String get ingestionWebEyebrow;
 
   /// No description provided for @receiptScanTitle.
   ///

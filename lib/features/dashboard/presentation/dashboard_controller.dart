@@ -16,6 +16,7 @@ class DashboardState {
     required this.periodId,
     required this.currency,
     required this.stats,
+    required this.budgets,
     required this.alerts,
     required this.categoriesById,
     required this.loading,
@@ -25,6 +26,11 @@ class DashboardState {
   final String periodId;
   final String currency;
   final MonthStats stats;
+
+  /// All budgets with period rollup for the active month.
+  final List<BudgetWithPeriod> budgets;
+
+  /// Budgets past 80%/100% thresholds (subset of [budgets]).
   final List<BudgetWithPeriod> alerts;
   final Map<String, Category> categoriesById;
   final bool loading;
@@ -34,6 +40,7 @@ class DashboardState {
     periodId: periodId,
     currency: 'EUR',
     stats: MonthStats.empty,
+    budgets: const [],
     alerts: const [],
     categoriesById: const {},
     loading: true,
@@ -94,6 +101,7 @@ class DashboardController extends ChangeNotifier {
             incomeByAccount: const {},
             expenseByAccount: const {},
           ),
+      budgets: _budgetsWithPeriod,
       alerts: alerts,
       categoriesById: _categoriesById,
       loading: _loading && !_hasReceivedStats,

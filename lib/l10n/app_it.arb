@@ -1,17 +1,124 @@
 {
   "@@locale": "it",
   "appTitle": "Family Finance",
-  "navHome": "Home",
-  "navTransactions": "Movimenti",
+  "navHome": "Dashboard",
+  "navTransactions": "Transazioni",
   "navAccounts": "Conti",
   "navCategories": "Categorie",
   "navBudgets": "Budget",
   "navGoals": "Obiettivi",
+  "navReview": "Revisione",
+  "navBudgetGoals": "Budget & Obiettivi",
   "navSettings": "Impostazioni",
+  "shellBrandTagline": "Kinship Stewardship",
+  "shellActiveFamily": "Nucleo attivo",
+  "shellSettingsMembers": "Impostazioni / Membri",
+  "shellSearchHint": "Cerca transazioni, note o categorie...",
+  "shellExport": "Esporta",
+  "shellNotifications": "Notifiche",
+  "shellAddExpense": "Aggiungi spesa",
+  "shellAddTransaction": "Registra spesa",
+  "shellScanReceipt": "Scansiona ricevuta",
+  "budgetGoalsTabBudgets": "Budget mensili",
+  "budgetGoalsTabGoals": "Obiettivi comuni",
+  "budgetGoalsEyebrow": "Panoramica condivisa",
+  "budgetGoalsHeadline": "Budget & Risparmio",
+  "budgetGoalsEyebrowWeb": "Pianificazione domestica condivisa",
+  "budgetGoalsHeadlineWeb": "Budget e obiettivi del nucleo",
+  "budgetTotalHouseholdSpend": "Spesa totale della casa",
+  "budgetAvailableLabel": "Disponibili: {amount}",
+  "@budgetAvailableLabel": {
+    "placeholders": {
+      "amount": {"type": "String"}
+    }
+  },
+  "budgetDaysRemaining": "{count, plural, =0{Nessun giorno rimasto} one{{count} giorno rimasto} other{{count} giorni rimasti}}",
+  "@budgetDaysRemaining": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "budgetPercentUsed": "{percent}%",
+  "@budgetPercentUsed": {
+    "placeholders": {
+      "percent": {"type": "int"}
+    }
+  },
+  "budgetSpentPercent": "{percent}% speso",
+  "@budgetSpentPercent": {
+    "placeholders": {
+      "percent": {"type": "int"}
+    }
+  },
+  "budgetRemainingLabel": "Rimasti: {amount}",
+  "@budgetRemainingLabel": {
+    "placeholders": {
+      "amount": {"type": "String"}
+    }
+  },
+  "budgetOfLimitSuffix": "su {limit}",
+  "@budgetOfLimitSuffix": {
+    "placeholders": {
+      "limit": {"type": "String"}
+    }
+  },
+  "budgetCategoriesSection": "Categorie di spesa",
+  "budgetCategoriesSectionWeb": "Monitoraggio categorie di spesa",
+  "budgetEditLimits": "Modifica limiti",
+  "budgetCreateBudgetOrGoal": "Crea nuovo budget o obiettivo",
+  "budgetCreateBudgetChoice": "Nuovo budget",
+  "budgetCreateGoalChoice": "Nuovo obiettivo",
+  "budgetNearLimitCount": "{count, plural, one{{count} vicino al limite} other{{count} vicini al limite}}",
+  "@budgetNearLimitCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "budgetResidueMonth": "Residuo mese",
+  "budgetResidueAvailable": "Disponibili",
+  "budgetDailyAllowance": "Spesa consentita",
+  "budgetDailyTarget": "Target giornaliero",
+  "budgetDailyPerDay": "{amount} / g",
+  "@budgetDailyPerDay": {
+    "placeholders": {
+      "amount": {"type": "String"}
+    }
+  },
+  "budgetPercentUtilized": "{percent}% utilizzato",
+  "@budgetPercentUtilized": {
+    "placeholders": {
+      "percent": {"type": "int"}
+    }
+  },
+  "budgetMarginRemaining": "Margine residuo: {amount} ({percent}%)",
+  "@budgetMarginRemaining": {
+    "placeholders": {
+      "amount": {"type": "String"},
+      "percent": {"type": "int"}
+    }
+  },
+  "budgetNewCategoryTitle": "Nuova categoria",
+  "budgetNewCategoryBody": "Aggiungi una soglia di spesa",
+  "budgetCreateNow": "Crea ora",
+  "goalsSavingBanner": "State risparmiando insieme verso i vostri obiettivi di famiglia.",
+  "goalsNextPromptTitle": "Prossimo obiettivo?",
+  "goalsNextPromptBody": "Aggiungi un nuovo traguardo condiviso",
+  "goalsExplore": "Esplora",
+  "goalAddFunds": "Aggiungi fondi",
+  "goalProgressPercent": "{percent}%",
+  "@goalProgressPercent": {
+    "placeholders": {
+      "percent": {"type": "int"}
+    }
+  },
   "settingsTitle": "Impostazioni",
   "settingsLanguage": "Lingua",
   "languageEnglish": "Inglese",
   "languageItalian": "Italiano",
+  "settingsTheme": "Tema",
+  "themeSystem": "Sistema",
+  "themeLight": "Chiaro",
+  "themeDark": "Scuro",
   "actionCancel": "Annulla",
   "actionContinue": "Continua",
   "actionSave": "Salva",
@@ -66,6 +173,62 @@
   "filterDateFrom": "Dal",
   "filterDateTo": "Al",
   "filterAll": "Tutti",
+  "ledgerBookTitle": "Libro Mastro Famiglia",
+  "ledgerExpensesMonth": "Spese {month}",
+  "@ledgerExpensesMonth": {
+    "placeholders": {
+      "month": { "type": "String" }
+    }
+  },
+  "ledgerIncomeTotal": "Entrate totali",
+  "ledgerMonthlyOutflows": "Uscite mensili",
+  "ledgerMonthlyInflows": "Entrate mensili",
+  "ledgerNetSavings": "Risparmio netto",
+  "ledgerDataIntegrity": "Integrità dati",
+  "ledgerRegistered": "Registrate",
+  "ledgerSearchPlaceholder": "Cerca esercente, nota, importo...",
+  "ledgerAllMembers": "Tutti i membri",
+  "ledgerMemberOnly": "Solo {name}",
+  "@ledgerMemberOnly": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "ledgerThisMonth": "Questo mese",
+  "ledgerAllAccounts": "Tutti i conti",
+  "ledgerUnifiedFinance": "Gestione finanziaria unificata",
+  "ledgerFiscalYear": "Anno fiscale {year}",
+  "@ledgerFiscalYear": {
+    "placeholders": {
+      "year": { "type": "String" }
+    }
+  },
+  "ledgerInReview": "{count} in revisione",
+  "@ledgerInReview": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ledgerDayToday": "Oggi, {date}",
+  "@ledgerDayToday": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "ledgerDayYesterday": "Ieri, {date}",
+  "@ledgerDayYesterday": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "ledgerSortNewest": "Ordinato per: data più recente",
+  "ledgerShownOf": "Mostrate {shown} di {total}",
+  "@ledgerShownOf": {
+    "placeholders": {
+      "shown": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
   "transactionCreateTitle": "Nuovo movimento",
   "transactionEditTitle": "Modifica movimento",
   "transactionType": "Tipo",
@@ -181,6 +344,50 @@
   "dashboardNoExpenses": "Nessuna spesa in questo periodo.",
   "dashboardNoIncome": "Nessuna entrata in questo periodo.",
   "dashboardQuickLinks": "Collegamenti rapidi",
+  "dashboardGreetingHi": "Ciao {name}!",
+  "dashboardGreetingWelcome": "Bentornato, {name}",
+  "dashboardCurrentMonth": "Mese corrente • {month}",
+  "dashboardTotalBalance": "Saldo Totale Famiglia",
+  "dashboardNetSavings": "Risparmio netto: {amount} ({percent}%)",
+  "dashboardIncomeMonth": "Entrate Mese",
+  "dashboardExpenseMonth": "Spese Mese",
+  "dashboardReviewCount": "{count} Da Revisionare",
+  "dashboardReviewActionBadge": "Azione",
+  "dashboardReviewNow": "Revisiona ora",
+  "dashboardReviewSubtitle": "Bozze da wallet e scansione scontrino in attesa di conferma.",
+  "dashboardAccountsSection": "Conti e Carte Famiglia",
+  "dashboardManage": "Gestisci",
+  "dashboardBudgetOfMonth": "Budget di {month}",
+  "dashboardSeeAllCount": "Vedi tutti ({count})",
+  "dashboardRecentTransactions": "Ultime Transazioni",
+  "dashboardSeeAll": "Tutte",
+  "dashboardActiveMembers": "{count} attivi",
+  "dashboardPatrimony": "Patrimonio Nucleo",
+  "dashboardIncomeForMonth": "Entrate {month}",
+  "dashboardMonthlyOutflows": "Uscite Mensili",
+  "dashboardSmartReview": "Smart Review",
+  "dashboardReviewValidate": "{count} Transazioni da Validare",
+  "dashboardReviewCta": "Revisiona Subito",
+  "dashboardCashflowTitle": "Andamento Cashflow",
+  "dashboardCashflowPlaceholder": "Grafico cashflow settimanale in arrivo — i totali del mese sono nei KPI sopra.",
+  "dashboardBudgetMonitor": "Monitoraggio Budget di Categoria",
+  "dashboardQuickQueue": "Coda Rapida",
+  "dashboardQuickQueueEmpty": "Nessuna bozza da revisionare.",
+  "dashboardQuickQueueHint": "Transazioni intercettate automaticamente dai gateway di pagamento.",
+  "dashboardLinkedAccounts": "Conti Collegati",
+  "dashboardLinkAccount": "Collega nuovo conto",
+  "dashboardSavingsGoals": "Obiettivi di Risparmio",
+  "dashboardViewAllTransactions": "Vedi tutto il registro transazioni",
+  "dashboardBudgetPreset": "Budget prefissato",
+  "dashboardSpentPercent": "{percent}% speso",
+  "dashboardUsedPercent": "{percent}% utilizzato",
+  "dashboardRemaining": "Rimangono {amount}",
+  "dashboardAttentionThreshold": "Soglia d'attenzione",
+  "dashboardNoAccounts": "Nessun conto ancora.",
+  "dashboardNoRecentTx": "Nessuna transazione recente.",
+  "dashboardNoGoals": "Nessun obiettivo di risparmio.",
+  "dashboardAvailableBalance": "Saldo disponibile",
+  "dashboardPrimaryAccount": "Principale",
   "budgetsTitle": "Budget",
   "budgetsEmpty": "Nessun budget. Imposta un limite mensile per una categoria di spesa.",
   "budgetCreateTitle": "Nuovo budget",
@@ -241,6 +448,48 @@
   "ingestionSaveMerchantRule": "Ricorda categoria e conto per questo esercente",
   "ingestionSaveMerchantRuleHint": "Usato come suggerimento la prossima volta che compare questo esercente.",
   "ingestionOpenQueue": "Apri coda di revisione",
+  "ingestionPendingCount": "{count} in attesa",
+  "@ingestionPendingCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ingestionFilterAll": "Tutte ({count})",
+  "@ingestionFilterAll": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ingestionFilterNotification": "Notifiche ({count})",
+  "@ingestionFilterNotification": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ingestionFilterOcr": "Scontrino OCR ({count})",
+  "@ingestionFilterOcr": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ingestionFilterDuplicates": "Possibili duplicati ({count})",
+  "@ingestionFilterDuplicates": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ingestionConfirmLedger": "Conferma nel mastro",
+  "ingestionEmptyDoneTitle": "Tutto in ordine!",
+  "ingestionEmptyDoneBody": "Non ci sono altre bozze in attesa. Il libro mastro di famiglia è aggiornato.",
+  "ingestionEmptyGoDashboard": "Torna alla Dashboard",
+  "ingestionSettingsCapture": "Impostazioni acquisizione notifiche & OCR",
+  "ingestionUnreconciledTitle": "Elementi non riconciliati",
+  "ingestionSortedByDate": "Ordinati per data",
+  "ingestionSelectDraftHint": "Seleziona una bozza per verificare e confermare",
+  "ingestionReviewVerifyTitle": "Verifica & associazione spesa",
+  "ingestionInReview": "In revisione",
+  "ingestionToConfirm": "Da confermare",
+  "ingestionWebEyebrow": "Staging & riconciliazione AI",
   "receiptScanTitle": "Scansiona scontrino",
   "receiptScanAction": "Scansiona scontrino",
   "receiptScanBody": "Scatta una foto o scegli un'immagine. L'app estrae importo, data ed esercente in una bozza da confermare — niente viene registrato in silenzio.",

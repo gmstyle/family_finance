@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../core/locale/locale_controller.dart';
 import '../../../core/money/money.dart';
 import '../../../core/theme/app_tokens.dart';
-import '../../../core/ui/app_page.dart';
+import '../../../core/ui/kinship_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../accounts/domain/account.dart';
 import '../../auth/presentation/auth_controller.dart';
@@ -17,10 +17,20 @@ import '../domain/ingestion.dart';
 import 'ingestion_controller.dart';
 
 /// Review / edit a single draft — Confirm creates the ledger transaction.
+///
+/// When [embedded] is true (wide master–detail pane), chrome/AppBar are omitted
+/// and [onCompleted] is called instead of popping the route.
 class IngestionDetailScreen extends StatefulWidget {
-  const IngestionDetailScreen({super.key, required this.dedupKey});
+  const IngestionDetailScreen({
+    super.key,
+    required this.dedupKey,
+    this.embedded = false,
+    this.onCompleted,
+  });
 
   final String dedupKey;
+  final bool embedded;
+  final VoidCallback? onCompleted;
 
   @override
   State<IngestionDetailScreen> createState() => _IngestionDetailScreenState();
@@ -46,6 +56,17 @@ class _IngestionDetailScreenState extends State<IngestionDetailScreen> {
   void initState() {
     super.initState();
     _bookingDate = formatBookingDate(DateTime.now());
+  }
+
+  @override
+  void didUpdateWidget(covariant IngestionDetailScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.dedupKey != widget.dedupKey) {
+      _loading = true;
+      _error = null;
+      _draft = null;
+      _load();
+    }
   }
 
   @override
@@ -88,11 +109,21 @@ class _IngestionDetailScreenState extends State<IngestionDetailScreen> {
       _merchant.text = draft.merchant ?? '';
       if (draft.amountMinor != null) {
         _amount.text = Money.formatFromMinor(draft.amountMinor!, locale);
+      } else {
+        _amount.clear();
       }
     } catch (e) {
       _error = e.toString();
     } finally {
       if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  void _finish() {
+    if (widget.embedded) {
+      widget.onCompleted?.call();
+    } else if (mounted) {
+      context.pop();
     }
   }
 
@@ -182,7 +213,7 @@ class _IngestionDetailScreenState extends State<IngestionDetailScreen> {
         currency: _currency,
         saveMerchantRule: _saveMerchantRule,
       );
-      if (mounted) context.pop();
+      if (mounted) _finish();
     } catch (e) {
       setState(() => _error = e.toString());
     } finally {
@@ -218,7 +249,7 @@ class _IngestionDetailScreenState extends State<IngestionDetailScreen> {
     });
     try {
       await context.read<IngestionController>().discardDraft(widget.dedupKey);
-      if (mounted) context.pop();
+      if (mounted) _finish();
     } catch (e) {
       setState(() => _error = e.toString());
     } finally {
@@ -242,216 +273,243 @@ class _IngestionDetailScreenState extends State<IngestionDetailScreen> {
     final categoriesCtrl = context.watch<CategoriesController>();
 
     if (familyId == null) {
+      if (widget.embedded) {
+        return Center(child: Text(l10n.familyMissing));
+      }
       return Scaffold(
         appBar: AppBar(title: Text(l10n.ingestionReviewTitle)),
         body: Center(child: Text(l10n.familyMissing)),
       );
     }
 
+    final formBody = _loading
+        ? const Center(child: CircularProgressIndicator())
+        : Form(
+            key: _formKey,
+            child: ListView(
+              padding: widget.embedded
+                  ? const EdgeInsets.all(AppSpacing.lg)
+                  : EdgeInsets.zero,
+              children: [
+                if (widget.embedded) ...[
+                  Text(
+                    l10n.ingestionReviewVerifyTitle,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                ],
+                if (_draft != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Chip(
+                        avatar: Icon(
+                          _draft!.source == IngestionSource.notification
+                              ? Icons.notifications_outlined
+                              : Icons.document_scanner_outlined,
+                          size: 18,
+                        ),
+                        label: Text(
+                          _draft!.source == IngestionSource.notification
+                              ? l10n.ingestionSourceNotification
+                              : l10n.ingestionSourceReceiptOcr,
+                        ),
+                      ),
+                    ),
+                  ),
+                if (_draft?.status == IngestionStatus.possibleDuplicate)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                    child: Material(
+                      color: theme.colorScheme.tertiaryContainer.withValues(
+                        alpha: 0.55,
+                      ),
+                      borderRadius: AppRadius.mdAll,
+                      child: Padding(
+                        padding: AppInsets.card,
+                        child: Text(
+                          l10n.ingestionPossibleDuplicateHint,
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ),
+                    ),
+                  ),
+                StreamBuilder<List<Account>>(
+                  stream: ingestionCtrl.watchAccounts(),
+                  builder: (context, snap) {
+                    final accounts = snap.data ?? ingestionCtrl.accounts;
+                    return DropdownButtonFormField<String>(
+                      // ignore: deprecated_member_use
+                      value: _accountId,
+                      decoration: InputDecoration(
+                        labelText: l10n.filterAccount,
+                      ),
+                      items: accounts
+                          .map(
+                            (a) => DropdownMenuItem(
+                              value: a.id,
+                              child: Text(a.name),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (v) => setState(() => _accountId = v),
+                      validator: (v) =>
+                          v == null ? l10n.transactionFormIncomplete : null,
+                    );
+                  },
+                ),
+                const SizedBox(height: AppSpacing.md),
+                StreamBuilder<List<Category>>(
+                  stream: categoriesCtrl.watchCategories(
+                    type: CategoryType.expense,
+                  ),
+                  builder: (context, snap) {
+                    final cats = snap.data ?? const <Category>[];
+                    return DropdownButtonFormField<String>(
+                      // ignore: deprecated_member_use
+                      value: _categoryId,
+                      decoration: InputDecoration(
+                        labelText: l10n.filterCategory,
+                      ),
+                      items: cats
+                          .map(
+                            (c) => DropdownMenuItem(
+                              value: c.id,
+                              child: Text(categoryLabel(l10n, c)),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (v) => setState(() => _categoryId = v),
+                      validator: (v) =>
+                          v == null ? l10n.transactionFormIncomplete : null,
+                    );
+                  },
+                ),
+                const SizedBox(height: AppSpacing.md),
+                TextFormField(
+                  controller: _amount,
+                  decoration: InputDecoration(
+                    labelText: l10n.transactionAmount,
+                    suffixText: ingestionCtrl.currency,
+                  ),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  validator: (v) {
+                    if (v == null || v.trim().isEmpty) {
+                      return l10n.moneyInvalid;
+                    }
+                    try {
+                      final n = Money.parseToMinor(
+                        v,
+                        context.read<LocaleController>().locale.languageCode,
+                      );
+                      if (n <= 0) return l10n.moneyInvalid;
+                      return null;
+                    } catch (_) {
+                      return l10n.moneyInvalid;
+                    }
+                  },
+                ),
+                const SizedBox(height: AppSpacing.md),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(l10n.transactionBookingDate),
+                  subtitle: Text(_bookingDate),
+                  trailing: const Icon(Icons.calendar_today_outlined),
+                  onTap: () async {
+                    final v = await pickBookingDate(
+                      context,
+                      initial: _bookingDate,
+                    );
+                    if (v != null) setState(() => _bookingDate = v);
+                  },
+                ),
+                if (periodIdFromBookingDate(_bookingDate) !=
+                    currentBudgetPeriodId()) ...[
+                  const SizedBox(height: AppSpacing.sm),
+                  Material(
+                    color: theme.colorScheme.tertiaryContainer,
+                    borderRadius: AppRadius.mdAll,
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: Text(
+                        l10n.ingestionPeriodMismatchBody(
+                          _bookingDate,
+                          periodIdFromBookingDate(_bookingDate),
+                          currentBudgetPeriodId(),
+                        ),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onTertiaryContainer,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+                TextFormField(
+                  controller: _merchant,
+                  decoration: InputDecoration(
+                    labelText: l10n.transactionMerchant,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(l10n.ingestionSaveMerchantRule),
+                  subtitle: Text(l10n.ingestionSaveMerchantRuleHint),
+                  value: _saveMerchantRule,
+                  onChanged: (v) => setState(() => _saveMerchantRule = v),
+                ),
+                if (_error != null) ...[
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    _error!,
+                    style: TextStyle(color: theme.colorScheme.error),
+                  ),
+                ],
+                const SizedBox(height: AppSpacing.lg),
+                KinshipPrimaryPillButton(
+                  onPressed: _busy ? null : _confirm,
+                  icon: const Icon(Icons.check_circle_outline, size: 18),
+                  child: _busy
+                      ? const SizedBox(
+                          width: AppSizes.buttonProgress,
+                          height: AppSizes.buttonProgress,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text(
+                          widget.embedded
+                              ? l10n.ingestionConfirmLedger
+                              : l10n.ingestionConfirmAction,
+                        ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                TextButton(
+                  onPressed: _busy ? null : _discard,
+                  style: TextButton.styleFrom(
+                    foregroundColor: theme.colorScheme.secondary,
+                  ),
+                  child: Text(l10n.ingestionDiscardAction),
+                ),
+              ],
+            ),
+          );
+
+    if (widget.embedded) {
+      return KinshipCard(
+        elevated: true,
+        borderRadius: AppRadius.xxlAll,
+        clipBehavior: Clip.antiAlias,
+        child: formBody,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text(l10n.ingestionReviewTitle)),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : AppPage(
-              form: true,
-              padding: AppInsets.page,
-              child: Form(
-                key: _formKey,
-                child: ListView(
-                  children: [
-                    if (_draft != null)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Chip(
-                            avatar: Icon(
-                              _draft!.source == IngestionSource.notification
-                                  ? Icons.notifications_outlined
-                                  : Icons.document_scanner_outlined,
-                              size: 18,
-                            ),
-                            label: Text(
-                              _draft!.source == IngestionSource.notification
-                                  ? l10n.ingestionSourceNotification
-                                  : l10n.ingestionSourceReceiptOcr,
-                            ),
-                          ),
-                        ),
-                      ),
-                    if (_draft?.status == IngestionStatus.possibleDuplicate)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                        child: Material(
-                          color: theme.colorScheme.tertiaryContainer.withValues(
-                            alpha: 0.55,
-                          ),
-                          borderRadius: AppRadius.mdAll,
-                          child: Padding(
-                            padding: AppInsets.card,
-                            child: Text(
-                              l10n.ingestionPossibleDuplicateHint,
-                              style: theme.textTheme.bodyMedium,
-                            ),
-                          ),
-                        ),
-                      ),
-                    StreamBuilder<List<Account>>(
-                      stream: ingestionCtrl.watchAccounts(),
-                      builder: (context, snap) {
-                        final accounts = snap.data ?? ingestionCtrl.accounts;
-                        return DropdownButtonFormField<String>(
-                          // ignore: deprecated_member_use
-                          value: _accountId,
-                          decoration: InputDecoration(
-                            labelText: l10n.filterAccount,
-                          ),
-                          items: accounts
-                              .map(
-                                (a) => DropdownMenuItem(
-                                  value: a.id,
-                                  child: Text(a.name),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (v) => setState(() => _accountId = v),
-                          validator: (v) =>
-                              v == null ? l10n.transactionFormIncomplete : null,
-                        );
-                      },
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    StreamBuilder<List<Category>>(
-                      stream: categoriesCtrl.watchCategories(
-                        type: CategoryType.expense,
-                      ),
-                      builder: (context, snap) {
-                        final cats = snap.data ?? const <Category>[];
-                        return DropdownButtonFormField<String>(
-                          // ignore: deprecated_member_use
-                          value: _categoryId,
-                          decoration: InputDecoration(
-                            labelText: l10n.filterCategory,
-                          ),
-                          items: cats
-                              .map(
-                                (c) => DropdownMenuItem(
-                                  value: c.id,
-                                  child: Text(categoryLabel(l10n, c)),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (v) => setState(() => _categoryId = v),
-                          validator: (v) =>
-                              v == null ? l10n.transactionFormIncomplete : null,
-                        );
-                      },
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    TextFormField(
-                      controller: _amount,
-                      decoration: InputDecoration(
-                        labelText: l10n.transactionAmount,
-                        suffixText: ingestionCtrl.currency,
-                      ),
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      validator: (v) {
-                        if (v == null || v.trim().isEmpty) {
-                          return l10n.moneyInvalid;
-                        }
-                        try {
-                          final n = Money.parseToMinor(
-                            v,
-                            context
-                                .read<LocaleController>()
-                                .locale
-                                .languageCode,
-                          );
-                          if (n <= 0) return l10n.moneyInvalid;
-                          return null;
-                        } catch (_) {
-                          return l10n.moneyInvalid;
-                        }
-                      },
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(l10n.transactionBookingDate),
-                      subtitle: Text(_bookingDate),
-                      trailing: const Icon(Icons.calendar_today_outlined),
-                      onTap: () async {
-                        final v = await pickBookingDate(
-                          context,
-                          initial: _bookingDate,
-                        );
-                        if (v != null) setState(() => _bookingDate = v);
-                      },
-                    ),
-                    if (periodIdFromBookingDate(_bookingDate) !=
-                        currentBudgetPeriodId()) ...[
-                      const SizedBox(height: AppSpacing.sm),
-                      Material(
-                        color: theme.colorScheme.tertiaryContainer,
-                        borderRadius: AppRadius.mdAll,
-                        child: Padding(
-                          padding: const EdgeInsets.all(AppSpacing.md),
-                          child: Text(
-                            l10n.ingestionPeriodMismatchBody(
-                              _bookingDate,
-                              periodIdFromBookingDate(_bookingDate),
-                              currentBudgetPeriodId(),
-                            ),
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onTertiaryContainer,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                    TextFormField(
-                      controller: _merchant,
-                      decoration: InputDecoration(
-                        labelText: l10n.transactionMerchant,
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(l10n.ingestionSaveMerchantRule),
-                      subtitle: Text(l10n.ingestionSaveMerchantRuleHint),
-                      value: _saveMerchantRule,
-                      onChanged: (v) => setState(() => _saveMerchantRule = v),
-                    ),
-                    if (_error != null) ...[
-                      const SizedBox(height: AppSpacing.sm),
-                      Text(
-                        _error!,
-                        style: TextStyle(color: theme.colorScheme.error),
-                      ),
-                    ],
-                    const SizedBox(height: AppSpacing.lg),
-                    FilledButton(
-                      onPressed: _busy ? null : _confirm,
-                      child: _busy
-                          ? const SizedBox(
-                              width: AppSizes.buttonProgress,
-                              height: AppSizes.buttonProgress,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : Text(l10n.ingestionConfirmAction),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    OutlinedButton(
-                      onPressed: _busy ? null : _discard,
-                      child: Text(l10n.ingestionDiscardAction),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+      body: AppPage(form: true, padding: AppInsets.page, child: formBody),
     );
   }
 }
