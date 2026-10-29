@@ -20,23 +20,11 @@ class VerifyEmailScreen extends StatelessWidget {
     final wide = AppBreakpoints.isWide(context);
 
     return KinshipAuthScaffold(
-      brandPanel: KinshipAuthBrandPanel(
-        title: l10n.appTitle,
-        logo: Icon(
-          Icons.account_balance_wallet_outlined,
-          size: 40,
-          color: scheme.onPrimary,
-        ),
-      ),
+      brandPanel: KinshipAuthBrandPanel(title: l10n.appTitle),
       body: SingleChildScrollView(
         child: KinshipAuthPanel(
           showCard: !wide,
           brandName: l10n.appTitle,
-          logo: Icon(
-            Icons.mark_email_unread_outlined,
-            size: 32,
-            color: scheme.primaryContainer,
-          ),
           headline: l10n.authVerifyEmailTitle,
           body: l10n.authVerifyEmailBody(auth.user?.email ?? ''),
           footer: Align(

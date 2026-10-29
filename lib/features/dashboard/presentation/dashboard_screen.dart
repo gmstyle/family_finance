@@ -477,36 +477,40 @@ class _DashboardWeb extends StatelessWidget {
         LayoutBuilder(
           builder: (context, constraints) {
             final cols = constraints.maxWidth < 900 ? 2 : 4;
-            return GridView.count(
-              crossAxisCount: cols,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: AppSpacing.md,
-              crossAxisSpacing: AppSpacing.md,
-              childAspectRatio: cols == 4 ? 1.35 : 1.5,
+            final gap = AppSpacing.md;
+            final tileWidth = (constraints.maxWidth - gap * (cols - 1)) / cols;
+            final tiles = <Widget>[
+              KinshipKpiTile(
+                label: l10n.dashboardPatrimony.toUpperCase(),
+                amountText: data.balanceHidden
+                    ? _maskedAmount(data.currency)
+                    : _money(data.totalBalanceMinor, data),
+                icon: Icons.account_balance_outlined,
+              ),
+              KinshipKpiTile(
+                label: l10n
+                    .dashboardIncomeForMonth(data.monthLabel)
+                    .toUpperCase(),
+                amountText: _money(data.incomeMinor, data),
+                amountColor: extras.income,
+                icon: Icons.payments_outlined,
+                iconBackground: scheme.surfaceContainerHigh,
+                iconColor: scheme.primary,
+              ),
+              _ExpenseKpiTile(data: data),
+              _SmartReviewKpi(
+                count: data.pendingCount,
+                onTap: () => context.go(AppRoutes.ingestion),
+              ),
+            ];
+            // Wrap (not GridView): tiles size to content — avoids fixed-aspect
+            // overflow when footers/meters need more vertical room.
+            return Wrap(
+              spacing: gap,
+              runSpacing: gap,
               children: [
-                KinshipKpiTile(
-                  label: l10n.dashboardPatrimony.toUpperCase(),
-                  amountText: data.balanceHidden
-                      ? _maskedAmount(data.currency)
-                      : _money(data.totalBalanceMinor, data),
-                  icon: Icons.account_balance_outlined,
-                ),
-                KinshipKpiTile(
-                  label: l10n
-                      .dashboardIncomeForMonth(data.monthLabel)
-                      .toUpperCase(),
-                  amountText: _money(data.incomeMinor, data),
-                  amountColor: extras.income,
-                  icon: Icons.payments_outlined,
-                  iconBackground: scheme.surfaceContainerHigh,
-                  iconColor: scheme.primary,
-                ),
-                _ExpenseKpiTile(data: data),
-                _SmartReviewKpi(
-                  count: data.pendingCount,
-                  onTap: () => context.go(AppRoutes.ingestion),
-                ),
+                for (final tile in tiles)
+                  SizedBox(width: tileWidth, child: tile),
               ],
             );
           },
@@ -1362,12 +1366,15 @@ class _ExpenseKpiTile extends StatelessWidget {
           ? null
           : Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
                   children: [
                     Expanded(
                       child: Text(
                         l10n.dashboardBudgetPreset,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.labelSmall
                             ?.copyWith(color: scheme.onSurfaceVariant),
                       ),
@@ -1379,20 +1386,24 @@ class _ExpenseKpiTile extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: AppSpacing.xs),
-                KinshipBudgetMeter(progress: progress, height: 8),
+                const SizedBox(height: AppSpacing.xxs),
+                KinshipBudgetMeter(progress: progress, height: 6),
                 const SizedBox(height: AppSpacing.xxs),
                 Row(
                   children: [
                     Expanded(
                       child: Text(
                         l10n.dashboardSpentPercent('$percent'),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.labelSmall
                             ?.copyWith(color: scheme.onSurfaceVariant),
                       ),
                     ),
                     Text(
                       l10n.dashboardRemaining(_money(remaining, data)),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.labelSmall
                           ?.copyWith(color: scheme.onSurfaceVariant),
                     ),
@@ -1419,16 +1430,19 @@ class _SmartReviewKpi extends StatelessWidget {
     return KinshipCard(
       color: scheme.tertiaryFixed.withValues(alpha: 0.3),
       onTap: onTap,
-      padding: const EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
               Expanded(
                 child: Text(
                   l10n.dashboardSmartReview.toUpperCase(),
-                  style: textTheme.labelMedium?.copyWith(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: textTheme.labelSmall?.copyWith(
                     color: scheme.tertiary,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.8,
@@ -1436,8 +1450,8 @@ class _SmartReviewKpi extends StatelessWidget {
                 ),
               ),
               Container(
-                width: 32,
-                height: 32,
+                width: 28,
+                height: 28,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: scheme.tertiary,
@@ -1453,26 +1467,30 @@ class _SmartReviewKpi extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.xs),
           Text(
             l10n.dashboardReviewValidate(count),
-            style: textTheme.headlineSmall?.copyWith(
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: textTheme.titleMedium?.copyWith(
               color: scheme.onTertiaryFixed,
               fontWeight: FontWeight.w700,
-              fontSize: 20,
             ),
           ),
-          const SizedBox(height: AppSpacing.xxs),
           Text(
             l10n.dashboardReviewSubtitle,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: textTheme.bodySmall?.copyWith(
               color: scheme.onTertiaryFixedVariant,
             ),
           ),
-          const Spacer(),
           const SizedBox(height: AppSpacing.sm),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.sm,
+              vertical: AppSpacing.xs,
+            ),
             decoration: BoxDecoration(
               color: scheme.surfaceContainerLowest,
               borderRadius: AppRadius.mdAll,
@@ -1482,13 +1500,15 @@ class _SmartReviewKpi extends StatelessWidget {
                 Expanded(
                   child: Text(
                     l10n.dashboardReviewCta,
-                    style: textTheme.labelMedium?.copyWith(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: textTheme.labelSmall?.copyWith(
                       color: scheme.tertiary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-                Icon(Icons.arrow_forward, size: 18, color: scheme.tertiary),
+                Icon(Icons.arrow_forward, size: 16, color: scheme.tertiary),
               ],
             ),
           ),

@@ -8,6 +8,7 @@ library;
 export 'app_page.dart';
 export 'kinship_auth_scaffold.dart';
 export 'kinship_badge_count.dart';
+export 'kinship_brand_mark.dart';
 export 'kinship_budget_meter.dart';
 export 'kinship_card.dart';
 export 'kinship_filter_chips.dart';

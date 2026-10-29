@@ -40,23 +40,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final wide = AppBreakpoints.isWide(context);
 
     return KinshipAuthScaffold(
-      brandPanel: KinshipAuthBrandPanel(
-        title: l10n.appTitle,
-        logo: Icon(
-          Icons.account_balance_wallet_outlined,
-          size: 40,
-          color: scheme.onPrimary,
-        ),
-      ),
+      brandPanel: KinshipAuthBrandPanel(title: l10n.appTitle),
       body: SingleChildScrollView(
         child: KinshipAuthPanel(
           showCard: !wide,
           brandName: l10n.appTitle,
-          logo: Icon(
-            Icons.lock_reset_outlined,
-            size: 32,
-            color: scheme.primaryContainer,
-          ),
           headline: l10n.authForgotPassword,
           footer: TextButton(
             onPressed: () => context.pop(),

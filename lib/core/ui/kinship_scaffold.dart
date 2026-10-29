@@ -10,6 +10,7 @@ import '../../l10n/app_localizations.dart';
 import '../router/app_router.dart';
 import '../theme/app_breakpoints.dart';
 import '../theme/app_tokens.dart';
+import 'kinship_brand_mark.dart';
 
 /// Stitch Kinship responsive shell: wide sidebar + top bar, or compact
 /// header + 4-tab bottom nav + FAB.
@@ -319,19 +320,7 @@ class _Sidebar extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: scheme.primaryContainer,
-                        borderRadius: AppRadius.mdAll,
-                      ),
-                      child: Icon(
-                        Icons.family_restroom,
-                        color: scheme.onPrimary,
-                        size: 24,
-                      ),
-                    ),
+                    const KinshipBrandMark(size: 40),
                     const SizedBox(width: AppSpacing.xs),
                     Expanded(
                       child: Column(
@@ -810,19 +799,7 @@ class _CompactHeader extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.margin),
             child: Row(
               children: [
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: scheme.primaryContainer,
-                    borderRadius: AppRadius.smAll,
-                  ),
-                  child: Icon(
-                    Icons.family_restroom,
-                    size: 20,
-                    color: scheme.onPrimary,
-                  ),
-                ),
+                const KinshipBrandMark(size: 32),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Column(

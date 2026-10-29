@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_breakpoints.dart';
 import '../theme/app_tokens.dart';
+import 'kinship_brand_mark.dart';
 import 'kinship_card.dart';
 
 /// Max width for the auth form column (plan ~440px).
@@ -125,10 +126,11 @@ class KinshipAuthPanel extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (logo != null) ...[
-          Align(alignment: Alignment.centerLeft, child: logo!),
-          const SizedBox(height: AppSpacing.sm),
-        ],
+        Align(
+          alignment: Alignment.centerLeft,
+          child: logo ?? const KinshipBrandMark(size: 48),
+        ),
+        const SizedBox(height: AppSpacing.sm),
         Text(
           brandName,
           style: textTheme.labelSmall?.copyWith(
@@ -213,10 +215,8 @@ class KinshipAuthBrandPanel extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (logo != null) ...[
-                  logo!,
-                  const SizedBox(height: AppSpacing.lg),
-                ],
+                logo ?? const KinshipBrandMark(size: 72),
+                const SizedBox(height: AppSpacing.lg),
                 Text(
                   title,
                   style: textTheme.headlineMedium?.copyWith(

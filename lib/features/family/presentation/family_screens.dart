@@ -8,7 +8,6 @@ import '../../../core/invite/pending_invite_store.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_breakpoints.dart';
 import '../../../core/theme/app_tokens.dart';
-import '../../../core/ui/app_page.dart';
 import '../../../core/ui/kinship_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../auth/presentation/auth_controller.dart';
@@ -81,21 +80,11 @@ class _AcceptInviteScreenState extends State<AcceptInviteScreen> {
       brandPanel: KinshipAuthBrandPanel(
         title: l10n.appTitle,
         subtitle: l10n.inviteAcceptBody,
-        logo: Icon(
-          Icons.account_balance_wallet_outlined,
-          size: 40,
-          color: scheme.onPrimary,
-        ),
       ),
       body: SingleChildScrollView(
         child: KinshipAuthPanel(
           showCard: !wide,
           brandName: l10n.appTitle,
-          logo: Icon(
-            Icons.mail_outline,
-            size: 32,
-            color: scheme.primaryContainer,
-          ),
           headline: l10n.inviteAcceptTitle,
           body: l10n.inviteAcceptBody,
           child: Column(

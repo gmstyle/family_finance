@@ -5,6 +5,9 @@ import '../theme/app_tokens.dart';
 import 'kinship_card.dart';
 
 /// Compact financial KPI card (dashboard web / summary strips).
+///
+/// Sizes to its content (no Expanded/Spacer) so it can sit in a [Wrap] or
+/// unbounded-height parent without RenderFlex overflow.
 class KinshipKpiTile extends StatelessWidget {
   const KinshipKpiTile({
     super.key,
@@ -44,20 +47,25 @@ class KinshipKpiTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final amountStyle = footer != null
+        ? AppTextStyles.tabularAmountMd(context)
+        : AppTextStyles.tabularAmountLg(context);
 
     return KinshipCard(
       onTap: onTap,
-      padding: padding ?? const EdgeInsets.all(AppSpacing.lg),
+      padding: padding ?? const EdgeInsets.all(AppSpacing.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
               Expanded(
                 child: Text(
                   label,
-                  style: textTheme.labelMedium?.copyWith(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: textTheme.labelSmall?.copyWith(
                     color: scheme.onSurfaceVariant,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 0.8,
@@ -66,8 +74,8 @@ class KinshipKpiTile extends StatelessWidget {
               ),
               if (icon != null)
                 Container(
-                  width: 32,
-                  height: 32,
+                  width: 28,
+                  height: 28,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color:
@@ -76,30 +84,29 @@ class KinshipKpiTile extends StatelessWidget {
                   ),
                   child: Icon(
                     icon,
-                    size: 18,
+                    size: 16,
                     color: iconColor ?? scheme.primaryContainer,
                   ),
                 ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  amountText,
-                  style: AppTextStyles.tabularAmountLg(context)
-                      ?.copyWith(color: amountColor ?? scheme.onSurface),
-                ),
-                if (trend != null) ...[
-                  const SizedBox(height: AppSpacing.xxs),
-                  trend!,
-                ],
-              ],
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            amountText,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: amountStyle?.copyWith(
+              color: amountColor ?? scheme.onSurface,
             ),
           ),
-          if (footer != null) footer!,
+          if (trend != null) ...[
+            const SizedBox(height: AppSpacing.xxs),
+            trend!,
+          ],
+          if (footer != null) ...[
+            const SizedBox(height: AppSpacing.sm),
+            footer!,
+          ],
         ],
       ),
     );

@@ -52,21 +52,11 @@ class _CreateFamilyScreenState extends State<CreateFamilyScreen> {
       brandPanel: KinshipAuthBrandPanel(
         title: l10n.appTitle,
         subtitle: l10n.familyCreateBody,
-        logo: Icon(
-          Icons.account_balance_wallet_outlined,
-          size: 40,
-          color: scheme.onPrimary,
-        ),
       ),
       body: SingleChildScrollView(
         child: KinshipAuthPanel(
           showCard: !wide,
           brandName: l10n.appTitle,
-          logo: Icon(
-            Icons.groups_outlined,
-            size: 32,
-            color: scheme.primaryContainer,
-          ),
           headline: l10n.familyCreateTitle,
           body: l10n.familyCreateBody,
           footer: Align(

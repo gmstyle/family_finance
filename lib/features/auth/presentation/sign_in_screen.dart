@@ -70,27 +70,14 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final auth = context.watch<AuthController>();
-    final scheme = Theme.of(context).colorScheme;
     final wide = AppBreakpoints.isWide(context);
 
     return KinshipAuthScaffold(
-      brandPanel: KinshipAuthBrandPanel(
-        title: l10n.appTitle,
-        logo: Icon(
-          Icons.account_balance_wallet_outlined,
-          size: 40,
-          color: scheme.onPrimary,
-        ),
-      ),
+      brandPanel: KinshipAuthBrandPanel(title: l10n.appTitle),
       body: SingleChildScrollView(
         child: KinshipAuthPanel(
           showCard: !wide,
           brandName: l10n.appTitle,
-          logo: Icon(
-            Icons.account_balance_wallet_outlined,
-            size: 32,
-            color: scheme.primaryContainer,
-          ),
           headline: _registerMode ? l10n.authCreateAccount : l10n.authSignIn,
           footer: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
