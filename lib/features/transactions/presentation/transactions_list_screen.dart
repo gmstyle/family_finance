@@ -246,6 +246,8 @@ class _TransactionsListScreenState extends State<TransactionsListScreen> {
                           context.push(AppRoutes.transactionNew),
                       onOpenReview: () => context.go(AppRoutes.ingestion),
                       onTransfer: () => context.push(AppRoutes.transferNew),
+                      onOpenRecurring: () =>
+                          context.push(AppRoutes.transactionsRecurring),
                     )
                   : _MobileBody(
                       l10n: l10n,
@@ -263,6 +265,8 @@ class _TransactionsListScreenState extends State<TransactionsListScreen> {
                       onSearchChanged: (v) => setState(() => _searchQuery = v),
                       onOpenFilters: _openFilters,
                       onExport: _export,
+                      onOpenRecurring: () =>
+                          context.push(AppRoutes.transactionsRecurring),
                       onSelectMember: _selectMember,
                       onToggleThisMonth: _toggleThisMonth,
                       onOpenTransaction: _openTransaction,
@@ -353,6 +357,7 @@ class _MobileBody extends StatelessWidget {
     required this.onSearchChanged,
     required this.onOpenFilters,
     required this.onExport,
+    required this.onOpenRecurring,
     required this.onSelectMember,
     required this.onToggleThisMonth,
     required this.onOpenTransaction,
@@ -374,6 +379,7 @@ class _MobileBody extends StatelessWidget {
   final ValueChanged<String> onSearchChanged;
   final VoidCallback onOpenFilters;
   final VoidCallback onExport;
+  final VoidCallback onOpenRecurring;
   final Future<void> Function(String? memberId) onSelectMember;
   final Future<void> Function(bool enable) onToggleThisMonth;
   final ValueChanged<LedgerTransaction> onOpenTransaction;
@@ -396,6 +402,7 @@ class _MobileBody extends StatelessWidget {
             incomeMinor: dash.stats.totalIncomeMinor,
             memberSpend: memberSpend,
             onExport: onExport,
+            onOpenRecurring: onOpenRecurring,
           ),
         ),
         const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
@@ -452,6 +459,7 @@ class _MobileBody extends StatelessWidget {
                     category: tx.categoryId == null
                         ? null
                         : categoriesById[tx.categoryId!],
+                    isRecurring: tx.recurringRuleId != null,
                     onTap: () => onOpenTransaction(tx),
                     onLongPress: () => onDelete(tx),
                   );
@@ -489,6 +497,7 @@ class _MobileSummaryCard extends StatelessWidget {
     required this.incomeMinor,
     required this.memberSpend,
     required this.onExport,
+    required this.onOpenRecurring,
   });
 
   final AppLocalizations l10n;
@@ -498,6 +507,7 @@ class _MobileSummaryCard extends StatelessWidget {
   final int incomeMinor;
   final List<_MemberSpendShare> memberSpend;
   final VoidCallback onExport;
+  final VoidCallback onOpenRecurring;
 
   @override
   Widget build(BuildContext context) {
@@ -522,6 +532,39 @@ class _MobileSummaryCard extends StatelessWidget {
                   ),
                 ),
               ),
+              Material(
+                color: scheme.surfaceContainerLow,
+                shape: const StadiumBorder(),
+                child: InkWell(
+                  onTap: onOpenRecurring,
+                  customBorder: const StadiumBorder(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                      vertical: AppSpacing.xxs + 2,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.replay_outlined,
+                          size: 16,
+                          color: scheme.primary,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          l10n.recurringShort,
+                          style: textTheme.labelSmall?.copyWith(
+                            color: scheme.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.xs),
               Material(
                 color: scheme.surfaceContainerLow,
                 shape: const StadiumBorder(),
@@ -669,6 +712,7 @@ class _WebBody extends StatelessWidget {
     required this.onNewTransaction,
     required this.onOpenReview,
     required this.onTransfer,
+    required this.onOpenRecurring,
   });
 
   final AppLocalizations l10n;
@@ -694,6 +738,7 @@ class _WebBody extends StatelessWidget {
   final VoidCallback onNewTransaction;
   final VoidCallback onOpenReview;
   final VoidCallback onTransfer;
+  final VoidCallback onOpenRecurring;
 
   @override
   Widget build(BuildContext context) {
@@ -772,6 +817,14 @@ class _WebBody extends StatelessWidget {
                     onPressed: onTransfer,
                     icon: const Icon(Icons.swap_horiz, size: 18),
                     label: Text(l10n.transferCreateTitle),
+                    style: KinshipPillCta.secondary(context).copyWith(
+                      minimumSize: const WidgetStatePropertyAll(Size(0, 40)),
+                    ),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: onOpenRecurring,
+                    icon: const Icon(Icons.replay_outlined, size: 18),
+                    label: Text(l10n.recurringShort),
                     style: KinshipPillCta.secondary(context).copyWith(
                       minimumSize: const WidgetStatePropertyAll(Size(0, 40)),
                     ),
@@ -1011,6 +1064,7 @@ class _WebBody extends StatelessWidget {
                       category: tx.categoryId == null
                           ? null
                           : categoriesById[tx.categoryId!],
+                      isRecurring: tx.recurringRuleId != null,
                       onTap: () => onOpenTransaction(tx),
                       onDelete: () => onDelete(tx),
                     ),
@@ -1269,6 +1323,7 @@ class _TxLedgerCard extends StatelessWidget {
     required this.locale,
     required this.memberName,
     required this.category,
+    required this.isRecurring,
     required this.onTap,
     required this.onLongPress,
   });
@@ -1278,6 +1333,7 @@ class _TxLedgerCard extends StatelessWidget {
   final String locale;
   final String? memberName;
   final Category? category;
+  final bool isRecurring;
   final VoidCallback onTap;
   final VoidCallback onLongPress;
 
@@ -1326,6 +1382,12 @@ class _TxLedgerCard extends StatelessWidget {
           categoryLabel: category == null
               ? null
               : categoryLabel(l10n, category!),
+          alertBadge: isRecurring
+              ? Tooltip(
+                  message: l10n.recurringBadge,
+                  child: Icon(Icons.replay, size: 14, color: scheme.secondary),
+                )
+              : null,
           padding: EdgeInsets.zero,
         ),
       ),
@@ -1341,6 +1403,7 @@ class _WebTableRow extends StatelessWidget {
     required this.memberName,
     required this.accountName,
     required this.category,
+    required this.isRecurring,
     required this.onTap,
     required this.onDelete,
   });
@@ -1351,6 +1414,7 @@ class _WebTableRow extends StatelessWidget {
   final String? memberName;
   final String? accountName;
   final Category? category;
+  final bool isRecurring;
   final VoidCallback onTap;
   final VoidCallback onDelete;
 
@@ -1428,13 +1492,30 @@ class _WebTableRow extends StatelessWidget {
                     ),
                     const SizedBox(width: AppSpacing.xs),
                     Expanded(
-                      child: Text(
-                        title,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          if (isRecurring) ...[
+                            const SizedBox(width: 4),
+                            Tooltip(
+                              message: l10n.recurringBadge,
+                              child: Icon(
+                                Icons.replay,
+                                size: 14,
+                                color: scheme.secondary,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
                   ],

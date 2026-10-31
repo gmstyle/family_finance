@@ -98,10 +98,13 @@ flutter run -d android
 Blaze plan required (Cloud Functions 2nd gen). From repo root, logged into Firebase CLI:
 
 ```bash
-# Backend only
-npx -y firebase-tools@latest deploy \
-  --project family-finance-gmstyle-app \
-  --only firestore,functions
+# Backend (Firestore rules/indexes + Cloud Functions)
+./scripts/deploy_backend.sh
+# equivalent: cd functions && npm ci && npm run build
+#             npx -y firebase-tools@latest deploy \
+#               --project family-finance-gmstyle-app --only firestore,functions
+# ONLY=functions ./scripts/deploy_backend.sh   # functions only
+# ONLY=firestore ./scripts/deploy_backend.sh   # rules/indexes only
 ```
 
 - Firestore: rules + indexes  

@@ -78,6 +78,9 @@ class DataExportRepository {
     final transactions = await _readCollection(
       familyRef.collection('transactions'),
     );
+    final recurringRules = await _readCollection(
+      familyRef.collection('recurringRules'),
+    );
     final stats = await _readCollection(familyRef.collection('stats'));
     final ingestion = await _readCollection(familyRef.collection('ingestion'));
     final merchantRules = await _readCollection(
@@ -116,6 +119,7 @@ class DataExportRepository {
       'accounts': accounts,
       'categories': categories,
       'transactions': transactions,
+      'recurringRules': recurringRules,
       'budgets': budgets,
       'goals': goals,
       'stats': stats,

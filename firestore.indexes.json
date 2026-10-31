@@ -76,6 +76,14 @@
         { "fieldPath": "bookingDate", "order": "ASCENDING" },
         { "fieldPath": "amountMinor", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "recurringRules",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "active", "order": "ASCENDING" },
+        { "fieldPath": "nextBookingDate", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

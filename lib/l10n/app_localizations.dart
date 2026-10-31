@@ -1004,6 +1004,192 @@ abstract class AppLocalizations {
   /// **'This removes the transaction from the shared ledger.'**
   String get transactionDeleteBody;
 
+  /// No description provided for @recurringTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring payments'**
+  String get recurringTitle;
+
+  /// No description provided for @recurringShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring'**
+  String get recurringShort;
+
+  /// No description provided for @recurringSettingsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage monthly expense and income rules'**
+  String get recurringSettingsHint;
+
+  /// No description provided for @recurringEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No recurring rules yet. Enable monthly recurrence when saving an expense or income.'**
+  String get recurringEmpty;
+
+  /// No description provided for @recurringMonthlySwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat monthly'**
+  String get recurringMonthlySwitch;
+
+  /// No description provided for @recurringMonthlyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Every month on day {day}'**
+  String recurringMonthlyHint(int day);
+
+  /// No description provided for @recurringHasEndSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends after a set number of payments'**
+  String get recurringHasEndSwitch;
+
+  /// No description provided for @recurringTotalOccurrences.
+  ///
+  /// In en, this message translates to:
+  /// **'Total payments (including this one)'**
+  String get recurringTotalOccurrences;
+
+  /// No description provided for @recurringTotalOccurrencesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Example: 12 for a one-year loan installment'**
+  String get recurringTotalOccurrencesHint;
+
+  /// No description provided for @recurringTotalOccurrencesInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter at least 2 payments'**
+  String get recurringTotalOccurrencesInvalid;
+
+  /// No description provided for @recurringEndsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends on {date}'**
+  String recurringEndsOn(String date);
+
+  /// No description provided for @recurringOpenEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'No end date'**
+  String get recurringOpenEnded;
+
+  /// No description provided for @recurringClearEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove end date'**
+  String get recurringClearEnd;
+
+  /// No description provided for @recurringLinkedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly recurrence'**
+  String get recurringLinkedTitle;
+
+  /// No description provided for @recurringLinkedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {day} · next {nextDate}'**
+  String recurringLinkedBody(int day, String nextDate);
+
+  /// No description provided for @recurringLinkedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving this movement updates only this entry. Future automatic payments follow the rule until you pause or stop it.'**
+  String get recurringLinkedHint;
+
+  /// No description provided for @recurringLinkedMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'The linked recurring rule was deleted. You can start a new monthly recurrence below.'**
+  String get recurringLinkedMissing;
+
+  /// No description provided for @recurringStopTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop recurrence?'**
+  String get recurringStopTitle;
+
+  /// No description provided for @recurringStopBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Future automatic entries stop. Past ledger transactions are kept.'**
+  String get recurringStopBody;
+
+  /// No description provided for @recurringStopAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop recurrence'**
+  String get recurringStopAction;
+
+  /// No description provided for @recurringEditManageAction.
+  ///
+  /// In en, this message translates to:
+  /// **'All recurring payments'**
+  String get recurringEditManageAction;
+
+  /// No description provided for @recurringActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get recurringActive;
+
+  /// No description provided for @recurringPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get recurringPaused;
+
+  /// No description provided for @recurringPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get recurringPause;
+
+  /// No description provided for @recurringResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get recurringResume;
+
+  /// No description provided for @recurringEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit rule'**
+  String get recurringEdit;
+
+  /// No description provided for @recurringUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring rule updated'**
+  String get recurringUpdated;
+
+  /// No description provided for @recurringDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete recurring rule?'**
+  String get recurringDeleteTitle;
+
+  /// No description provided for @recurringDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Future automatic entries stop. Past ledger transactions are kept.'**
+  String get recurringDeleteBody;
+
+  /// No description provided for @recurringBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'From recurring rule'**
+  String get recurringBadge;
+
+  /// No description provided for @recurringRuleSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {day} · next {nextDate} · {account}'**
+  String recurringRuleSubtitle(int day, String nextDate, String account);
+
   /// No description provided for @transferCreateTitle.
   ///
   /// In en, this message translates to:

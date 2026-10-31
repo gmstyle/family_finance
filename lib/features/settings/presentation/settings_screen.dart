@@ -321,6 +321,12 @@ class _SettingsScreenState extends State<SettingsScreen>
               onTap: () => context.push(AppRoutes.categories),
             ),
             ListTile(
+              leading: const Icon(Icons.replay_outlined),
+              title: Text(l10n.recurringTitle),
+              subtitle: Text(l10n.recurringSettingsHint),
+              onTap: () => context.push(AppRoutes.transactionsRecurring),
+            ),
+            ListTile(
               leading: const Icon(Icons.inbox_outlined),
               title: Text(l10n.ingestionTitle),
               // go: /ingestion is a shell branch; push would duplicate ShellRouteMatch pageKey.

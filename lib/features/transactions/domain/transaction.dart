@@ -47,6 +47,7 @@ class LedgerTransaction {
     this.note,
     this.transferId,
     this.transferRole,
+    this.recurringRuleId,
     this.createdAt,
     this.updatedAt,
   });
@@ -62,6 +63,9 @@ class LedgerTransaction {
   final String? note;
   final String? transferId;
   final TransferRole? transferRole;
+
+  /// Set on occurrences materialized from a recurring rule (optional).
+  final String? recurringRuleId;
   final String createdByUserId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -84,6 +88,7 @@ class LedgerTransaction {
       note: d['note'] as String?,
       transferId: d['transferId'] as String?,
       transferRole: TransferRole.fromString(d['transferRole'] as String?),
+      recurringRuleId: d['recurringRuleId'] as String?,
       createdByUserId: d['createdByUserId'] as String? ?? '',
       createdAt: created is Timestamp ? created.toDate() : null,
       updatedAt: updated is Timestamp ? updated.toDate() : null,

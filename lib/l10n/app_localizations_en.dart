@@ -520,6 +520,113 @@ class AppLocalizationsEn extends AppLocalizations {
       'This removes the transaction from the shared ledger.';
 
   @override
+  String get recurringTitle => 'Recurring payments';
+
+  @override
+  String get recurringShort => 'Recurring';
+
+  @override
+  String get recurringSettingsHint => 'Manage monthly expense and income rules';
+
+  @override
+  String get recurringEmpty =>
+      'No recurring rules yet. Enable monthly recurrence when saving an expense or income.';
+
+  @override
+  String get recurringMonthlySwitch => 'Repeat monthly';
+
+  @override
+  String recurringMonthlyHint(int day) {
+    return 'Every month on day $day';
+  }
+
+  @override
+  String get recurringHasEndSwitch => 'Ends after a set number of payments';
+
+  @override
+  String get recurringTotalOccurrences => 'Total payments (including this one)';
+
+  @override
+  String get recurringTotalOccurrencesHint =>
+      'Example: 12 for a one-year loan installment';
+
+  @override
+  String get recurringTotalOccurrencesInvalid => 'Enter at least 2 payments';
+
+  @override
+  String recurringEndsOn(String date) {
+    return 'Ends on $date';
+  }
+
+  @override
+  String get recurringOpenEnded => 'No end date';
+
+  @override
+  String get recurringClearEnd => 'Remove end date';
+
+  @override
+  String get recurringLinkedTitle => 'Monthly recurrence';
+
+  @override
+  String recurringLinkedBody(int day, String nextDate) {
+    return 'Day $day · next $nextDate';
+  }
+
+  @override
+  String get recurringLinkedHint =>
+      'Saving this movement updates only this entry. Future automatic payments follow the rule until you pause or stop it.';
+
+  @override
+  String get recurringLinkedMissing =>
+      'The linked recurring rule was deleted. You can start a new monthly recurrence below.';
+
+  @override
+  String get recurringStopTitle => 'Stop recurrence?';
+
+  @override
+  String get recurringStopBody =>
+      'Future automatic entries stop. Past ledger transactions are kept.';
+
+  @override
+  String get recurringStopAction => 'Stop recurrence';
+
+  @override
+  String get recurringEditManageAction => 'All recurring payments';
+
+  @override
+  String get recurringActive => 'Active';
+
+  @override
+  String get recurringPaused => 'Paused';
+
+  @override
+  String get recurringPause => 'Pause';
+
+  @override
+  String get recurringResume => 'Resume';
+
+  @override
+  String get recurringEdit => 'Edit rule';
+
+  @override
+  String get recurringUpdated => 'Recurring rule updated';
+
+  @override
+  String get recurringDeleteTitle => 'Delete recurring rule?';
+
+  @override
+  String get recurringDeleteBody =>
+      'Future automatic entries stop. Past ledger transactions are kept.';
+
+  @override
+  String get recurringBadge => 'From recurring rule';
+
+  @override
+  String recurringRuleSubtitle(int day, String nextDate, String account) {
+    return 'Day $day · next $nextDate · $account';
+  }
+
+  @override
   String get transferCreateTitle => 'Transfer';
 
   @override

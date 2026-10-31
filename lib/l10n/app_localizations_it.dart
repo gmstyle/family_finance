@@ -521,6 +521,114 @@ class AppLocalizationsIt extends AppLocalizations {
       'Il movimento sarà rimosso dal libro mastro condiviso.';
 
   @override
+  String get recurringTitle => 'Pagamenti ricorrenti';
+
+  @override
+  String get recurringShort => 'Ricorrenti';
+
+  @override
+  String get recurringSettingsHint =>
+      'Gestisci regole mensili di spese e entrate';
+
+  @override
+  String get recurringEmpty =>
+      'Nessuna regola ricorrente. Attiva la ricorrenza mensile quando salvi una spesa o un\'entrata.';
+
+  @override
+  String get recurringMonthlySwitch => 'Ripeti ogni mese';
+
+  @override
+  String recurringMonthlyHint(int day) {
+    return 'Ogni mese il giorno $day';
+  }
+
+  @override
+  String get recurringHasEndSwitch => 'Termina dopo un numero di pagamenti';
+
+  @override
+  String get recurringTotalOccurrences => 'Pagamenti totali (incluso questo)';
+
+  @override
+  String get recurringTotalOccurrencesHint =>
+      'Esempio: 12 per una rata annuale';
+
+  @override
+  String get recurringTotalOccurrencesInvalid => 'Inserisci almeno 2 pagamenti';
+
+  @override
+  String recurringEndsOn(String date) {
+    return 'Termina il $date';
+  }
+
+  @override
+  String get recurringOpenEnded => 'Senza scadenza';
+
+  @override
+  String get recurringClearEnd => 'Rimuovi scadenza';
+
+  @override
+  String get recurringLinkedTitle => 'Ricorrenza mensile';
+
+  @override
+  String recurringLinkedBody(int day, String nextDate) {
+    return 'Giorno $day · prossima $nextDate';
+  }
+
+  @override
+  String get recurringLinkedHint =>
+      'Salvare questo movimento aggiorna solo questa voce. I pagamenti automatici futuri seguono la regola finché non la metti in pausa o la interrompi.';
+
+  @override
+  String get recurringLinkedMissing =>
+      'La regola ricorrente collegata è stata eliminata. Puoi avviare una nuova ricorrenza mensile qui sotto.';
+
+  @override
+  String get recurringStopTitle => 'Interrompere la ricorrenza?';
+
+  @override
+  String get recurringStopBody =>
+      'Le prossime voci automatiche si interrompono. I movimenti già scritti restano nel libro mastro.';
+
+  @override
+  String get recurringStopAction => 'Interrompi ricorrenza';
+
+  @override
+  String get recurringEditManageAction => 'Tutti i pagamenti ricorrenti';
+
+  @override
+  String get recurringActive => 'Attiva';
+
+  @override
+  String get recurringPaused => 'In pausa';
+
+  @override
+  String get recurringPause => 'Pausa';
+
+  @override
+  String get recurringResume => 'Riprendi';
+
+  @override
+  String get recurringEdit => 'Modifica regola';
+
+  @override
+  String get recurringUpdated => 'Regola ricorrente aggiornata';
+
+  @override
+  String get recurringDeleteTitle => 'Eliminare la regola ricorrente?';
+
+  @override
+  String get recurringDeleteBody =>
+      'Le prossime voci automatiche si interrompono. I movimenti già scritti restano nel libro mastro.';
+
+  @override
+  String get recurringBadge => 'Da regola ricorrente';
+
+  @override
+  String recurringRuleSubtitle(int day, String nextDate, String account) {
+    return 'Giorno $day · prossima $nextDate · $account';
+  }
+
+  @override
   String get transferCreateTitle => 'Trasferimento';
 
   @override

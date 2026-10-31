@@ -171,6 +171,50 @@ service cloud.firestore {
         allow delete: if isFamilyMember(familyId);
       }
 
+      // Recurring monthly rules — client CRUD; scheduled Function materializes txs.
+      match /recurringRules/{ruleId} {
+        allow read: if isFamilyMember(familyId);
+
+        allow create: if isFamilyMember(familyId)
+          && request.resource.data.keys().hasOnly([
+            'type', 'accountId', 'categoryId', 'amountMinor', 'currency',
+            'merchant', 'note', 'dayOfMonth', 'active', 'nextBookingDate',
+            'endBookingDate', 'createdByUserId', 'createdAt', 'updatedAt'
+          ])
+          && request.resource.data.type in ['expense', 'income']
+          && request.resource.data.accountId is string
+          && request.resource.data.categoryId is string
+          && request.resource.data.currency is string
+          && request.resource.data.amountMinor is int
+          && request.resource.data.amountMinor > 0
+          && request.resource.data.dayOfMonth is int
+          && request.resource.data.dayOfMonth >= 1
+          && request.resource.data.dayOfMonth <= 31
+          && request.resource.data.active is bool
+          && request.resource.data.nextBookingDate is string
+          && (!('endBookingDate' in request.resource.data)
+              || request.resource.data.endBookingDate is string)
+          && request.resource.data.createdByUserId == uid();
+
+        allow update: if isFamilyMember(familyId)
+          && request.resource.data.createdByUserId == resource.data.createdByUserId
+          && !request.resource.data.diff(resource.data)
+              .affectedKeys().hasAny(['createdByUserId', 'createdAt'])
+          && request.resource.data.type in ['expense', 'income']
+          && request.resource.data.amountMinor is int
+          && request.resource.data.amountMinor > 0
+          && request.resource.data.dayOfMonth is int
+          && request.resource.data.dayOfMonth >= 1
+          && request.resource.data.dayOfMonth <= 31
+          && request.resource.data.active is bool
+          && request.resource.data.nextBookingDate is string
+          && (!('endBookingDate' in request.resource.data)
+              || request.resource.data.endBookingDate == null
+              || request.resource.data.endBookingDate is string);
+
+        allow delete: if isFamilyMember(familyId);
+      }
+
       // Budgets — categoryId immutable on update.
       match /budgets/{budgetId} {
         allow read: if isFamilyMember(familyId);

@@ -243,6 +243,60 @@
   "transactionFormIncomplete": "Seleziona conto e categoria",
   "transactionDeleteTitle": "Eliminare il movimento?",
   "transactionDeleteBody": "Il movimento sarà rimosso dal libro mastro condiviso.",
+  "recurringTitle": "Pagamenti ricorrenti",
+  "recurringShort": "Ricorrenti",
+  "recurringSettingsHint": "Gestisci regole mensili di spese e entrate",
+  "recurringEmpty": "Nessuna regola ricorrente. Attiva la ricorrenza mensile quando salvi una spesa o un'entrata.",
+  "recurringMonthlySwitch": "Ripeti ogni mese",
+  "recurringMonthlyHint": "Ogni mese il giorno {day}",
+  "@recurringMonthlyHint": {
+    "placeholders": {
+      "day": { "type": "int" }
+    }
+  },
+  "recurringHasEndSwitch": "Termina dopo un numero di pagamenti",
+  "recurringTotalOccurrences": "Pagamenti totali (incluso questo)",
+  "recurringTotalOccurrencesHint": "Esempio: 12 per una rata annuale",
+  "recurringTotalOccurrencesInvalid": "Inserisci almeno 2 pagamenti",
+  "recurringEndsOn": "Termina il {date}",
+  "@recurringEndsOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "recurringOpenEnded": "Senza scadenza",
+  "recurringClearEnd": "Rimuovi scadenza",
+  "recurringLinkedTitle": "Ricorrenza mensile",
+  "recurringLinkedBody": "Giorno {day} · prossima {nextDate}",
+  "@recurringLinkedBody": {
+    "placeholders": {
+      "day": { "type": "int" },
+      "nextDate": { "type": "String" }
+    }
+  },
+  "recurringLinkedHint": "Salvare questo movimento aggiorna solo questa voce. I pagamenti automatici futuri seguono la regola finché non la metti in pausa o la interrompi.",
+  "recurringLinkedMissing": "La regola ricorrente collegata è stata eliminata. Puoi avviare una nuova ricorrenza mensile qui sotto.",
+  "recurringStopTitle": "Interrompere la ricorrenza?",
+  "recurringStopBody": "Le prossime voci automatiche si interrompono. I movimenti già scritti restano nel libro mastro.",
+  "recurringStopAction": "Interrompi ricorrenza",
+  "recurringEditManageAction": "Tutti i pagamenti ricorrenti",
+  "recurringActive": "Attiva",
+  "recurringPaused": "In pausa",
+  "recurringPause": "Pausa",
+  "recurringResume": "Riprendi",
+  "recurringEdit": "Modifica regola",
+  "recurringUpdated": "Regola ricorrente aggiornata",
+  "recurringDeleteTitle": "Eliminare la regola ricorrente?",
+  "recurringDeleteBody": "Le prossime voci automatiche si interrompono. I movimenti già scritti restano nel libro mastro.",
+  "recurringBadge": "Da regola ricorrente",
+  "recurringRuleSubtitle": "Giorno {day} · prossima {nextDate} · {account}",
+  "@recurringRuleSubtitle": {
+    "placeholders": {
+      "day": { "type": "int" },
+      "nextDate": { "type": "String" },
+      "account": { "type": "String" }
+    }
+  },
   "transferCreateTitle": "Trasferimento",
   "transferCreateBody": "Crea due movimenti collegati. Si cancellano insieme.",
   "transferSourceAccount": "Dal conto",

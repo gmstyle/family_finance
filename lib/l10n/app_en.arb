@@ -251,6 +251,60 @@
   "transactionFormIncomplete": "Select account and category",
   "transactionDeleteTitle": "Delete transaction?",
   "transactionDeleteBody": "This removes the transaction from the shared ledger.",
+  "recurringTitle": "Recurring payments",
+  "recurringShort": "Recurring",
+  "recurringSettingsHint": "Manage monthly expense and income rules",
+  "recurringEmpty": "No recurring rules yet. Enable monthly recurrence when saving an expense or income.",
+  "recurringMonthlySwitch": "Repeat monthly",
+  "recurringMonthlyHint": "Every month on day {day}",
+  "@recurringMonthlyHint": {
+    "placeholders": {
+      "day": { "type": "int" }
+    }
+  },
+  "recurringHasEndSwitch": "Ends after a set number of payments",
+  "recurringTotalOccurrences": "Total payments (including this one)",
+  "recurringTotalOccurrencesHint": "Example: 12 for a one-year loan installment",
+  "recurringTotalOccurrencesInvalid": "Enter at least 2 payments",
+  "recurringEndsOn": "Ends on {date}",
+  "@recurringEndsOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "recurringOpenEnded": "No end date",
+  "recurringClearEnd": "Remove end date",
+  "recurringLinkedTitle": "Monthly recurrence",
+  "recurringLinkedBody": "Day {day} · next {nextDate}",
+  "@recurringLinkedBody": {
+    "placeholders": {
+      "day": { "type": "int" },
+      "nextDate": { "type": "String" }
+    }
+  },
+  "recurringLinkedHint": "Saving this movement updates only this entry. Future automatic payments follow the rule until you pause or stop it.",
+  "recurringLinkedMissing": "The linked recurring rule was deleted. You can start a new monthly recurrence below.",
+  "recurringStopTitle": "Stop recurrence?",
+  "recurringStopBody": "Future automatic entries stop. Past ledger transactions are kept.",
+  "recurringStopAction": "Stop recurrence",
+  "recurringEditManageAction": "All recurring payments",
+  "recurringActive": "Active",
+  "recurringPaused": "Paused",
+  "recurringPause": "Pause",
+  "recurringResume": "Resume",
+  "recurringEdit": "Edit rule",
+  "recurringUpdated": "Recurring rule updated",
+  "recurringDeleteTitle": "Delete recurring rule?",
+  "recurringDeleteBody": "Future automatic entries stop. Past ledger transactions are kept.",
+  "recurringBadge": "From recurring rule",
+  "recurringRuleSubtitle": "Day {day} · next {nextDate} · {account}",
+  "@recurringRuleSubtitle": {
+    "placeholders": {
+      "day": { "type": "int" },
+      "nextDate": { "type": "String" },
+      "account": { "type": "String" }
+    }
+  },
   "transferCreateTitle": "Transfer",
   "transferCreateBody": "Creates two linked movements. They are deleted together.",
   "transferSourceAccount": "From account",

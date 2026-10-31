@@ -701,6 +701,7 @@ async function deleteFamilyTree(familyId: string): Promise<void> {
     "ingestion",
     "merchantRules",
     "accountBindings",
+    "recurringRules",
     "members",
     "accounts",
     "categories",

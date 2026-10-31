@@ -25,6 +25,7 @@ import {
   onGoalContributionWritten,
   onTransactionWritten,
 } from "./ledger/triggers";
+import {materializeRecurringTransactions} from "./ledger/recurring";
 
 initializeApp();
 
@@ -48,4 +49,5 @@ export {
   onTransactionWritten,
   onAccountWritten,
   onGoalContributionWritten,
+  materializeRecurringTransactions,
 };

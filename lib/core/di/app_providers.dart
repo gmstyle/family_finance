@@ -28,7 +28,9 @@ import '../../features/receipt_ocr/presentation/ingestion_controller.dart';
 import '../../features/settings/data/account_lifecycle_repository.dart';
 import '../../features/settings/data/data_export_repository.dart';
 import '../../features/settings/presentation/settings_controller.dart';
+import '../../features/transactions/data/recurring_rules_repository.dart';
 import '../../features/transactions/data/transactions_repository.dart';
+import '../../features/transactions/presentation/recurring_rules_controller.dart';
 import '../../features/transactions/presentation/transactions_controller.dart';
 import '../locale/locale_controller.dart';
 import '../theme/theme_mode_controller.dart';
@@ -44,6 +46,8 @@ List<SingleChildWidget> buildAppProviders({
   CategoriesRepository? categoriesRepository,
   TransactionsRepository? transactionsRepository,
   TransactionsController? transactionsController,
+  RecurringRulesRepository? recurringRulesRepository,
+  RecurringRulesController? recurringRulesController,
   BudgetsRepository? budgetsRepository,
   BudgetsController? budgetsController,
   GoalsRepository? goalsRepository,
@@ -68,6 +72,7 @@ List<SingleChildWidget> buildAppProviders({
   final accounts = accountsRepository ?? AccountsRepository();
   final categories = categoriesRepository ?? CategoriesRepository();
   final transactions = transactionsRepository ?? TransactionsRepository();
+  final recurringRules = recurringRulesRepository ?? RecurringRulesRepository();
   final budgets = budgetsRepository ?? BudgetsRepository();
   final goals = goalsRepository ?? GoalsRepository();
   final stats = statsRepository ?? StatsRepository();
@@ -107,6 +112,7 @@ List<SingleChildWidget> buildAppProviders({
     Provider<AccountsRepository>.value(value: accounts),
     Provider<CategoriesRepository>.value(value: categories),
     Provider<TransactionsRepository>.value(value: transactions),
+    Provider<RecurringRulesRepository>.value(value: recurringRules),
     Provider<BudgetsRepository>.value(value: budgets),
     Provider<GoalsRepository>.value(value: goals),
     Provider<StatsRepository>.value(value: stats),
@@ -120,6 +126,11 @@ List<SingleChildWidget> buildAppProviders({
       create: (_) =>
           transactionsController ??
           TransactionsController(repository: transactions),
+    ),
+    ChangeNotifierProvider<RecurringRulesController>(
+      create: (_) =>
+          recurringRulesController ??
+          RecurringRulesController(repository: recurringRules),
     ),
     ChangeNotifierProvider<BudgetsController>(
       create: (_) =>

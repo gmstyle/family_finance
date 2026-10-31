@@ -21,6 +21,7 @@ import '../../features/receipt_ocr/presentation/ingestion_inbox_screen.dart';
 import '../../features/receipt_ocr/presentation/receipt_scan_screen.dart';
 import '../../features/settings/presentation/privacy_policy_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/transactions/presentation/recurring_rules_screen.dart';
 import '../../features/transactions/presentation/transaction_editor_screen.dart';
 import '../../features/transactions/presentation/transactions_list_screen.dart';
 import '../../features/transactions/presentation/transfer_screen.dart';
@@ -33,6 +34,7 @@ abstract final class AppRoutes {
   static const home = '/';
   static const transactions = '/transactions';
   static const transactionNew = '/transactions/new';
+  static const transactionsRecurring = '/transactions/recurring';
   static const transactionEdit = '/transactions/:id';
   static const accounts = '/accounts';
   static const accountNew = '/accounts/new';
@@ -225,6 +227,11 @@ GoRouter createAppRouter({
         path: AppRoutes.transactionNew,
         name: 'transactionNew',
         builder: (context, state) => const TransactionEditorScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.transactionsRecurring,
+        name: 'transactionsRecurring',
+        builder: (context, state) => const RecurringRulesScreen(),
       ),
       GoRoute(
         path: AppRoutes.transactionEdit,

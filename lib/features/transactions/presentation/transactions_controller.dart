@@ -212,6 +212,18 @@ class TransactionsController extends ChangeNotifier {
     );
   }
 
+  Future<void> setRecurringRuleId({
+    required String transactionId,
+    String? recurringRuleId,
+  }) {
+    final familyId = _requireFamilyId();
+    return _repository.setRecurringRuleId(
+      familyId: familyId,
+      transactionId: transactionId,
+      recurringRuleId: recurringRuleId,
+    );
+  }
+
   Future<void> deleteTransaction(LedgerTransaction tx) async {
     final familyId = _requireFamilyId();
     if (tx.type == TransactionType.transfer && tx.transferId != null) {

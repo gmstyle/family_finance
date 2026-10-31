@@ -183,6 +183,20 @@ class TransactionsRepository {
     });
   }
 
+  /// Links (or clears) a recurring rule on an existing ledger transaction.
+  Future<void> setRecurringRuleId({
+    required String familyId,
+    required String transactionId,
+    String? recurringRuleId,
+  }) {
+    return _col(familyId).doc(transactionId).update({
+      'recurringRuleId': recurringRuleId == null || recurringRuleId.isEmpty
+          ? FieldValue.delete()
+          : recurringRuleId,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
   Future<void> deleteManualTransaction({
     required String familyId,
     required String transactionId,

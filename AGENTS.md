@@ -104,7 +104,7 @@ cd test/rules && npm install && npm test   # needs Java + Firestore emulator
 
 ### Deploy (only when asked)
 
-- Backend: `npx -y firebase-tools@latest deploy --project family-finance-gmstyle-app --only firestore,functions`
+- Backend: `./scripts/deploy_backend.sh` (Firestore rules/indexes + Functions)
 - Web hosting: `./scripts/deploy_web_hosting.sh`
 
 ## Required finish checklist
