@@ -1,13 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/firebase/firebase_bootstrap.dart';
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_breakpoints.dart';
 import '../../../core/theme/app_tokens.dart';
 import '../../../core/ui/kinship_widgets.dart';
 import '../../../l10n/app_localizations.dart';
 import 'auth_controller.dart';
+import 'google_gis_button.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -22,6 +25,37 @@ class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _registerMode = false;
   final _displayName = TextEditingController();
+  bool _googleReady = false;
+  String? _googleInitError;
+
+  bool get _showGoogle => !FirebaseBootstrap.shouldUseEmulators;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_showGoogle) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _prepareGoogle());
+    }
+  }
+
+  Future<void> _prepareGoogle() async {
+    final auth = context.read<AuthController>();
+    try {
+      await auth.ensureGoogleSignInInitialized();
+      await auth.wireGoogleAuthenticationEvents();
+      if (!mounted) return;
+      setState(() {
+        _googleReady = true;
+        _googleInitError = null;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _googleReady = false;
+        _googleInitError = e.toString();
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -64,6 +98,44 @@ class _SignInScreenState extends State<SignInScreen> {
     try {
       await context.read<AuthController>().signInWithGoogle();
     } catch (_) {}
+  }
+
+  Widget _buildGoogleSection(AuthController auth, AppLocalizations l10n) {
+    if (_googleInitError != null) {
+      return Text(
+        _googleInitError!,
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
+      );
+    }
+    if (!_googleReady) {
+      return const Center(
+        child: SizedBox(
+          width: AppSizes.buttonProgress,
+          height: AppSizes.buttonProgress,
+          child: CircularProgressIndicator(strokeWidth: 2),
+        ),
+      );
+    }
+
+    // Web: official GIS button. Other platforms: authenticate() via our pill.
+    if (!auth.googleSupportsAuthenticate) {
+      final gis = buildGoogleGisSignInButton();
+      if (gis != null) {
+        return Center(child: gis);
+      }
+      if (kIsWeb) {
+        return Text(
+          'Google Sign-In is unavailable in this browser build.',
+          style: TextStyle(color: Theme.of(context).colorScheme.error),
+        );
+      }
+    }
+
+    return KinshipSecondaryPillButton(
+      onPressed: auth.busy ? null : _google,
+      icon: const Icon(Icons.g_mobiledata),
+      child: Text(l10n.authContinueGoogle),
+    );
   }
 
   @override
@@ -157,12 +229,10 @@ class _SignInScreenState extends State<SignInScreen> {
                       )
                     : Text(_registerMode ? l10n.authRegister : l10n.authSignIn),
               ),
-              const SizedBox(height: AppSpacing.sm),
-              KinshipSecondaryPillButton(
-                onPressed: auth.busy ? null : _google,
-                icon: const Icon(Icons.g_mobiledata),
-                child: Text(l10n.authContinueGoogle),
-              ),
+              if (_showGoogle) ...[
+                const SizedBox(height: AppSpacing.sm),
+                _buildGoogleSection(auth, l10n),
+              ],
             ],
           ),
         ),

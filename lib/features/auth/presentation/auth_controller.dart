@@ -282,11 +282,88 @@ class AuthController extends ChangeNotifier {
     }
   }
 
+  /// Optional Web OAuth client id override:
+  /// `--dart-define=GOOGLE_WEB_CLIENT_ID=….apps.googleusercontent.com`
+  /// Prefer the `google-signin-client_id` meta tag in `web/index.html`.
+  static const String _googleWebClientId = String.fromEnvironment(
+    'GOOGLE_WEB_CLIENT_ID',
+  );
+
+  Future<void>? _googleInit;
+  StreamSubscription<GoogleSignInAuthenticationEvent>? _googleAuthSub;
+  bool _googleEventsWired = false;
+
+  /// Whether this platform supports [GoogleSignIn.authenticate] (not web GIS).
+  bool get googleSupportsAuthenticate =>
+      GoogleSignIn.instance.supportsAuthenticate();
+
+  Future<void> ensureGoogleSignInInitialized() {
+    return _googleInit ??= _initializeGoogleSignIn();
+  }
+
+  Future<void> _initializeGoogleSignIn() async {
+    final clientId = _googleWebClientId.isEmpty ? null : _googleWebClientId;
+    await GoogleSignIn.instance.initialize(clientId: clientId);
+  }
+
+  /// Listens for GIS / platform sign-in events and signs into Firebase.
+  /// Safe to call more than once; only one subscription is kept.
+  Future<void> wireGoogleAuthenticationEvents() async {
+    await ensureGoogleSignInInitialized();
+    if (_googleEventsWired) return;
+    _googleEventsWired = true;
+    _googleAuthSub = GoogleSignIn.instance.authenticationEvents.listen(
+      (event) async {
+        if (event is! GoogleSignInAuthenticationEventSignIn) return;
+        try {
+          await _signInFirebaseWithGoogleAccount(event.user);
+        } catch (e) {
+          _errorMessage = e.toString();
+          notifyListeners();
+        }
+      },
+      onError: (Object e) {
+        _errorMessage = e.toString();
+        notifyListeners();
+      },
+    );
+  }
+
+  Future<void> _signInFirebaseWithGoogleAccount(GoogleSignInAccount account) {
+    return _guard(() async {
+      final idToken = account.authentication.idToken;
+      if (idToken == null) {
+        throw StateError('Google Sign-In did not return an idToken.');
+      }
+      final credential = GoogleAuthProvider.credential(idToken: idToken);
+      await _repository.firebaseAuth.signInWithCredential(credential);
+    });
+  }
+
+  Future<void> _reauthenticateFirebaseWithGoogleAccount(
+    GoogleSignInAccount account,
+  ) {
+    return _guard(() async {
+      final idToken = account.authentication.idToken;
+      if (idToken == null) {
+        throw StateError('Google Sign-In did not return an idToken.');
+      }
+      final credential = GoogleAuthProvider.credential(idToken: idToken);
+      await _repository.reauthenticateWithGoogleCredential(credential);
+    });
+  }
+
+  /// Interactive Google sign-in on platforms that support [authenticate].
+  /// On web, show the GIS [renderButton] and rely on [wireGoogleAuthenticationEvents].
   Future<void> signInWithGoogle() {
     return _guard(() async {
-      final googleSignIn = GoogleSignIn.instance;
-      await googleSignIn.initialize();
-      final account = await googleSignIn.authenticate();
+      await ensureGoogleSignInInitialized();
+      if (!GoogleSignIn.instance.supportsAuthenticate()) {
+        throw UnsupportedError(
+          'Google Sign-In on web must use the official GIS button.',
+        );
+      }
+      final account = await GoogleSignIn.instance.authenticate();
       final idToken = account.authentication.idToken;
       if (idToken == null) {
         throw StateError('Google Sign-In did not return an idToken.');
@@ -305,15 +382,14 @@ class AuthController extends ChangeNotifier {
 
   Future<void> reauthenticateWithGoogle() {
     return _guard(() async {
-      final googleSignIn = GoogleSignIn.instance;
-      await googleSignIn.initialize();
-      final account = await googleSignIn.authenticate();
-      final idToken = account.authentication.idToken;
-      if (idToken == null) {
-        throw StateError('Google Sign-In did not return an idToken.');
+      await ensureGoogleSignInInitialized();
+      if (!GoogleSignIn.instance.supportsAuthenticate()) {
+        throw UnsupportedError(
+          'Google reauthentication on web must use the official GIS button.',
+        );
       }
-      final credential = GoogleAuthProvider.credential(idToken: idToken);
-      await _repository.reauthenticateWithGoogleCredential(credential);
+      final account = await GoogleSignIn.instance.authenticate();
+      await _reauthenticateFirebaseWithGoogleAccount(account);
     });
   }
 
@@ -343,6 +419,7 @@ class AuthController extends ChangeNotifier {
   void dispose() {
     _authSub?.cancel();
     _familyIdSub?.cancel();
+    _googleAuthSub?.cancel();
     super.dispose();
   }
 }

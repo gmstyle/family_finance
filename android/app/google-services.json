@@ -12,7 +12,20 @@
           "package_name": "com.gmstyle.family_finance"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "393534396036-clu7sufscn6v87k9qbtatnl1i1ahnuts.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gmstyle.family_finance",
+            "certificate_hash": "fdea7d3481b1565f7fa167f7353256092218136a"
+          }
+        },
+        {
+          "client_id": "393534396036-2jilumcipfp6c47jes9bq4dt50ruh9ga.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBWZHG4RfIOamDNTBBygtsXeNJFxvsRwKU"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "393534396036-2jilumcipfp6c47jes9bq4dt50ruh9ga.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

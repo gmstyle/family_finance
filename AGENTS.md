@@ -79,12 +79,9 @@ Settings (`/settings`) and Family (`/family`) are **outside** the indexed shell 
 ### Emulators
 
 ```bash
-npx -y firebase-tools@latest emulators:start --project demo-family-finance
+./scripts/start_emulators.sh
 # UI http://127.0.0.1:4000 — Auth 9099, Firestore 8080, Functions 5001
-```
-
-```bash
-cd functions && npm install && npm run build && cd ..
+# SKIP_BUILD=1 / IMPORT_DIR=… / EXPORT_ON_EXIT=… supported
 ```
 
 ### Flutter

@@ -13,20 +13,19 @@ FlutterFire is already configured for project `family-finance-gmstyle-app` (`lib
 
 ## Local emulators
 
-Start Auth, Firestore, Functions, and the Emulator UI:
+Start Auth, Firestore, Functions, and the Emulator UI (builds `functions/` first):
 
 ```bash
-npx -y firebase-tools@latest emulators:start --project demo-family-finance
+./scripts/start_emulators.sh
+# equivalent: cd functions && npm ci && npm run build && cd ..
+#             npx -y firebase-tools@latest emulators:start --project demo-family-finance
+# SKIP_BUILD=1 ./scripts/start_emulators.sh
+# EXPORT_ON_EXIT=./.emulator-data ./scripts/start_emulators.sh
+# IMPORT_DIR=./.emulator-data ./scripts/start_emulators.sh
 ```
 
 UI: http://127.0.0.1:4000  
 Ports: Auth `9099`, Firestore `8080`, Functions `5001`.
-
-Install Functions dependencies once:
-
-```bash
-cd functions && npm install && npm run build && cd ..
-```
 
 ### Flutter against emulators
 
